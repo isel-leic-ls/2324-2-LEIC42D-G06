@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="pt.isel.ls.Phase0Tests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-02-26T22:04:24" hostname="NOVO" time="0.211">
+  <properties/>
+  <testcase name="student retrieval test" classname="pt.isel.ls.Phase0Tests" time="0.211"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
