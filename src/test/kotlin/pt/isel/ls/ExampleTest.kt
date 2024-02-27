@@ -1,9 +1,8 @@
 package pt.isel.ls
 
-import java.io.FileInputStream
-import java.io.FileNotFoundException
 import kotlin.test.Test
 import kotlin.test.assertEquals
+
 
 class ExampleTest {
     @Test
@@ -18,5 +17,4 @@ class ExampleTest {
         // assert | then
         assertEquals(3, result)
     }
-    
 }
