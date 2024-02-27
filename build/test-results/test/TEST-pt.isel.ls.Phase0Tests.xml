@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="pt.isel.ls.Phase0Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-02-27T17:56:32" hostname="LAPTOPJOÃOPEREI" time="0.619">
+<testsuite name="pt.isel.ls.Phase0Tests" tests="3" skipped="0" failures="0" errors="0" timestamp="2024-02-27T18:00:44" hostname="LAPTOPJOÃOPEREI" time="0.666">
   <properties/>
-  <testcase name="delete a student test" classname="pt.isel.ls.Phase0Tests" time="0.382"/>
-  <testcase name="student retrieval test" classname="pt.isel.ls.Phase0Tests" time="0.12"/>
-  <testcase name="insert and update a student test" classname="pt.isel.ls.Phase0Tests" time="0.117"/>
+  <testcase name="delete a student test" classname="pt.isel.ls.Phase0Tests" time="0.321"/>
+  <testcase name="student retrieval test" classname="pt.isel.ls.Phase0Tests" time="0.114"/>
+  <testcase name="insert and update a student test" classname="pt.isel.ls.Phase0Tests" time="0.23"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

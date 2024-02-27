@@ -13,7 +13,7 @@ class Phase0Tests {
     }
 
     private val studentToRetrieve = Student(47718, "Pedro Diz", 1)
-    private val studentToUpdate = Student(48259, "Vasco Branco", 1)
+    private val studentToUpdate = Student(48259, "This will change", 1)
     private val studentToDelete = Student(48264, "João Pereira", 1)
 
     @BeforeTest
