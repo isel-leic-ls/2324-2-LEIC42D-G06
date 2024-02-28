@@ -1,7 +1,7 @@
 package pt.isel.ls
 
 import org.postgresql.ds.PGSimpleDataSource
-import pt.isel.ls.domain.Student
+import pt.isel.ls.phase0.Student
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals

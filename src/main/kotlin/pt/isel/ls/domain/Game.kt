@@ -1,0 +1,4 @@
+package pt.isel.ls.domain
+
+data class Game(val id:Int,val name:String,val dev:String,val genres:Array<String>) {
+}
