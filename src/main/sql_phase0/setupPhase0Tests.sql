@@ -1,0 +1,9 @@
+Create OR REPLACE PROCEDURE SETUP()
+LANGUAGE PLPGSQL
+AS $$
+BEGIN
+DELETE FROM students;
+INSERT INTO students VALUES(47718, 'Pedro Diz', 1);
+INSERT INTO students VALUES(48264, 'Joao Pereira', 1);
+END
+$$;
