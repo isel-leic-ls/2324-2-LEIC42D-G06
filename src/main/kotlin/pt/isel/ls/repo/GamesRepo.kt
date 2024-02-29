@@ -11,8 +11,8 @@ interface GamesRepo {
     fun getGameById(gid: Int): Game
 
     /** get details of a game by its name */
-    fun getGameByName(name: String): Game
+    //fun getGameByName(name: String): Game
 
     /** get a list made by the list of games of given genre(s) plus the list of games of the given developer */
-    fun getListOfGames(genres: List<String>, developer: String): List<Game>
+    //fun getListOfGames(genres: List<String>, developer: String): List<Game>
 }
