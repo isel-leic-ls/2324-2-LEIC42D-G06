@@ -22,22 +22,23 @@ class MemSessionRepo : SessionRepo {
     }
 
     override fun addPlayerToSession(sid: Int, player: Int) {
-        sessions.first { it.id == sid }.let { session ->
+        sessions.find { it.id == sid }?.let { session ->
             val nPlayers = session.players + player
             val state = if(nPlayers.size == session.capacity) State.CLOSED else session.state
             val nSession = session.copy(players = nPlayers, state = state)
             sessions.remove(session)
             sessions.add(nSession)
-        }
+        } ?: throw SessionNotFound
     }
 
     override fun getSession(sid: Int): Session =
-        sessions.first { it.id == sid }
+        sessions.find { it.id == sid } ?: throw SessionNotFound
 
-    override fun getListOfSessions(gid: Int, date: Date?, state: State?, pid: Int?): List<Session> =
+    override fun getListOfSessions(gid: Int, date: Date?, state: State?, pid: Int?, skip : Int, limit : Int): List<Session> =
         sessions.filter { it.game == gid &&
             date?.let { d -> it.date == d } ?: true &&
             state?.let { s -> it.state == s } ?: true &&
             pid?.let { p -> it.players.contains(p) } ?: true
-        }
+        }.drop(skip).take(limit)
+
 }

@@ -4,6 +4,7 @@ import org.junit.Test
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.State
 import pt.isel.ls.repo.MemSessionRepo
+import pt.isel.ls.repo.SessionNotFound
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -82,11 +83,13 @@ class MemSessionTests {
         val gid = 1
         val players = listOf(1,2)
         val capacity = 5
+        val skip = 0
+        val limit = Int.MAX_VALUE
         val sid = repo.createSession(players[0], gid, capacity, Date.from(Instant.now()))
         val sid2 = repo.createSession(players[1], gid, capacity, Date.from(Instant.now()))
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, null, null)
+        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
         val session1 = repo.getSession(sid)
         val session2 = repo.getSession(sid2)
 
@@ -102,11 +105,13 @@ class MemSessionTests {
         val players = listOf(1,2)
         val capacity = 5
         val sessionCount = 5
+        val skip = 0
+        val limit = Int.MAX_VALUE
         val sids = (0..sessionCount)
             .map { repo.createSession(players[it % 2], games[it % 2], capacity, Date.from(Instant.now()) ) }
 
         //act
-        val sessions = repo.getListOfSessions(games[0], null, null, players[0])
+        val sessions = repo.getListOfSessions(games[0], null, null, players[0], skip, limit)
         val session1 = repo.getSession(sids[0])
         val session2 = repo.getSession(sids[2])
         val session3 = repo.getSession(sids[4])
@@ -125,7 +130,7 @@ class MemSessionTests {
         val sid = 10
 
         //act & assert
-        assertFailsWith<NoSuchElementException> {
+        assertFailsWith<SessionNotFound> {
             repo.getSession(sid)
         }
     }
@@ -138,7 +143,7 @@ class MemSessionTests {
         val pid = 1
 
         //act & assert
-        assertFailsWith<NoSuchElementException> {
+        assertFailsWith<SessionNotFound> {
             repo.addPlayerToSession(sid, pid)
         }
     }
@@ -148,12 +153,107 @@ class MemSessionTests {
         //arrange
         val repo = MemSessionRepo()
         val gid = 1
+        val skip = 0
+        val limit = Int.MAX_VALUE
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, null, null)
+        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
 
         //assert
         assertTrue(sessions.isEmpty())
+    }
+
+    @Test
+    fun `getting a list of games skipping 2 games`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val skip = 2
+        val limit = Int.MAX_VALUE
+        val total = 5
+        val gid = 1
+        val capacity = 5
+        val sids = (0..total).map { repo.createSession(it + 1, gid, capacity, Date.from(Instant.now())) }
+
+        //act
+        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+
+        //assert
+        assertTrue(sessions.size == (total + 1 - skip) && sessions.all{ it.game == gid && sids.contains(it.id)})
+
+    }
+
+    @Test
+    fun `limiting the retrieval of games to 2 from a bigger list`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val skip = 0
+        val limit = 2
+        val total = 5
+        val gid = 1
+        val capacity = 5
+        val sids = (0..total).map { repo.createSession(it + 1, gid, capacity, Date.from(Instant.now())) }
+
+        //act
+        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+
+        //assert
+        assertTrue(sessions.size == limit && sessions.all {it.id in sids.take(limit)})
+
+    }
+
+    @Test
+    fun `skipping all games should yield an empty list`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val gid = 1
+        val capacity = 5
+        val skip = Int.MAX_VALUE
+        val limit = Int.MAX_VALUE
+        val pid = 1
+        repo.createSession(pid, gid, capacity, Date.from(Instant.now()))
+
+        //act
+        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+
+        //assert
+        assertTrue(sessions.isEmpty())
+    }
+
+    @Test
+    fun `limiting the search of games to 0 yields an empty list`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val gid = 1
+        val capacity = 5
+        val skip = 0
+        val limit = 0
+        val pid = 1
+        repo.createSession(pid, gid, capacity, Date.from(Instant.now()))
+
+        //act
+        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+
+        //assert
+        assertTrue(sessions.isEmpty())
+    }
+
+    @Test
+    fun `skipping 2 games and taking 2 games from a list of 6 games should yield the sessions in the middle of the list`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val gid = 1
+        val capacity = 5
+        val total = 5
+        val skip = 2
+        val limit = skip
+
+        val sids = (0..total).map { repo.createSession(it + 1, gid, capacity, Date.from(Instant.now())) }
+
+        //act
+        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+
+        //assert
+        assertTrue(sessions.size == limit && sessions.all { it.id in sids.drop(skip).take(limit) })
     }
 
     @Test
@@ -162,6 +262,8 @@ class MemSessionTests {
         val repo = MemSessionRepo()
         val gid = 1
         val players = listOf(1,2)
+        val skip = 0
+        val limit = Int.MAX_VALUE
         val capacity = 2
         val sid = repo.createSession(players[0], gid, capacity, Date.from(Instant.now()))
         val sid2 = repo.createSession(players[1], gid, capacity, Date.from(Instant.now()))
@@ -169,7 +271,7 @@ class MemSessionTests {
         repo.addPlayerToSession(sid2, players[0])
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, State.CLOSED, null)
+        val sessions = repo.getListOfSessions(gid, null, State.CLOSED, null, skip, limit)
         val session1 = repo.getSession(sid)
         val session2 = repo.getSession(sid2)
 

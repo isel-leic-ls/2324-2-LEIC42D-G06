@@ -9,3 +9,7 @@ enum class State {
     override fun toString(): String = if(this == OPEN) "OPEN" else "CLOSED"
 }
 data class Session(val id: Int, val capacity: Int, val date: Date, val game: Int, val state : State, val players: List<Int>)
+
+
+
+

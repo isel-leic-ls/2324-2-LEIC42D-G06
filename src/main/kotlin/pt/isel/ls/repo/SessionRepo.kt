@@ -10,5 +10,11 @@ interface SessionRepo {
     fun addPlayerToSession(sid : Int, player : Int)
     fun getSession(sid : Int) : Session
 
-    fun getListOfSessions(gid : Int, date : Date?, state : State?, pid : Int?) : List<Session>
+    fun getListOfSessions(
+        gid : Int,
+        date : Date?,
+        state : State?,
+        pid : Int?,
+        skip : Int,
+        limit : Int) : List<Session>
 }
