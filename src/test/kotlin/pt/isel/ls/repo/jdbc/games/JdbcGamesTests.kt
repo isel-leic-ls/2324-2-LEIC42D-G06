@@ -60,4 +60,6 @@ class JdbcGamesTests {
     //TODO add tests for getGameByName
 
     //TODO add tests for getListOfGames
+
+    //TODO add tests for paging (skip and limit)
 }

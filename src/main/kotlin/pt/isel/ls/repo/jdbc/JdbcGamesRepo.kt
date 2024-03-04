@@ -51,7 +51,7 @@ class JdbcGamesRepo(private val connection: Connection) : GamesRepo {
     }
 
     //do not use vars or mutable lists. I need immutability
-    override fun getListOfGames(genres: List<String>, developer: String): List<Game> {
+    override fun getListOfGames(genres: List<String>, developer: String, limit: Int, skip: Int): List<Game> {
         TODO()
         /*val stmt = connection.prepareStatement("SELECT * FROM game WHERE dev = ? OR genres LIKE ?")
         stmt.setString(1, developer)
