@@ -3,8 +3,8 @@ package pt.isel.ls.repo.mem.session
 import org.junit.Test
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.State
+import pt.isel.ls.repo.Exceptions
 import pt.isel.ls.repo.mem.MemSessionRepo
-import pt.isel.ls.repo.SessionNotFound
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -12,8 +12,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-class MemSessionTests {
 
+class MemSessionTests {
     @Test
     fun `creating a session test`() {
 
@@ -34,10 +34,11 @@ class MemSessionTests {
         val session = repo.getSession(sid)
 
         // assert
-        assertTrue(session.capacity == capacity &&
-            session.date == startDate && session.game == gid &&
-                session.players.size == 1 && session.players.contains(pid) &&
-                session.state == State.OPEN
+        assertTrue(
+            session.capacity == capacity &&
+                    session.date == startDate && session.game == gid &&
+                    session.players.size == 1 && session.players.contains(pid) &&
+                    session.state == State.OPEN
         )
     }
 
@@ -45,7 +46,7 @@ class MemSessionTests {
     fun `adding players to a session test`() {
         //arrange
         val repo = MemSessionRepo()
-        val players = listOf(1,2)
+        val players = listOf(1, 2)
         val gid = 1
         val capacity = 5
         val sid = repo.createSession(players[0], gid, capacity, Date.from(Instant.now()))
@@ -63,7 +64,7 @@ class MemSessionTests {
     fun `full session should yield closed state`() {
         //arrange
         val repo = MemSessionRepo()
-        val players = listOf(1,2)
+        val players = listOf(1, 2)
         val gid = 1
         val capacity = 2
         val sid = repo.createSession(players[0], gid, capacity, Date.from(Instant.now()))
@@ -81,7 +82,7 @@ class MemSessionTests {
         //arrange
         val repo = MemSessionRepo()
         val gid = 1
-        val players = listOf(1,2)
+        val players = listOf(1, 2)
         val capacity = 5
         val skip = 0
         val limit = Int.MAX_VALUE
@@ -101,14 +102,14 @@ class MemSessionTests {
     fun `getting a list of games with a certain player id`() {
         //arrange
         val repo = MemSessionRepo()
-        val games = listOf(1,2)
-        val players = listOf(1,2)
+        val games = listOf(1, 2)
+        val players = listOf(1, 2)
         val capacity = 5
         val sessionCount = 5
         val skip = 0
         val limit = Int.MAX_VALUE
         val sids = (0..sessionCount)
-            .map { repo.createSession(players[it % 2], games[it % 2], capacity, Date.from(Instant.now()) ) }
+            .map { repo.createSession(players[it % 2], games[it % 2], capacity, Date.from(Instant.now())) }
 
         //act
         val sessions = repo.getListOfSessions(games[0], null, null, players[0], skip, limit)
@@ -117,33 +118,34 @@ class MemSessionTests {
         val session3 = repo.getSession(sids[4])
 
         //assert
-        assertTrue(sessions.size == 3 &&
-            sessions.containsAll(listOf(session1, session2, session3))
+        assertTrue(
+            sessions.size == 3 &&
+                    sessions.containsAll(listOf(session1, session2, session3))
         )
     }
 
     // These 2 tests that fail with an exception are to be fixed with service logic
     @Test
-    fun `getting a session that doesnt exist`() {
+    fun `getting a session that does not exist`() {
         //arrange
         val repo = MemSessionRepo()
         val sid = 10
 
         //act & assert
-        assertFailsWith<SessionNotFound> {
+        assertFailsWith<Exceptions.SessionNotFound> {
             repo.getSession(sid)
         }
     }
 
     @Test
-    fun `adding a player to a session that doesnt exist`() {
+    fun `adding a player to a session that does not exist`() {
         //arrange
         val repo = MemSessionRepo()
         val sid = 10
         val pid = 1
 
         //act & assert
-        assertFailsWith<SessionNotFound> {
+        assertFailsWith<Exceptions.SessionNotFound> {
             repo.addPlayerToSession(sid, pid)
         }
     }
@@ -178,7 +180,7 @@ class MemSessionTests {
         val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
 
         //assert
-        assertTrue(sessions.size == (total + 1 - skip) && sessions.all{ it.game == gid && sids.contains(it.id)})
+        assertTrue(sessions.size == (total + 1 - skip) && sessions.all { it.game == gid && sids.contains(it.id) })
 
     }
 
@@ -197,7 +199,7 @@ class MemSessionTests {
         val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
 
         //assert
-        assertTrue(sessions.size == limit && sessions.all {it.id in sids.take(limit)})
+        assertTrue(sessions.size == limit && sessions.all { it.id in sids.take(limit) })
 
     }
 
@@ -261,7 +263,7 @@ class MemSessionTests {
         //arrange
         val repo = MemSessionRepo()
         val gid = 1
-        val players = listOf(1,2)
+        val players = listOf(1, 2)
         val skip = 0
         val limit = Int.MAX_VALUE
         val capacity = 2
@@ -277,8 +279,8 @@ class MemSessionTests {
 
         //assert
         assertTrue(sessions.size == 2 &&
-            sessions.all { it.state == State.CLOSED} &&
-            sessions.containsAll(listOf(session1, session2))
+                sessions.all { it.state == State.CLOSED } &&
+                sessions.containsAll(listOf(session1, session2))
         )
     }
 
@@ -309,7 +311,7 @@ class MemSessionTests {
 
         //assert
         assertTrue(sessions.size == threadCount &&
-            sessions.all { it.capacity == capacity && it.date == startDate && it.game == gid && it.state == State.OPEN }
+                sessions.all { it.capacity == capacity && it.date == startDate && it.game == gid && it.state == State.OPEN }
         )
         // check that every session id is in the range [1, threadCount] and that there are no duplicates
         assertTrue(sids.all { it in 1..threadCount } && sids.groupingBy { it }.eachCount().all { it.value == 1 })

@@ -1,5 +1,6 @@
 package pt.isel.ls.repo.mem.games
 
+import pt.isel.ls.repo.mem.INITIAL_GAME_ID
 import pt.isel.ls.repo.mem.MemGamesRepo
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -8,12 +9,14 @@ import kotlin.test.assertTrue
 
 class MemGamesTests {
     @Test
-    fun `insert game`() {
+    fun `insert two games`() {
         val repo = MemGamesRepo()
-        val gid = repo.insert("name", "developer", listOf("genre"))
+        val gid1 = repo.insert("name", "developer", listOf("genre"))
 
-        assertEquals(0, gid)
-        assertEquals(1, repo.games.size)
+        assertEquals(INITIAL_GAME_ID, gid1)
+
+        val gid2 = repo.insert("name", "developer", listOf("genre"))
+        assertEquals(INITIAL_GAME_ID + 1, gid2)
     }
 
     @Test
