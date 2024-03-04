@@ -4,7 +4,7 @@ import pt.isel.ls.domain.Game
 import pt.isel.ls.repo.interfaces.GamesRepo
 
 
-/*class MemGamesRepo : GamesRepo {
+class MemGamesRepo : GamesRepo {
     val games = mutableListOf<Game>()
 
     override fun insert(name: String, developer: String, genres: List<String>): Int {
@@ -20,4 +20,4 @@ import pt.isel.ls.repo.interfaces.GamesRepo
 
     override fun getListOfGames(genres: List<String>, developer: String): List<Game> =
         games.filter { it.dev == developer || it.genres.any { g -> genres.contains(g) } }
-}*/
+}

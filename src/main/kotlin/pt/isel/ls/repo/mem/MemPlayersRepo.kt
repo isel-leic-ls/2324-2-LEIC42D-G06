@@ -6,7 +6,7 @@ import java.util.UUID.randomUUID
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-class MemGamesRepo : PlayersRepo {
+class MemPlayersRepo : PlayersRepo {
     private val players = mutableListOf<Player>()
     private val monitor = ReentrantLock()
     override fun createPlayer(name: String, email: String): Int {

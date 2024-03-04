@@ -1,4 +1,4 @@
-package pt.isel.ls.repo.session
+package pt.isel.ls.repo.mem.session
 
 import org.junit.Test
 import pt.isel.ls.domain.Session
