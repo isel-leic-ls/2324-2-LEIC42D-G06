@@ -3,7 +3,7 @@ package pt.isel.ls.repo.session
 import org.junit.Test
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.State
-import pt.isel.ls.repo.MemSessionRepo
+import pt.isel.ls.repo.mem.MemSessionRepo
 import pt.isel.ls.repo.SessionNotFound
 import java.time.Instant
 import java.util.*

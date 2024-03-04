@@ -1,6 +1,6 @@
 package pt.isel.ls.services
 
-import pt.isel.ls.repo.SessionRepo
+import pt.isel.ls.repo.interfaces.SessionRepo
 import java.util.*
 
 class SessionServices(private val repo : SessionRepo)  {
