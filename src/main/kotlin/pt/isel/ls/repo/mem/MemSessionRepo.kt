@@ -27,11 +27,11 @@ class MemSessionRepo : SessionRepo {
             val nSession = session.copy(players = nPlayers, state = state)
             sessions.remove(session)
             sessions.add(nSession)
-        } ?: throw Exceptions.SessionNotFound()
+        } ?: throw Exceptions.SessionNotFound
     }
 
     override fun getSession(sid: Int): Session =
-        sessions.find { it.id == sid } ?: throw Exceptions.SessionNotFound()
+        sessions.find { it.id == sid } ?: throw Exceptions.SessionNotFound
 
     override fun getListOfSessions(
         gid: Int,
@@ -43,8 +43,8 @@ class MemSessionRepo : SessionRepo {
     ): List<Session> =
         sessions.filter {
             it.game == gid &&
-                    date?.let { d -> it.date == d } ?: true &&
-                    state?.let { s -> it.state == s } ?: true &&
-                    pid?.let { p -> it.players.contains(p) } ?: true
+            date?.let { d -> it.date == d } ?: true &&
+            state?.let { s -> it.state == s } ?: true &&
+            pid?.let { p -> it.players.contains(p) } ?: true
         }.drop(skip).take(limit)
 }

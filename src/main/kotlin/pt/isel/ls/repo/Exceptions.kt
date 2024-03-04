@@ -1,7 +1,7 @@
 package pt.isel.ls.repo
 
 
-class Exceptions : Exception() {
-    class SessionNotFound : Exception()
+object Exceptions : Exception() {
+    object SessionNotFound : Exception()
     class GameNotFound(message: String) : Exception(message)
 }
