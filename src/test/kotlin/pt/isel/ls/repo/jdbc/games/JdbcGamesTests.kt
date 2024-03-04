@@ -1,18 +1,18 @@
-package pt.isel.ls.repo.games
+package pt.isel.ls.repo.jdbc.games
 
 import org.postgresql.ds.PGSimpleDataSource
-import pt.isel.ls.repo.JdbcGamesRepo
+import pt.isel.ls.repo.jdbc.JdbcGamesRepo
 import kotlin.test.*
 
 
-class GamesTests {
+class JdbcGamesTests {
     private val dataSource = PGSimpleDataSource().apply {
         setUrl(System.getenv("JDBC_DATABASE_URL"))
     }
 
     //clears the SessionPlayer, Session and Game tables before each test
     @BeforeTest
-    fun setup() {
+    fun setup(): Unit =
         dataSource.connection.use {
             val stmt0 = it.prepareStatement("DELETE FROM SessionPlayer")
             stmt0.executeUpdate()
@@ -21,22 +21,20 @@ class GamesTests {
             val stmt2 = it.prepareStatement("DELETE FROM Game")
             stmt2.executeUpdate()
         }
-    }
 
     //clears the Game table after each test
     @AfterTest
-    fun afterTestCleanup() {
+    fun afterTestCleanup(): Unit =
         dataSource.connection.use {
             val stmt = it.prepareStatement("DELETE FROM Game")
             stmt.executeUpdate()
         }
-    }
 
     @Test
     fun `test game insertion given a name, a developer and a list of genres`() {
         val repo = JdbcGamesRepo(dataSource.connection)
         val returnedGameId = repo.insert(
-            "Generic Game Name - Insertion Test", "Generic Game Developer", listOf("genre1", "genre2")
+            "Game Name - Insertion Test Jdbc", "Generic Game Developer", listOf("genre1", "genre2")
         )
         //println("\nGame ID returned: $returnedGameId\n")
         //TODO should we add assertions here?
@@ -58,4 +56,8 @@ class GamesTests {
         assertTrue { game.genres.contains("genre1") }
         assertTrue { game.genres.contains("genre2") }
     }
+
+    //TODO add tests for getGameByName
+
+    //TODO add tests for getListOfGames
 }
