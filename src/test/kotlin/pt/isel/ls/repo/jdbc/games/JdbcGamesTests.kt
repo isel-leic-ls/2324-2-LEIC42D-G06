@@ -12,7 +12,7 @@ class JdbcGamesTests {
 
     //clears the SessionPlayer, Session and Game tables before each test
     @BeforeTest
-    fun setup() {
+    fun setup(): Unit =
         dataSource.connection.use {
             val stmt0 = it.prepareStatement("DELETE FROM SessionPlayer")
             stmt0.executeUpdate()
@@ -21,16 +21,14 @@ class JdbcGamesTests {
             val stmt2 = it.prepareStatement("DELETE FROM Game")
             stmt2.executeUpdate()
         }
-    }
 
     //clears the Game table after each test
     @AfterTest
-    fun afterTestCleanup() {
+    fun afterTestCleanup(): Unit =
         dataSource.connection.use {
             val stmt = it.prepareStatement("DELETE FROM Game")
             stmt.executeUpdate()
         }
-    }
 
     @Test
     fun `test game insertion given a name, a developer and a list of genres`() {
@@ -58,4 +56,8 @@ class JdbcGamesTests {
         assertTrue { game.genres.contains("genre1") }
         assertTrue { game.genres.contains("genre2") }
     }
+
+    //TODO add tests for getGameByName
+
+    //TODO add tests for getListOfGames
 }

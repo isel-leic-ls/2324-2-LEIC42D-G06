@@ -1,4 +1,4 @@
-package pt.isel.ls.repo.mem.names
+package pt.isel.ls.repo.mem.games
 
 /*import pt.isel.ls.repo.mem.MemGamesRepo
 import kotlin.test.Test
