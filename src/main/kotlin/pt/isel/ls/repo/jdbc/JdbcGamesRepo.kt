@@ -1,6 +1,7 @@
-package pt.isel.ls.repo
+package pt.isel.ls.repo.jdbc
 
 import pt.isel.ls.domain.Game
+import pt.isel.ls.repo.interfaces.GamesRepo
 import java.sql.Connection
 import java.sql.Statement
 
@@ -36,21 +37,23 @@ class JdbcGamesRepo(private val connection: Connection) : GamesRepo {
             rs.getString("genres").drop(1).dropLast(1).split(",")
         )
     }
-    /*
+
     override fun getGameByName(name: String): Game {
-        val stmt = connection.prepareStatement("SELECT * FROM game WHERE name = ?")
+        TODO()
+        /*val stmt = connection.prepareStatement("SELECT * FROM game WHERE name = ?")
         stmt.setString(1, name)
         val rs = stmt.executeQuery()
         rs.next()
 
         return Game(
             rs.getInt("gid"), rs.getString("name"), rs.getString("dev"), rs.getString("genres").split(",")
-        )
+        )*/
     }
 
     //do not use vars or mutable lists. I need immutability
     override fun getListOfGames(genres: List<String>, developer: String): List<Game> {
-        val stmt = connection.prepareStatement("SELECT * FROM game WHERE dev = ? OR genres LIKE ?")
+        TODO()
+        /*val stmt = connection.prepareStatement("SELECT * FROM game WHERE dev = ? OR genres LIKE ?")
         stmt.setString(1, developer)
         stmt.setString(2, genres.joinToString(","))
         val rs = stmt.executeQuery()
@@ -66,6 +69,6 @@ class JdbcGamesRepo(private val connection: Connection) : GamesRepo {
             } else null
         }.toList()
 
-        return games
-    }*/
+        return games*/
+    }
 }

@@ -1,11 +1,11 @@
-package pt.isel.ls.repo.games
+package pt.isel.ls.repo.jdbc.games
 
 import org.postgresql.ds.PGSimpleDataSource
-import pt.isel.ls.repo.JdbcGamesRepo
+import pt.isel.ls.repo.jdbc.JdbcGamesRepo
 import kotlin.test.*
 
 
-class GamesTests {
+class JdbcGamesTests {
     private val dataSource = PGSimpleDataSource().apply {
         setUrl(System.getenv("JDBC_DATABASE_URL"))
     }
@@ -36,7 +36,7 @@ class GamesTests {
     fun `test game insertion given a name, a developer and a list of genres`() {
         val repo = JdbcGamesRepo(dataSource.connection)
         val returnedGameId = repo.insert(
-            "Generic Game Name - Insertion Test", "Generic Game Developer", listOf("genre1", "genre2")
+            "Game Name - Insertion Test Jdbc", "Generic Game Developer", listOf("genre1", "genre2")
         )
         //println("\nGame ID returned: $returnedGameId\n")
         //TODO should we add assertions here?

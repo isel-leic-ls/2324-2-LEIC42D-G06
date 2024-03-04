@@ -1,4 +1,4 @@
-package pt.isel.ls.repo
+package pt.isel.ls.repo.interfaces
 
 import pt.isel.ls.domain.Player
 
