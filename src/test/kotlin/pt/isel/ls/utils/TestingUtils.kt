@@ -1,5 +1,6 @@
 package pt.isel.ls.utils
 
+import pt.isel.ls.domain.GameDetails
 import pt.isel.ls.services.session.*
 import kotlin.random.Random
 
@@ -14,7 +15,7 @@ fun generateNameAndEmail() : Pair<String,String> {
     return name to email
 }
 
-fun generateGameInfo() : GameInfo {
+fun generateGameDetails() : GameDetails {
     val name = generateName()
     val developer = generateName()
     val genresCount = Random.nextInt(1,3)
@@ -23,7 +24,7 @@ fun generateGameInfo() : GameInfo {
     repeat(genresCount) {
         genresSet.add(GENRES.random())
     }
-    return GameInfo(name, developer, genresSet.toList())
+    return GameDetails(name, developer, genresSet.toList())
 }
 
 fun generateName() : String =

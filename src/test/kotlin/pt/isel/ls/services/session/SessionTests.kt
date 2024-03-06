@@ -7,16 +7,14 @@ import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.repo.mem.MemSessionRepo
 import pt.isel.ls.services.SessionServices
 import pt.isel.ls.utils.INITIAL_GAME_ID
-import pt.isel.ls.utils.generateGameInfo
+import pt.isel.ls.utils.generateGameDetails
 import pt.isel.ls.utils.generateNameAndEmail
-import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
-data class GameInfo(val name : String, val developer : String, val genres : List<String>)
 
 class SessionTests {
     private val pRepo = MemPlayersRepo()
@@ -31,8 +29,8 @@ class SessionTests {
             .forEach { pRepo.createPlayer(it.first, it.second) }
 
         (0 until gameCount)
-            .map { generateGameInfo() }
-            .forEach { gRepo.insert(it.name, it.developer, it.genres) }
+            .map { generateGameDetails() }
+            .forEach { gRepo.insert(it.name, it.dev, it.genres) }
 
     }
 
