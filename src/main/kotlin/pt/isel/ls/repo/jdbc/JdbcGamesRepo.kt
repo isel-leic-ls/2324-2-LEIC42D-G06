@@ -71,4 +71,8 @@ class JdbcGamesRepo(private val connection: Connection) : GamesRepo {
 
         return games*/
     }
+
+    override fun checkGameExists(gid: Int): Boolean {
+        TODO("Not yet implemented")
+    }
 }

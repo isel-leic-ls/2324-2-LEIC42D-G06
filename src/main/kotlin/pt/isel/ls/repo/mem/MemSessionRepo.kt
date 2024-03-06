@@ -4,6 +4,7 @@ import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.State
 import pt.isel.ls.repo.Exceptions
 import pt.isel.ls.repo.interfaces.SessionRepo
+import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
@@ -13,7 +14,7 @@ class MemSessionRepo : SessionRepo {
     private val sessions = ConcurrentLinkedQueue<Session>()
     private val currentId = AtomicInteger(1)
 
-    override fun createSession(pid: Int, gid: Int, capacity: Int, startDate: Date): Int {
+    override fun createSession(pid: Int, gid: Int, capacity: Int, startDate: LocalDateTime): Int {
         val id = currentId.getAndIncrement()
         val session = Session(id, capacity, startDate, gid, State.OPEN, listOf(pid))
         sessions.add(session)
@@ -35,7 +36,7 @@ class MemSessionRepo : SessionRepo {
 
     override fun getListOfSessions(
         gid: Int,
-        date: Date?,
+        date: LocalDateTime?,
         state: State?,
         pid: Int?,
         skip: Int,
@@ -47,4 +48,8 @@ class MemSessionRepo : SessionRepo {
             state?.let { s -> it.state == s } ?: true &&
             pid?.let { p -> it.players.contains(p) } ?: true
         }.drop(skip).take(limit)
+
+    override fun checkSessionExists(sid: Int): Boolean =
+        sessions.any { it.id == sid }
+
 }

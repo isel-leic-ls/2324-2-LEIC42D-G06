@@ -23,4 +23,6 @@ interface GamesRepo {
         limit: Int = LIMIT_DEFAULT,
         skip: Int = SKIP_DEFAULT
     ): List<Game>
+
+    fun checkGameExists(gid : Int) : Boolean
 }

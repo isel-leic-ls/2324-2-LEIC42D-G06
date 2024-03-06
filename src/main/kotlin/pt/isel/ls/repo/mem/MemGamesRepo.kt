@@ -35,4 +35,8 @@ class MemGamesRepo : GamesRepo {
 
         return fullList.subList(firstIdx, lastIdx)
     }
+
+    override fun checkGameExists(gid: Int): Boolean {
+        return games.any { it.id == gid }
+    }
 }
