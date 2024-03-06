@@ -37,7 +37,7 @@ class JdbcGamesTests {
     @Test
     fun `test game insertion given a name, a developer and a list of genres`() {
         val repo = JdbcGamesRepo(dataSource.connection)
-        val returnedGameId = repo.insert(
+        /*val returnedGameId = */repo.insert(
             "Game Name - Insertion Test Jdbc", "Generic Game Developer", listOf("genre1", "genre2")
         )
         //println("\nGame ID returned: $returnedGameId\n")

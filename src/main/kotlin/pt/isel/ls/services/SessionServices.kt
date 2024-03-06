@@ -3,14 +3,13 @@ package pt.isel.ls.services
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.checkIfCanAdd
 import pt.isel.ls.domain.toState
-import pt.isel.ls.repo.Exceptions
+import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.interfaces.GamesRepo
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.repo.interfaces.SessionRepo
 import pt.isel.ls.utils.CAPACITY_LOWER_BOUND
 import pt.isel.ls.utils.CAPACITY_UPPER_BOUND
 import pt.isel.ls.utils.toDate
-import java.util.*
 
 class SessionServices(
     private val pRepo : PlayersRepo,
@@ -22,7 +21,7 @@ class SessionServices(
 
         val pid = pRepo.getPlayerIdByToken(token)
         if(!gRepo.checkGameExistsById(gid))
-            throw Exceptions.GameNotFound("Game $gid does not exist")
+            throw DomainException.GameNotFound("Game $gid does not exist")
 
         check(capacity in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND) {"Invalid capacity $capacity"}
 
@@ -36,7 +35,7 @@ class SessionServices(
         val pid = pRepo.getPlayerIdByToken(token)
 
         if(!sRepo.checkSessionExists(sid))
-            throw Exceptions.SessionNotFound
+            throw DomainException.SessionNotFound("Session $sid does not exist")
 
         val session = sRepo.getSession(sid)
         session.checkIfCanAdd()
@@ -49,7 +48,7 @@ class SessionServices(
 
     fun getListOfSessions(gid : Int, startDate : String?, state : String?, pid : Int?, skip : Int, limit : Int) : List<Session> {
         if(!gRepo.checkGameExistsById(gid))
-            throw Exceptions.GameNotFound("Game $gid does not exist")
+            throw DomainException.GameNotFound("Game $gid does not exist")
 
         val sState = state?.toState()
         val date = startDate?.toDate()

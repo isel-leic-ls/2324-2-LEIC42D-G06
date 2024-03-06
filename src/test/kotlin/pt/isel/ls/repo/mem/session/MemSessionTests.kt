@@ -3,12 +3,9 @@ package pt.isel.ls.repo.mem.session
 import org.junit.Test
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.State
-import pt.isel.ls.repo.Exceptions
+import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.mem.MemSessionRepo
-import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -138,7 +135,7 @@ class MemSessionTests {
         val sid = 10
 
         //act & assert
-        assertFailsWith<Exceptions.SessionNotFound> {
+        assertFailsWith<DomainException.SessionNotFound> {
             repo.getSession(sid)
         }
     }
@@ -151,7 +148,7 @@ class MemSessionTests {
         val pid = 1
 
         //act & assert
-        assertFailsWith<Exceptions.SessionNotFound> {
+        assertFailsWith<DomainException.SessionNotFound> {
             repo.addPlayerToSession(sid, pid)
         }
     }

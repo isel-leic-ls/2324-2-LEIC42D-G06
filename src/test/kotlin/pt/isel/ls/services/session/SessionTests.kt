@@ -1,7 +1,7 @@
 package pt.isel.ls.services.session
 
 import pt.isel.ls.domain.State
-import pt.isel.ls.repo.Exceptions
+import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.mem.MemGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.repo.mem.MemSessionRepo
@@ -67,7 +67,7 @@ class SessionTests {
         val fPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occured")
         val token = fPlayer.token
 
-        assertFailsWith<Exceptions.GameNotFound> {
+        assertFailsWith<DomainException.GameNotFound> {
             sServices.createSession(token, gid, capacity, startDate)
         }
 
@@ -143,7 +143,7 @@ class SessionTests {
         val fPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occured")
         val token = fPlayer.token
 
-        assertFailsWith<Exceptions.IllegalDate> {
+        assertFailsWith<DomainException.IllegalDate> {
             sServices.createSession(token, gid, capacity, startDate)
         }
 

@@ -1,7 +1,7 @@
 package pt.isel.ls.repo.mem
 
 import pt.isel.ls.domain.Player
-import pt.isel.ls.repo.Exceptions
+import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import java.util.UUID.randomUUID
 import java.util.concurrent.locks.ReentrantLock
@@ -42,7 +42,7 @@ class MemPlayersRepo : PlayersRepo {
 
     override fun getPlayerIdByToken(token: String): Int {
         monitor.withLock {
-            return players.find { it.token == token }?.id ?: throw Exceptions.PlayerNotFound("Player with token $token does not exist")
+            return players.find { it.token == token }?.id ?: throw DomainException.PlayerNotFound("Player with token $token does not exist")
         }
     }
 

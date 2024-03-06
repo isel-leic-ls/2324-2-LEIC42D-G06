@@ -1,7 +1,7 @@
 package pt.isel.ls.repo.mem
 
 import pt.isel.ls.domain.Game
-import pt.isel.ls.repo.Exceptions
+import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.interfaces.GamesRepo
 import pt.isel.ls.utils.INITIAL_GAME_ID
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -23,12 +23,13 @@ class MemGamesRepo : GamesRepo {
     }
 
     override fun getGameById(gid: Int): Game =
-        games.find { it.id == gid } ?: throw Exceptions.GameNotFound("Game not found with id $gid")
+        games.find { it.id == gid } ?: throw DomainException.GameNotFound("Game not found with id $gid")
 
     override fun getGameByName(name: String): Game =
-        games.find { it.name == name } ?: throw Exceptions.GameNotFound("Game not found with name $name")
+        games.find { it.name == name } ?: throw DomainException.GameNotFound("Game not found with name $name")
 
     override fun getListOfGames(genres: List<String>, developer: String, limit: Int, skip: Int): List<Game> {
+        //TODO this checks should be in the service
         check(skip >= 0) { "Skip must be a non-negative number" }
         check(limit > 0) { "Limit must be a positive number" }
 

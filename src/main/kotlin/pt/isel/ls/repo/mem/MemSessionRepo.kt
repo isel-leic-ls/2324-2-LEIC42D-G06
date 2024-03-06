@@ -2,10 +2,9 @@ package pt.isel.ls.repo.mem
 
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.State
-import pt.isel.ls.repo.Exceptions
+import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.interfaces.SessionRepo
 import java.time.LocalDateTime
-import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -28,11 +27,11 @@ class MemSessionRepo : SessionRepo {
             val nSession = session.copy(players = nPlayers, state = state)
             sessions.remove(session)
             sessions.add(nSession)
-        } ?: throw Exceptions.SessionNotFound
+        } ?: throw DomainException.SessionNotFound("Session not found with id $sid")
     }
 
     override fun getSession(sid: Int): Session =
-        sessions.find { it.id == sid } ?: throw Exceptions.SessionNotFound
+        sessions.find { it.id == sid } ?: throw DomainException.SessionNotFound("Session not found with id $sid")
 
     override fun getListOfSessions(
         gid: Int,
@@ -44,9 +43,9 @@ class MemSessionRepo : SessionRepo {
     ): List<Session> =
         sessions.filter {
             it.game == gid &&
-            date?.let { d -> it.date == d } ?: true &&
-            state?.let { s -> it.state == s } ?: true &&
-            pid?.let { p -> it.players.contains(p) } ?: true
+                    date?.let { d -> it.date == d } ?: true &&
+                    state?.let { s -> it.state == s } ?: true &&
+                    pid?.let { p -> it.players.contains(p) } ?: true
         }.drop(skip).take(limit)
 
     override fun checkSessionExists(sid: Int): Boolean =

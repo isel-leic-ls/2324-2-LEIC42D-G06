@@ -1,10 +1,8 @@
 package pt.isel.ls.utils
 
-import pt.isel.ls.repo.Exceptions
-import java.time.LocalDate
+import pt.isel.ls.repo.DomainException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 
 const val INITIAL_GAME_ID = 100
@@ -20,7 +18,7 @@ fun String.toDate() : LocalDateTime {
     val dateTime = LocalDateTime.parse(this, dateFormatter)
     val currentTime = LocalDateTime.now()
     if(dateTime.isBefore(currentTime))
-        throw Exceptions.IllegalDate("Date must be in the future")
+        throw DomainException.IllegalDate("Date must be in the future")
 
     return dateTime
 }
