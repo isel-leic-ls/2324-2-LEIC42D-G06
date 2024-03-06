@@ -12,6 +12,10 @@ class MemGamesRepo : GamesRepo {
     private val games = ConcurrentLinkedQueue<Game>()
     private val currentId = AtomicInteger(INITIAL_GAME_ID)
 
+    override fun checkGameExistsById(gid: Int): Boolean = games.any { it.id == gid }
+
+    override fun checkGameExistsByName(name: String): Boolean = games.any { it.name.uppercase() == name.uppercase() }
+
     override fun insert(name: String, developer: String, genres: List<String>): Int {
         val gameId = currentId.getAndIncrement()
         games.add(Game(gameId, name, developer, genres))
@@ -34,9 +38,5 @@ class MemGamesRepo : GamesRepo {
         val firstIdx = if (skip > fullListSize) fullListSize else skip
 
         return fullList.subList(firstIdx, lastIdx)
-    }
-
-    override fun checkGameExists(gid: Int): Boolean {
-        return games.any { it.id == gid }
     }
 }

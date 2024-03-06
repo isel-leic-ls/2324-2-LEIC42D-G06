@@ -21,7 +21,7 @@ class SessionServices(
     fun createSession(token : String, gid : Int, capacity : Int, startDate: String) : Int {
 
         val pid = pRepo.getPlayerIdByToken(token)
-        if(!gRepo.checkGameExists(gid))
+        if(!gRepo.checkGameExistsById(gid))
             throw Exceptions.GameNotFound("Game $gid does not exist")
 
         check(capacity in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND) {"Invalid capacity $capacity"}
@@ -48,7 +48,7 @@ class SessionServices(
         sRepo.getSession(sid)
 
     fun getListOfSessions(gid : Int, startDate : String?, state : String?, pid : Int?, skip : Int, limit : Int) : List<Session> {
-        if(!gRepo.checkGameExists(gid))
+        if(!gRepo.checkGameExistsById(gid))
             throw Exceptions.GameNotFound("Game $gid does not exist")
 
         val sState = state?.toState()

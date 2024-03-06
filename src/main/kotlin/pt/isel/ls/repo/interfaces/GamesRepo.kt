@@ -6,6 +6,12 @@ import pt.isel.ls.utils.SKIP_DEFAULT
 
 
 interface GamesRepo {
+    /** checks if a game with the given id exists */
+    fun checkGameExistsById(gid: Int): Boolean
+
+    /** checks if a game with the given name exists (case-insensitive) */
+    fun checkGameExistsByName(name: String): Boolean
+
     /** returns the id of the inserted game */
     fun insert(name: String, developer: String, genres: List<String>): Int
 
@@ -23,6 +29,4 @@ interface GamesRepo {
         limit: Int = LIMIT_DEFAULT,
         skip: Int = SKIP_DEFAULT
     ): List<Game>
-
-    fun checkGameExists(gid : Int) : Boolean
 }

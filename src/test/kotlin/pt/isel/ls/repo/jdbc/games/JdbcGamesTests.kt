@@ -30,6 +30,10 @@ class JdbcGamesTests {
             stmt.executeUpdate()
         }
 
+    //TODO add tests for checkGameExistsById
+
+    //TODO add tests for checkGameExistsByName
+
     @Test
     fun `test game insertion given a name, a developer and a list of genres`() {
         val repo = JdbcGamesRepo(dataSource.connection)

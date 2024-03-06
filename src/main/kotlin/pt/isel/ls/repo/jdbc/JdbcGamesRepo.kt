@@ -7,7 +7,14 @@ import java.sql.Statement
 
 
 class JdbcGamesRepo(private val connection: Connection) : GamesRepo {
-    /** returns the id of the inserted game */
+    override fun checkGameExistsById(gid: Int): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun checkGameExistsByName(name: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
     override fun insert(name: String, developer: String, genres: List<String>): Int {
         val genresArray = genres.toTypedArray()
         val stmt = connection.prepareStatement(
@@ -50,7 +57,6 @@ class JdbcGamesRepo(private val connection: Connection) : GamesRepo {
         )*/
     }
 
-    //do not use vars or mutable lists. I need immutability
     override fun getListOfGames(genres: List<String>, developer: String, limit: Int, skip: Int): List<Game> {
         TODO()
         /*val stmt = connection.prepareStatement("SELECT * FROM game WHERE dev = ? OR genres LIKE ?")
@@ -70,9 +76,5 @@ class JdbcGamesRepo(private val connection: Connection) : GamesRepo {
         }.toList()
 
         return games*/
-    }
-
-    override fun checkGameExists(gid: Int): Boolean {
-        TODO("Not yet implemented")
     }
 }

@@ -9,6 +9,10 @@ import kotlin.test.assertTrue
 
 
 class MemGamesTests {
+    //TODO: test checkGameExistsById
+
+    //TODO: test checkGameExistsByName
+
     @Test
     fun `insert two games`() {
         val repo = MemGamesRepo()
