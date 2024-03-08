@@ -11,20 +11,15 @@ class MemPlayersRepo : PlayersRepo {
     private val players = mutableListOf<Player>()
     private val monitor = ReentrantLock()
     override fun createPlayer(name: String, email: String): Int {
-        monitor.withLock {
+        return monitor.withLock {
             val token = randomUUID().toString()
-            //In case there's already a player registered
             val id = if (players.isNotEmpty()) {
-                val lastId = players.last().id
-                players.add(Player(lastId + 1, name, email, token))
-                lastId + 1
-            }
-            //In case there's no player registered
-            else {
-                players.add(Player(1, name, email, token))
+                players.last().id + 1
+            } else {
                 1
             }
-            return id
+            players.add(Player(id, name, email, token))
+            id
         }
     }
 
