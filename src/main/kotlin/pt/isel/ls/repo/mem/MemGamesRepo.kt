@@ -12,9 +12,11 @@ class MemGamesRepo : GamesRepo {
     private val games = ConcurrentLinkedQueue<Game>()
     private val currentId = AtomicInteger(INITIAL_GAME_ID)
 
-    override fun checkGameExistsById(gid: Int): Boolean = games.any { it.id == gid }
+    override fun checkGameExistsById(gid: Int): Boolean =
+        games.any { it.id == gid }
 
-    override fun checkGameExistsByName(name: String): Boolean = games.any { it.name.uppercase() == name.uppercase() }
+    override fun checkGameExistsByName(name: String): Boolean =
+        games.any { it.name.uppercase() == name.uppercase() }
 
     override fun insert(name: String, developer: String, genres: List<String>): Int {
         val gameId = currentId.getAndIncrement()
@@ -29,10 +31,6 @@ class MemGamesRepo : GamesRepo {
         games.find { it.name == name } ?: throw DomainException.GameNotFound("Game not found with name $name")
 
     override fun getListOfGames(genres: List<String>, developer: String, limit: Int, skip: Int): List<Game> {
-        //TODO this checks should be in the service
-        check(skip >= 0) { "Skip must be a non-negative number" }
-        check(limit > 0) { "Limit must be a positive number" }
-
         val fullList = games.filter { it.dev == developer || it.genres.any { g -> genres.contains(g) } }
         val fullListSize = fullList.size
         val lastIdx = if (skip + limit > fullListSize) fullListSize else skip + limit

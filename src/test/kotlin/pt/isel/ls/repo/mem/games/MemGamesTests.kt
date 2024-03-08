@@ -4,14 +4,31 @@ import pt.isel.ls.repo.mem.MemGamesRepo
 import pt.isel.ls.utils.INITIAL_GAME_ID
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFails
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 
 class MemGamesTests {
-    //TODO: test checkGameExistsById
+    @Test
+    fun `check game exists by id`() {
+        val repo = MemGamesRepo()
+        val gId = repo.insert("name", "developer", listOf("genre"))
 
-    //TODO: test checkGameExistsByName
+        assertEquals(INITIAL_GAME_ID, gId)
+        assertTrue { repo.checkGameExistsById(gId) }
+        assertFalse { repo.checkGameExistsById(gId - 1) }
+    }
+
+    @Test
+    fun `check game exists by name`() {
+        val repo = MemGamesRepo()
+        val gName = "name"
+        repo.insert(gName, "developer", listOf("genre"))
+
+        assertTrue { repo.checkGameExistsByName(gName) }
+        assertTrue { repo.checkGameExistsByName(gName.uppercase()) } //test case-insensitive
+        assertFalse { repo.checkGameExistsByName("anotherName") }
+    }
 
     @Test
     fun `insert two games`() {
@@ -74,31 +91,31 @@ class MemGamesTests {
         val gameId4 = repo.insert("name4", dev2, genresXYZ)
         val game4 = repo.getGameById(gameId4)
 
-        val list1 = repo.getListOfGames(genresABC, dev1)
+        val list1 = repo.getListOfGames(genresABC, dev1, 5, 0)
         assertTrue { list1.containsAll(listOf(game1, game2, game3)) && list1.size == 3 }
 
-        val list2 = repo.getListOfGames(genresXYZ, dev1)
+        val list2 = repo.getListOfGames(genresXYZ, dev1, 5, 0)
         assertTrue { list2.containsAll(listOf(game1, game2, game3, game4)) && list2.size == 4 }
 
-        val list3 = repo.getListOfGames(genresBCD, dev2)
+        val list3 = repo.getListOfGames(genresBCD, dev2, 5, 0)
         assertTrue { list3.containsAll(listOf(game1, game2, game4)) && list3.size == 3 }
 
-        val list4 = repo.getListOfGames(genresXYZ, dev2)
+        val list4 = repo.getListOfGames(genresXYZ, dev2, 5, 0)
         assertTrue { list4.containsAll(listOf(game3, game4)) && list4.size == 2 }
 
-        val list5 = repo.getListOfGames(listOf(genresABC[2]), dev1)
+        val list5 = repo.getListOfGames(listOf(genresABC[2]), dev1, 5, 0)
         assertTrue { list5.containsAll(listOf(game1, game2, game3)) && list5.size == 3 }
 
-        val list6 = repo.getListOfGames(listOf(genresXYZ[0]), dev2)
+        val list6 = repo.getListOfGames(listOf(genresXYZ[0]), dev2, 5, 0)
         assertTrue { list6.containsAll(listOf(game3, game4)) && list6.size == 2 }
 
-        val list7 = repo.getListOfGames(listOf("G"), "developer3")
+        val list7 = repo.getListOfGames(listOf("G"), "developer3", 5, 0)
         assertTrue { list7.isEmpty() }
 
-        val list8 = repo.getListOfGames(genresABC, "developer4")
+        val list8 = repo.getListOfGames(genresABC, "developer4", 5, 0)
         assertTrue { list8.containsAll(listOf(game1, game2)) && list8.size == 2 }
 
-        val list9 = repo.getListOfGames(listOf("H"), dev2)
+        val list9 = repo.getListOfGames(listOf("H"), dev2, 5, 0)
         assertTrue { list9.containsAll(listOf(game4)) && list9.size == 1 }
     }
 
@@ -153,14 +170,12 @@ class MemGamesTests {
             )
         }
 
-        val list4 = repo.getListOfGames(genresABC, dev, 3, 9) //limit is 3 but there is only one game left
+        val list4 = repo.getListOfGames(genresABC, dev, 3, 9)
+        //limit is 3 but there is only one game left
         assertTrue { list4.size == 1 && list4.contains(repo.getGameById(gameId10)) }
 
-        val list5 = repo.getListOfGames(genresABC, dev, 3, 10) //skip is 10 but there are no games left
+        val list5 = repo.getListOfGames(genresABC, dev, 3, 10)
+        //skip is 10 but there are no games left
         assertTrue { list5.isEmpty() }
-
-        assertFails { repo.getListOfGames(genresABC, dev, 0, 0) } //limit must be a positive number
-
-        assertFails { repo.getListOfGames(genresABC, dev, 3, -1) } //skip must be a non-negative number
     }
 }

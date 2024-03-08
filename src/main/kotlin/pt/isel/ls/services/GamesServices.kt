@@ -1,7 +1,10 @@
 package pt.isel.ls.services
 
+import pt.isel.ls.domain.Game
 import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.interfaces.GamesRepo
+import pt.isel.ls.utils.LIMIT_DEFAULT
+import pt.isel.ls.utils.SKIP_DEFAULT
 
 
 class GamesServices(private val gRepo: GamesRepo) {
@@ -21,6 +24,12 @@ class GamesServices(private val gRepo: GamesRepo) {
 
     fun getDetailsOfGameByName(name: String) = gRepo.getGameByName(name)
 
-    fun getListOfGames(genres: List<String>, developer: String, skip: Int, limit: Int) =
-        gRepo.getListOfGames(genres, developer, skip, limit)
+    fun getListOfGames(
+        genres: List<String>, developer: String, limit: Int = LIMIT_DEFAULT, skip: Int = SKIP_DEFAULT
+    ): List<Game> {
+        check(limit > 0) { "Limit must be a positive number" }
+        check(skip >= 0) { "Skip must be a non-negative number" }
+
+        return gRepo.getListOfGames(genres, developer, limit, skip)
+    }
 }

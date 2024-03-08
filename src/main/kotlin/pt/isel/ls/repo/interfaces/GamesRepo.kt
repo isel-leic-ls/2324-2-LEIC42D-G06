@@ -1,8 +1,6 @@
 package pt.isel.ls.repo.interfaces
 
 import pt.isel.ls.domain.Game
-import pt.isel.ls.utils.LIMIT_DEFAULT
-import pt.isel.ls.utils.SKIP_DEFAULT
 
 
 interface GamesRepo {
@@ -23,10 +21,5 @@ interface GamesRepo {
 
     /** get a list made by the list of games of given genre(s) plus the list of games of the given developer;
      *  this list is limited by the limit parameter and skips the first skip games */
-    fun getListOfGames(
-        genres: List<String>,
-        developer: String,
-        limit: Int = LIMIT_DEFAULT,
-        skip: Int = SKIP_DEFAULT
-    ): List<Game>
+    fun getListOfGames(genres: List<String>, developer: String, limit: Int, skip: Int): List<Game>
 }
