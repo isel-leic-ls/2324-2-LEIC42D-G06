@@ -11,6 +11,7 @@ const val LIMIT_DEFAULT = 10
 const val CAPACITY_LOWER_BOUND = 2
 const val CAPACITY_UPPER_BOUND = 10
 const val DATE_PATTERN = "yyyy-MM-dd HH:mm:ss"
+const val TOKEN_LENGTH = 36
 
 val dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN)
 

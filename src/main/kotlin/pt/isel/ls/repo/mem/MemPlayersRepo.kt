@@ -3,16 +3,15 @@ package pt.isel.ls.repo.mem
 import pt.isel.ls.domain.Player
 import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.interfaces.PlayersRepo
-import java.util.UUID.randomUUID
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
 class MemPlayersRepo : PlayersRepo {
     private val players = mutableListOf<Player>()
     private val monitor = ReentrantLock()
-    override fun createPlayer(name: String, email: String): Int {
+    override fun createPlayer(name: String, email: String, token: String): Int {
         return monitor.withLock {
-            val token = randomUUID().toString()
+
             val id = if (players.isNotEmpty()) {
                 players.last().id + 1
             } else {
@@ -29,15 +28,15 @@ class MemPlayersRepo : PlayersRepo {
         }
     }
 
-    override fun getPlayerToken(pid: Int): String? {
+    /*override fun getPlayerToken(pid: Int): String? {
         monitor.withLock {
             return findPlayerId(pid)?.token
         }
-    }
+    }*/
 
-    override fun getPlayerIdByToken(token: String): Int {
+    override fun getPlayerIdByToken(token: String): Int? {
         monitor.withLock {
-            return players.find { it.token == token }?.id ?: throw DomainException.PlayerNotFound("Player with token $token does not exist")
+            return players.find { it.token == token }?.id
         }
     }
 
