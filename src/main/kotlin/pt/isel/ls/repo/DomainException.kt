@@ -8,6 +8,11 @@ sealed class DomainException : Exception() {
 
     class GameAlreadyExists(message: String) : Exception(message)
 
+    class SessionClosed(message: String) : Exception(message)
+
+    class PlayerAlreadyInSession(message: String) : Exception(message)
+
+
     class BadRequestCreateGame(message: String) : Exception(message)
 
     class PlayerNotFound(message: String) : Exception(message)

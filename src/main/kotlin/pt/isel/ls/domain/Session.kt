@@ -1,27 +1,14 @@
 package pt.isel.ls.domain
 
-import java.time.Duration
-import java.time.Instant
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.*
 
-enum class State {
-
-    OPEN, CLOSED;
-    override fun toString(): String = if(this == OPEN) "OPEN" else "CLOSED"
+fun String.isValidState() = this.uppercase() == "OPEN" || this.uppercase() == "CLOSED"
+fun String.toState() = this.uppercase() == "CLOSED"
+data class Session(val id: Int, val capacity: Int, val date: LocalDateTime, val game: Int, val closed : Boolean, val players: List<Int>) {
+    fun addPlayer(player : Int) = run {
+        copy(players = players + player, closed = players.size + 1 == capacity)
+    }
 }
 
-fun String.toState() = when(this.uppercase()) {
-    "OPEN" -> State.OPEN
-    "CLOSED" -> State.CLOSED
-    else -> error("State $this is not valid")
-}
-data class Session(val id: Int, val capacity: Int, val date: LocalDateTime, val game: Int, val state : State, val players: List<Int>)
-
-fun Session.checkIfCanAdd() = state != State.CLOSED &&
-        !Duration.between(date, LocalDateTime.ofInstant(Instant.now(), ZoneId.systemDefault())).isNegative
-
-
-
-
+fun Session.checkIfSessionClosed() = closed
+fun Session.checkPlayerInSession(player : Int) = players.contains(player)

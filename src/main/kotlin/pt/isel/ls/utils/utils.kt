@@ -11,15 +11,13 @@ const val LIMIT_DEFAULT = 10
 const val CAPACITY_LOWER_BOUND = 2
 const val CAPACITY_UPPER_BOUND = 10
 const val DATE_PATTERN = "yyyy-MM-dd HH:mm:ss"
+val DATE_REGEX = Regex("^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}):([0-9]{2}):([0-9]{2})\$")
 const val TOKEN_LENGTH = 36
 
 val dateFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN)
 
-fun String.toDate() : LocalDateTime {
-    val dateTime = LocalDateTime.parse(this, dateFormatter)
-    val currentTime = LocalDateTime.now()
-    if(dateTime.isBefore(currentTime))
-        throw DomainException.IllegalDate("Date must be in the future")
+fun String.isDateWellFormatted() =
+    DATE_REGEX.matches(this)
 
-    return dateTime
-}
+fun String.toDate() : LocalDateTime =
+    LocalDateTime.parse(this, dateFormatter)

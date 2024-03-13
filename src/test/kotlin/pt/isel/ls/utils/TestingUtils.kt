@@ -2,6 +2,7 @@ package pt.isel.ls.utils
 
 import pt.isel.ls.domain.GameDetails
 import pt.isel.ls.services.session.*
+import java.util.UUID
 import kotlin.random.Random
 
 const val ALPHABET = "abcdefghijklmnopqrstuvwxyz"
@@ -9,10 +10,12 @@ val DOMAINS = listOf("@gmail.com", "@hotmail.com","@outlook.com")
 val GENRES = listOf("Action", "Adventure", "RPG")
 const val NAME_LENGTH = 10
 
-fun generateNameAndEmail() : Pair<String,String> {
+data class PlayerDetails(val name : String, val email : String, val token : String)
+
+fun generatePlayerDetails() : PlayerDetails {
     val name = generateName()
     val email = "$name${DOMAINS.random()}"
-    return name to email
+    return PlayerDetails(name, email, UUID.randomUUID().toString())
 }
 
 fun generateGameDetails() : GameDetails {

@@ -1,9 +1,10 @@
 package pt.isel.ls.repo.mem
 
+import SessionRepo
 import pt.isel.ls.domain.Session
-import pt.isel.ls.domain.State
+import pt.isel.ls.domain.SessionDTO
+import pt.isel.ls.domain.toSession
 import pt.isel.ls.repo.DomainException
-import pt.isel.ls.repo.interfaces.SessionRepo
 import java.time.LocalDateTime
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
@@ -13,18 +14,16 @@ class MemSessionRepo : SessionRepo {
     private val sessions = ConcurrentLinkedQueue<Session>()
     private val currentId = AtomicInteger(1)
 
-    override fun createSession(pid: Int, gid: Int, capacity: Int, startDate: LocalDateTime): Int {
+    override fun createSession(sessionDTO: SessionDTO): Int {
         val id = currentId.getAndIncrement()
-        val session = Session(id, capacity, startDate, gid, State.OPEN, listOf(pid))
+        val session = sessionDTO.toSession(id)
         sessions.add(session)
         return id
     }
 
     override fun addPlayerToSession(sid: Int, player: Int) {
         sessions.find { it.id == sid }?.let { session ->
-            val nPlayers = session.players + player
-            val state = if (nPlayers.size == session.capacity) State.CLOSED else session.state
-            val nSession = session.copy(players = nPlayers, state = state)
+            val nSession = session.addPlayer(player)
             sessions.remove(session)
             sessions.add(nSession)
         } ?: throw DomainException.SessionNotFound("Session not found with id $sid")
@@ -36,16 +35,16 @@ class MemSessionRepo : SessionRepo {
     override fun getListOfSessions(
         gid: Int,
         date: LocalDateTime?,
-        state: State?,
+        state: Boolean?,
         pid: Int?,
         skip: Int,
         limit: Int
     ): List<Session> =
         sessions.filter {
             it.game == gid &&
-                    date?.let { d -> it.date == d } ?: true &&
-                    state?.let { s -> it.state == s } ?: true &&
-                    pid?.let { p -> it.players.contains(p) } ?: true
+            date?.let { d -> it.date == d } ?: true &&
+            state?.let { s -> it.closed == s } ?: true &&
+            pid?.let { p -> it.players.contains(p) } ?: true
         }.drop(skip).take(limit)
 
     override fun checkSessionExists(sid: Int): Boolean =

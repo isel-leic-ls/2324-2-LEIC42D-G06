@@ -2,12 +2,11 @@ package pt.isel.ls.repo.mem.session
 
 import org.junit.Test
 import pt.isel.ls.domain.Session
-import pt.isel.ls.domain.State
+import pt.isel.ls.domain.createSessionDTO
 import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.mem.MemSessionRepo
 import java.time.LocalDateTime
 import java.util.concurrent.ConcurrentLinkedQueue
-import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
@@ -20,11 +19,12 @@ class MemSessionTests {
         val repo = MemSessionRepo()
         val pid = 1
         val gid = 1
-        val date = LocalDateTime.now()
+        val date = LocalDateTime.now().plusDays(1)
         val capacity = 5
 
         //act
-        val sid = repo.createSession(pid, gid, capacity, date)
+        val sessionDTO = createSessionDTO(capacity, date, gid, listOf(pid))
+        val sid = repo.createSession(sessionDTO)
 
         //assert
         assertTrue(sid > 0)
@@ -36,8 +36,7 @@ class MemSessionTests {
         assertTrue(
             session.capacity == capacity &&
                     session.date == date && session.game == gid &&
-                    session.players.size == 1 && session.players.contains(pid) &&
-                    session.state == State.OPEN
+                    session.players.size == 1 && session.players.contains(pid) && !session.closed
         )
     }
 
@@ -48,8 +47,9 @@ class MemSessionTests {
         val players = listOf(1, 2)
         val gid = 1
         val capacity = 5
-        val date = LocalDateTime.now()
-        val sid = repo.createSession(players[0], gid, capacity, date)
+        val date = LocalDateTime.now().plusDays(1)
+        val sessionDTO = createSessionDTO(capacity, date, gid, listOf(players[0]))
+        val sid = repo.createSession(sessionDTO)
         val pid = players[1]
 
         //act
@@ -67,15 +67,16 @@ class MemSessionTests {
         val players = listOf(1, 2)
         val gid = 1
         val capacity = 2
-        val date = LocalDateTime.now()
-        val sid = repo.createSession(players[0], gid, capacity, date)
+        val date = LocalDateTime.now().plusDays(1)
+        val sessionDTO = createSessionDTO(capacity, date, gid, listOf(players[0]))
+        val sid = repo.createSession(sessionDTO)
 
         //act
         repo.addPlayerToSession(sid, players[1])
         val session = repo.getSession(sid)
 
         //assert
-        assertEquals(session.state, State.CLOSED)
+        assertTrue(session.closed)
     }
 
     @Test
@@ -87,9 +88,10 @@ class MemSessionTests {
         val capacity = 5
         val skip = 0
         val limit = Int.MAX_VALUE
-        val date = LocalDateTime.now()
-        val sid = repo.createSession(players[0], gid, capacity, date)
-        val sid2 = repo.createSession(players[1], gid, capacity, date)
+        val date = LocalDateTime.now().plusDays(1)
+
+        val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
+        val sid2 = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[1])))
 
         //act
         val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
@@ -110,9 +112,9 @@ class MemSessionTests {
         val sessionCount = 5
         val skip = 0
         val limit = Int.MAX_VALUE
-        val date = LocalDateTime.now()
+        val date = LocalDateTime.now().plusDays(1)
         val sids = (0..sessionCount)
-            .map { repo.createSession(players[it % 2], games[it % 2], capacity, date) }
+            .map { repo.createSession(createSessionDTO(capacity, date, games[it % 2], listOf(players[it % 2]))) }
 
         //act
         val sessions = repo.getListOfSessions(games[0], null, null, players[0], skip, limit)
@@ -177,8 +179,9 @@ class MemSessionTests {
         val total = 5
         val gid = 1
         val capacity = 5
-        val date = LocalDateTime.now()
-        val sids = (0..total).map { repo.createSession(it + 1, gid, capacity, date) }
+        val date = LocalDateTime.now().plusDays(1)
+
+        val sids = (0..total).map { repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1))) }
 
         //act
         val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
@@ -197,8 +200,8 @@ class MemSessionTests {
         val total = 5
         val gid = 1
         val capacity = 5
-        val date = LocalDateTime.now()
-        val sids = (0..total).map { repo.createSession(it + 1, gid, capacity, date) }
+        val date = LocalDateTime.now().plusDays(1)
+        val sids = (0..total).map { repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1))) }
 
         //act
         val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
@@ -217,8 +220,8 @@ class MemSessionTests {
         val skip = Int.MAX_VALUE
         val limit = Int.MAX_VALUE
         val pid = 1
-        val date = LocalDateTime.now()
-        repo.createSession(pid, gid, capacity, date)
+        val date = LocalDateTime.now().plusDays(1)
+        repo.createSession(createSessionDTO(capacity, date, gid, listOf(pid)))
 
         //act
         val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
@@ -236,8 +239,8 @@ class MemSessionTests {
         val skip = 0
         val limit = 0
         val pid = 1
-        val date = LocalDateTime.now()
-        repo.createSession(pid, gid, capacity, date)
+        val date = LocalDateTime.now().plusDays(1)
+        repo.createSession(createSessionDTO(capacity, date, gid, listOf(pid)))
 
         //act
         val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
@@ -255,9 +258,9 @@ class MemSessionTests {
         val total = 5
         val skip = 2
         val limit = skip
-        val date = LocalDateTime.now()
+        val date = LocalDateTime.now().plusDays(1)
 
-        val sids = (0..total).map { repo.createSession(it + 1, gid, capacity, date) }
+        val sids = (0..total).map { repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1))) }
 
         //act
         val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
@@ -275,20 +278,20 @@ class MemSessionTests {
         val skip = 0
         val limit = Int.MAX_VALUE
         val capacity = 2
-        val date = LocalDateTime.now()
-        val sid = repo.createSession(players[0], gid, capacity, date)
-        val sid2 = repo.createSession(players[1], gid, capacity, date)
+        val date = LocalDateTime.now().plusDays(1)
+        val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
+        val sid2 = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[1])))
         repo.addPlayerToSession(sid, players[1])
         repo.addPlayerToSession(sid2, players[0])
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, State.CLOSED, null, skip, limit)
+        val sessions = repo.getListOfSessions(gid, null, true , null, skip, limit)
         val session1 = repo.getSession(sid)
         val session2 = repo.getSession(sid2)
 
         //assert
         assertTrue(sessions.size == 2 &&
-                sessions.all { it.state == State.CLOSED } &&
+                sessions.all { it.closed } &&
                 sessions.containsAll(listOf(session1, session2))
         )
     }
@@ -299,7 +302,7 @@ class MemSessionTests {
         val repo = MemSessionRepo()
         val threadCount = 20
         val gid = 1
-        val startDate = LocalDateTime.now()
+        val startDate = LocalDateTime.now().plusDays(1)
         val capacity = 5
         val sids = ConcurrentLinkedQueue<Int>()
         val sessions = ConcurrentLinkedQueue<Session>()
@@ -307,7 +310,7 @@ class MemSessionTests {
         //act
         val threads = (0 until threadCount).map {
             val t = Thread {
-                val sid = repo.createSession(it + 1, gid, capacity, startDate)
+                val sid = repo.createSession(createSessionDTO(capacity, startDate, gid, listOf(it + 1)))
                 sids.add(sid)
                 val session = repo.getSession(sid)
                 sessions.add(session)
@@ -320,7 +323,7 @@ class MemSessionTests {
 
         //assert
         assertTrue(sessions.size == threadCount &&
-                sessions.all { it.capacity == capacity && it.date == startDate && it.game == gid && it.state == State.OPEN }
+                sessions.all { it.capacity == capacity && it.date == startDate && it.game == gid && !it.closed }
         )
         // check that every session id is in the range [1, threadCount] and that there are no duplicates
         assertTrue(sids.all { it in 1..threadCount } && sids.groupingBy { it }.eachCount().all { it.value == 1 })
