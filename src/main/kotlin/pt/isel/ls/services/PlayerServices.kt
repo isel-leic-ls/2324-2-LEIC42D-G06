@@ -1,6 +1,5 @@
 package pt.isel.ls.services
 
-import pt.isel.ls.domain.Player
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.CAPACITY_LOWER_BOUND
 import pt.isel.ls.utils.CAPACITY_UPPER_BOUND

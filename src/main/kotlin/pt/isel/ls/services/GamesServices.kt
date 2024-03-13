@@ -20,7 +20,7 @@ class GamesServices(private val gRepo: GamesRepo) {
         return gRepo.insert(name, developer, genres)
     }
 
-    fun getDetailsOfGameById(gid: Int) = gRepo.getGameById(gid)
+    fun getDetailsOfGameById(gid : Int) = gRepo.getGameById(gid)
 
     fun getDetailsOfGameByName(name: String) = gRepo.getGameByName(name)
 

@@ -1,7 +1,6 @@
 package pt.isel.ls.repo.mem
 
 import pt.isel.ls.domain.Player
-import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -11,7 +10,6 @@ class MemPlayersRepo : PlayersRepo {
     private val monitor = ReentrantLock()
     override fun createPlayer(name: String, email: String, token: String): Int {
         return monitor.withLock {
-
             val id = if (players.isNotEmpty()) {
                 players.last().id + 1
             } else {

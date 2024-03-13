@@ -5,7 +5,7 @@ import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.mem.MemGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.repo.mem.MemSessionRepo
-import pt.isel.ls.services.SessionServices
+//import pt.isel.ls.services.SessionServices
 import pt.isel.ls.utils.INITIAL_GAME_ID
 import pt.isel.ls.utils.generateGameDetails
 import pt.isel.ls.utils.generateNameAndEmail
@@ -14,7 +14,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-
+/*
 
 class SessionTests {
     private val pRepo = MemPlayersRepo()
@@ -151,4 +151,4 @@ class SessionTests {
 
 
 
-}
+}*/

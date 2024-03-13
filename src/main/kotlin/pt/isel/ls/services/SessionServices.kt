@@ -1,5 +1,5 @@
 package pt.isel.ls.services
-
+/*
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.checkIfCanAdd
 import pt.isel.ls.domain.toState
@@ -60,4 +60,4 @@ class SessionServices(
 
     }
 
-}
+}*/
