@@ -1,5 +1,6 @@
 package pt.isel.ls.services
 
+import pt.isel.ls.domain.Player
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.CAPACITY_LOWER_BOUND
 import pt.isel.ls.utils.CAPACITY_UPPER_BOUND
@@ -25,7 +26,10 @@ class PlayerServices(
         return pRepo.createPlayer(name, email, token)
     }
 
-    fun getPlayer(pid: Int) = pRepo.getPlayer(pid)
+    fun getPlayer(pid: Int): Player? {
+        require(pid > 0) { "Player id must be greater than 0" }
+        return pRepo.getPlayer(pid)
+    }
 
     fun getPlayerIdByToken(token: String): Int? {
         require(token.isNotEmpty()) { "Token cannot be empty" }
