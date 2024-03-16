@@ -1,7 +1,14 @@
 package pt.isel.ls
 
+import org.http4k.core.Method
+import org.junit.runner.Request
 import org.postgresql.ds.PGSimpleDataSource
+import pt.isel.ls.api.SessionRoutes
 import pt.isel.ls.phase0.Student
+import pt.isel.ls.repo.mem.MemGamesRepo
+import pt.isel.ls.repo.mem.MemPlayersRepo
+import pt.isel.ls.repo.mem.MemSessionRepo
+import pt.isel.ls.services.Services
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
