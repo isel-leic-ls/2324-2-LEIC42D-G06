@@ -5,7 +5,6 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Request
 import org.http4k.core.Response
 
-
 inline fun <reified T> Request.fromJson(): T {
     try {
         return Json.decodeFromString(bodyString())
