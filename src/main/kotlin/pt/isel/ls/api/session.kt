@@ -24,7 +24,7 @@ class SessionRoutes(private val services : SessionServices) {
         )
 
 
-    fun createSession(request: Request): Response =
+    private fun createSession(request: Request): Response =
         exceptionAwareScope {
             val token = request.getAuthorizationToken()
             val inputModel = request.fromJson<CreateSessionInputModel>()
@@ -40,15 +40,15 @@ class SessionRoutes(private val services : SessionServices) {
             Response(Status.OK).toJson(SessionRetrievalOutputModel(session))
         }
 
-    fun addPlayerToSession(request: Request) : Response =
+    private fun addPlayerToSession(request: Request) : Response =
         exceptionAwareScope {
             val token = request.getAuthorizationToken()
             val sid = request.getSessionID()
             services.addPlayerToSession(token, sid)
-            Response(Status.OK).toJson(Unit)
+            Response(Status.NO_CONTENT)// STATUS 204
         }
 
-    fun getListOfSessions(request: Request) : Response =
+    private fun getListOfSessions(request: Request) : Response =
         exceptionAwareScope {
             val inputModel = request.fromJson<SessionListRetrievalInputModel>()
             val (skip, limit) = request.getSkipAndLimit()
