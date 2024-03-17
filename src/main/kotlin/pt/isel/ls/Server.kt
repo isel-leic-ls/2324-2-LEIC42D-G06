@@ -8,6 +8,7 @@ import pt.isel.ls.repo.mem.MemGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.repo.mem.MemSessionRepo
 import pt.isel.ls.services.Services
+import pt.isel.ls.utils.FIRST_PLAYER_ID
 import java.util.*
 
 
@@ -23,8 +24,8 @@ fun main() {
     // create some players
     playersRepo.createPlayer("joao", "joao@hotmail.com", UUID.randomUUID().toString())
     playersRepo.createPlayer("pedro", "pedro@gmail.com", UUID.randomUUID().toString())
-    println(playersRepo.getPlayer(1))
-    println(playersRepo.getPlayer(2))
+    println(playersRepo.getPlayer(FIRST_PLAYER_ID))
+    println(playersRepo.getPlayer(FIRST_PLAYER_ID + 1))
 
     // create some games
     gamesRepo.insert("FIFA", "EA", listOf("Sports", "Football"))

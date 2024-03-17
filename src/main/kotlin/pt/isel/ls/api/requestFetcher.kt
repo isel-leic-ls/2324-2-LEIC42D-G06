@@ -9,9 +9,9 @@ import pt.isel.ls.utils.SKIP_DEFAULT
 const val AUTHORIZATION_HEADER = "Authorization"
 const val BEARER = "Bearer "
 const val gameId = "gid"
-const val session_id = "sid"
-const val skip = "skip"
-const val limit = "limit"
+const val SESSION_ID = "sid"
+const val SKIP = "skip"
+const val LIMIT = "limit"
 
 fun Request.getGameId(): Int {
     return path(gameId)?.toInt() ?: throw IllegalArgumentException("Game ID not found")
@@ -22,15 +22,15 @@ fun Request.getGameName(): String {
 }
 
 fun Request.getSessionID() : Int {
-    return path(session_id)?.toInt() ?: throw IllegalArgumentException("Session ID not found")
+    return path(SESSION_ID)?.toInt() ?: throw IllegalArgumentException("Session ID not found")
 }
 
 fun Request.getSkipAndLimit() : Pair<Int, Int> {
-    val skip = query(skip)
+    val skip = query(SKIP)
         ?.let{ it.toIntOrNull() ?: throw IllegalArgumentException("Invalid skip value") }
         ?: SKIP_DEFAULT
 
-    val limit = query(limit)
+    val limit = query(LIMIT)
         ?.let{ it.toIntOrNull() ?: throw IllegalArgumentException("Invalid limit value") }
         ?: LIMIT_DEFAULT
     return skip to limit

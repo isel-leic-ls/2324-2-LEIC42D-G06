@@ -36,6 +36,7 @@ class SessionRoutes(private val services : SessionServices) {
     fun getSession(request: Request): Response =
         exceptionAwareScope {
             val sid = request.getSessionID()
+            logger.debug("The session id in this request ${request.uri} is $sid")
             val session = services.getSession(sid)
             Response(Status.OK).toJson(SessionRetrievalOutputModel(session))
         }

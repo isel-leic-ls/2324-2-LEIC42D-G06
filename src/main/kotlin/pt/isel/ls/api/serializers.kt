@@ -5,7 +5,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializer
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import pt.isel.ls.utils.dateFormatter
+import pt.isel.ls.utils.DATE_FORMATTER
 import java.time.LocalDateTime
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -13,10 +13,10 @@ import java.time.LocalDateTime
 object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
 
     override fun serialize(encoder: Encoder, value: LocalDateTime) {
-        encoder.encodeString(value.format(dateFormatter))
+        encoder.encodeString(value.format(DATE_FORMATTER))
     }
 
     override fun deserialize(decoder: Decoder): LocalDateTime {
-        return LocalDateTime.parse(decoder.decodeString(), dateFormatter)
+        return LocalDateTime.parse(decoder.decodeString(), DATE_FORMATTER)
     }
 }

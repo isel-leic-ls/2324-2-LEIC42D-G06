@@ -9,5 +9,6 @@ val errors = mapOf(
     DomainException.SessionClosed::class to Status.BAD_REQUEST,
     DomainException.GameNotFound::class to Status.NOT_FOUND,
     DomainException.SessionNotFound::class to Status.NOT_FOUND,
-    IllegalArgumentException::class to Status.BAD_REQUEST
+    IllegalArgumentException::class to Status.BAD_REQUEST,
+    DomainException.IllegalDate::class to Status.BAD_REQUEST
 )
