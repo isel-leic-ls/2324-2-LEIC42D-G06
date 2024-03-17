@@ -1,4 +1,4 @@
-package pt.isel.ls.services.player
+package pt.isel.ls.services.mem.player
 
 import junit.framework.TestCase.assertEquals
 import org.junit.Test

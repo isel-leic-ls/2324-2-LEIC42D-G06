@@ -1,18 +1,29 @@
-package pt.isel.ls.services.games
+package pt.isel.ls.services.mem.games
 
 import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.mem.MemGamesRepo
+import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.GamesServices
 import pt.isel.ls.utils.INITIAL_GAME_ID
+import pt.isel.ls.utils.generatePlayerDetails
 import kotlin.test.*
 
 
 class ServiceGamesTests {
+    private val pRepo = MemPlayersRepo()
+
+    @BeforeTest
+    fun setup() {
+        generatePlayerDetails().let { (n, e, t) -> pRepo.createPlayer(n, e, t) }
+    }
+
     @Test
     fun `test createGame successfully`() {
-        val service = GamesServices(MemGamesRepo())
-        val gameId1 = service.createGame("CS", "valveDev", listOf("fps"))
-        val gameId2 = service.createGame("GTA V", "rockstarGamesDev", listOf("action", "adventure"))
+        val service = GamesServices(MemGamesRepo(), pRepo)
+        val foundPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occurred")
+        val token = foundPlayer.token
+        val gameId1 = service.createGame(token, "CS", "valveDev", listOf("fps"))
+        val gameId2 = service.createGame(token, "GTA V", "rockstarGamesDev", listOf("action", "adventure"))
 
         assertEquals(gameId1, INITIAL_GAME_ID)
         assertEquals(gameId2, INITIAL_GAME_ID + 1)
@@ -20,20 +31,25 @@ class ServiceGamesTests {
 
     @Test
     fun `test createGame creating a game with the same name (case-insensitive)`() {
-        val service = GamesServices(MemGamesRepo())
-        service.createGame("CS", "valveDev", listOf("fps"))
+        val service = GamesServices(MemGamesRepo(), pRepo)
+        val foundPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occurred")
+        val token = foundPlayer.token
+
+        service.createGame(token, "CS", "valveDev", listOf("fps"))
 
         val nameVariations = listOf("cs", "cS", "Cs", "CS") //case insensitive
         nameVariations.forEach {
             assertFailsWith<DomainException.GameAlreadyExists> {
-                service.createGame(it, "valveDev", listOf("fps"))
+                service.createGame(token, it, "valveDev", listOf("fps"))
             }
         }
     }
 
     @Test
     fun `test createGame creating a game with invalid data`() {
-        val service = GamesServices(MemGamesRepo())
+        val service = GamesServices(MemGamesRepo(), pRepo)
+        val foundPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occurred")
+        val token = foundPlayer.token
 
         val invalidData = listOf(
             Triple("", "valveDev", listOf("fps")),
@@ -43,19 +59,21 @@ class ServiceGamesTests {
         )
         invalidData.forEach {
             assertFailsWith<DomainException.BadRequestCreateGame> {
-                service.createGame(it.first, it.second, it.third)
+                service.createGame(token, it.first, it.second, it.third)
             }
         }
     }
 
     @Test
     fun `test getDetailsOfGameById and getDetailsOfGameByName`() {
-        val service = GamesServices(MemGamesRepo())
+        val service = GamesServices(MemGamesRepo(), pRepo)
+        val foundPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occurred")
+        val token = foundPlayer.token
         val gName = "CS"
         val gDev = "valveDev"
         val gGenres = listOf("fps", "tactical")
 
-        val gId = service.createGame(gName, gDev, gGenres)
+        val gId = service.createGame(token, gName, gDev, gGenres)
         val gameById = service.getDetailsOfGameById(gId)
         val gameByName = service.getDetailsOfGameByName(gName)
 
@@ -75,11 +93,13 @@ class ServiceGamesTests {
 
     @Test
     fun `test getListOfGames with and without limit and skip`() {
-        val service = GamesServices(MemGamesRepo())
-        val g1 = service.createGame("CS", "valveDev", listOf("fps", "tactical"))
-        val g2 = service.createGame("GTA V", "rockstarGamesDev", listOf("action", "adventure"))
-        val g3 = service.createGame("FIFA 20", "eaSportsDev", listOf("sports"))
-        val g4 = service.createGame("WWE 2K20", "eaSportsDev", listOf("sports"))
+        val service = GamesServices(MemGamesRepo(), pRepo)
+        val foundPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occurred")
+        val token = foundPlayer.token
+        val g1 = service.createGame(token, "CS", "valveDev", listOf("fps", "tactical"))
+        val g2 = service.createGame(token, "GTA V", "rockstarGamesDev", listOf("action", "adventure"))
+        val g3 = service.createGame(token, "FIFA 20", "eaSportsDev", listOf("sports"))
+        val g4 = service.createGame(token, "WWE 2K20", "eaSportsDev", listOf("sports"))
 
         val games1 = service.getListOfGames(listOf("fps", "tactical"), "valveDev")
         assertEquals(1, games1.size)

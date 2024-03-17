@@ -1,4 +1,4 @@
-package pt.isel.ls.services.session
+package pt.isel.ls.services.mem.session
 
 import pt.isel.ls.domain.createSessionDTO
 import pt.isel.ls.repo.DomainException
