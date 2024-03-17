@@ -6,7 +6,7 @@ import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.PlayerServices
 import kotlin.test.assertFailsWith
 
-class ServicePlayerTests {
+class ServiceMemPlayerTests {
 
     @Test
     fun `createPlayer should throw IllegalArgumentException when given name is empty`() {

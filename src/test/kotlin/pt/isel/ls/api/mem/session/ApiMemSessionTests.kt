@@ -22,7 +22,7 @@ import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class MemSessionTests {
+class ApiMemSessionTests {
     private val client = HttpClient.newBuilder().build()
 
     // initialize the repositories

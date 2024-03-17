@@ -5,7 +5,7 @@ import pt.isel.ls.repo.jdbc.JdbcGamesRepo
 import kotlin.test.*
 
 
-class JdbcGamesTests {
+class RepoJdbcGamesTests {
     private val dataSource = PGSimpleDataSource().apply {
         setUrl(System.getenv("JDBC_DATABASE_URL"))
     }

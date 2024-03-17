@@ -1,9 +1,9 @@
 package pt.isel.ls.utils
 
 import pt.isel.ls.domain.GameDetails
-import pt.isel.ls.services.session.*
-import java.util.UUID
+import java.util.*
 import kotlin.random.Random
+
 
 const val ALPHABET = "abcdefghijklmnopqrstuvwxyz"
 val DOMAINS = listOf("@gmail.com", "@hotmail.com","@outlook.com")

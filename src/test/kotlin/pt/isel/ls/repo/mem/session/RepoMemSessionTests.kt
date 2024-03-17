@@ -11,7 +11,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 
-class MemSessionTests {
+class RepoMemSessionTests {
     @Test
     fun `creating a session test`() {
 

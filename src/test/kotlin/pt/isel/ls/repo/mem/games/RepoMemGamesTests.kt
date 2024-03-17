@@ -8,7 +8,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 
-class MemGamesTests {
+class RepoMemGamesTests {
     @Test
     fun `check game exists by id`() {
         val repo = MemGamesRepo()

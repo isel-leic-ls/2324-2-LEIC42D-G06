@@ -9,7 +9,7 @@ import pt.isel.ls.utils.generatePlayerDetails
 import kotlin.test.*
 
 
-class ServiceGamesTests {
+class ServiceMemGamesTests {
     private val pRepo = MemPlayersRepo()
 
     @BeforeTest

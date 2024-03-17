@@ -7,7 +7,7 @@ import pt.isel.ls.repo.mem.MemPlayersRepo
 import kotlin.test.assertNotEquals
 
 
-class MemPlayerTests {
+class RepoMemPlayerTests {
 
 
     @Test
