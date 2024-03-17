@@ -36,8 +36,8 @@ fun Request.getSkipAndLimit() : Pair<Int, Int> {
     return skip to limit
 }
 
-fun Request.getAuthorizationToken() : String {
+fun Request.getAuthorizationToken(): String {
     val token = header(AUTHORIZATION_HEADER) ?: throw IllegalArgumentException("No Authorization header")
-    if(!token.startsWith(BEARER)) throw IllegalArgumentException("Invalid Authorization header")
-    return token.substring(7)
+    if (!token.startsWith(BEARER)) throw IllegalArgumentException("Invalid Authorization header")
+    return token.substring(BEARER.length)
 }

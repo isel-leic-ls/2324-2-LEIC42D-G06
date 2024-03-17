@@ -10,6 +10,7 @@ import pt.isel.ls.repo.mem.MemGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.repo.mem.MemSessionRepo
 import pt.isel.ls.services.Services
+import pt.isel.ls.utils.FIRST_PLAYER_ID
 import pt.isel.ls.utils.dateFormatter
 import java.net.URI
 import java.net.http.HttpClient
@@ -60,7 +61,7 @@ class ApiMemSessionTests {
         val gid = gamesRepo.getGameByName("FIFA").id
         val date = LocalDateTime.now().plusDays(1).format(dateFormatter)
         val capacity = 2
-        val fPlayer = playersRepo.getPlayer(1)
+        val fPlayer = playersRepo.getPlayer(FIRST_PLAYER_ID)
 
         val requestBody = """
         {

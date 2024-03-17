@@ -20,6 +20,6 @@ interface GamesRepo {
     fun getGameByName(name: String): Game
 
     /** get a list made by the list of games of given genre(s) plus the list of games of the given developer;
-     *  this list is limited by the limit parameter and skips the first skip games */
+     *  this list is limited by the limit parameter and skips the first skip games (case-insensitive) */
     fun getListOfGames(genres: List<String>, developer: String, limit: Int, skip: Int): List<Game>
 }

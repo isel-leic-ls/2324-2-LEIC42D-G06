@@ -30,7 +30,7 @@ class GamesRoutes(private val services: GamesServices) {
             val token = request.getAuthorizationToken()
             val inputModel = request.fromJson<GameInputModel>()
             val gId = services.createGame(token, inputModel.name, inputModel.developer, inputModel.genres)
-            Response(Status.CREATED).toJson(GameOutputModel(gId.toString()))
+            Response(Status.CREATED).toJson(GameOutputModel(gId))
         }
 
     private fun getGameDetailsById(request: Request): Response =

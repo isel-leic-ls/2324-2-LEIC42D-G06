@@ -1,7 +1,7 @@
 package pt.isel.ls.repo.mem.games
 
 import pt.isel.ls.repo.mem.MemGamesRepo
-import pt.isel.ls.utils.INITIAL_GAME_ID
+import pt.isel.ls.utils.FIRST_GAME_ID
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -14,7 +14,7 @@ class RepoMemGamesTests {
         val repo = MemGamesRepo()
         val gId = repo.insert("name", "developer", listOf("genre"))
 
-        assertEquals(INITIAL_GAME_ID, gId)
+        assertEquals(FIRST_GAME_ID, gId)
         assertTrue { repo.checkGameExistsById(gId) }
         assertFalse { repo.checkGameExistsById(gId - 1) }
     }
@@ -35,10 +35,10 @@ class RepoMemGamesTests {
         val repo = MemGamesRepo()
         val gid1 = repo.insert("name", "developer", listOf("genre"))
 
-        assertEquals(INITIAL_GAME_ID, gid1)
+        assertEquals(FIRST_GAME_ID, gid1)
 
         val gid2 = repo.insert("name", "developer", listOf("genre"))
-        assertEquals(INITIAL_GAME_ID + 1, gid2)
+        assertEquals(FIRST_GAME_ID + 1, gid2)
     }
 
     @Test

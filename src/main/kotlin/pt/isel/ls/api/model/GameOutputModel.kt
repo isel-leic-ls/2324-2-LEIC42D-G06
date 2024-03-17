@@ -4,4 +4,4 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class GameOutputModel(val gId: String)
+data class GameOutputModel(val gId: Int)

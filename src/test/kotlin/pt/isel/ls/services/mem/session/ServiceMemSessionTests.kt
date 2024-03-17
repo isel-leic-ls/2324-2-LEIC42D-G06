@@ -36,12 +36,12 @@ class ServiceMemSessionTests {
         //arrange
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
-        val gid = INITIAL_GAME_ID
+        val gid = FIRST_GAME_ID
         val capacity = 5
         val startDate = "2030-04-03 18:40:00"
 
         //act
-        val fPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occured")
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occured")
         val token = fPlayer.token
         val sid = sServices.createSession(token, gid, capacity, startDate)
         val session = sRepo.getSession(sid)
@@ -56,12 +56,12 @@ class ServiceMemSessionTests {
         //arrange
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
-        val gid = INITIAL_GAME_ID * 10
+        val gid = FIRST_GAME_ID * 10
         val capacity = 5
         val startDate = "2034-04-03 18:40:00"
 
         //act && assert
-        val fPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occured")
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occured")
         val token = fPlayer.token
 
         assertFailsWith<DomainException.GameNotFound> {
@@ -75,12 +75,12 @@ class ServiceMemSessionTests {
         //arrange
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
-        val gid = INITIAL_GAME_ID
+        val gid = FIRST_GAME_ID
         val capacity = 0
         val startDate = "2024-04-03 18:40:00"
 
         //act && assert
-        val fPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occured")
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occured")
         val token = fPlayer.token
 
         assertFailsWith<IllegalArgumentException> {
@@ -94,12 +94,12 @@ class ServiceMemSessionTests {
         //arrange
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
-        val gid = INITIAL_GAME_ID
+        val gid = FIRST_GAME_ID
         val capacity = 5
         val startDate = "2019-04-03 184000"
 
         //act && assert
-        val fPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occured")
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occured")
         val token = fPlayer.token
 
         assertFailsWith<DomainException.IllegalDate> {
@@ -113,12 +113,12 @@ class ServiceMemSessionTests {
         //arrange
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
-        val gid = INITIAL_GAME_ID
+        val gid = FIRST_GAME_ID
         val capacity = 5
         val startDate = "2019-04-03 18:40:00"
 
         //act && assert
-        val fPlayer = pRepo.getPlayer(1) ?: throw Exception("Error occured")
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occured")
         val token = fPlayer.token
 
         assertFailsWith<DomainException.IllegalDate> {
@@ -133,13 +133,13 @@ class ServiceMemSessionTests {
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
         val pid = 1
-        val gid = INITIAL_GAME_ID
+        val gid = FIRST_GAME_ID
         val capacity = 5
         val startDate = "2030-04-03 18:40:00"
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate.toDate(), gid, listOf(pid)))
 
         //act
-        val fPlayer = pRepo.getPlayer(2) ?: throw Exception("Error occured")
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID + 1) ?: throw Exception("Error occured")
         val token = fPlayer.token
 
         sServices.addPlayerToSession(token, sid)
@@ -154,8 +154,8 @@ class ServiceMemSessionTests {
         //arrange
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
-        val pid = 1
-        val gid = INITIAL_GAME_ID
+        val pid = FIRST_PLAYER_ID
+        val gid = FIRST_GAME_ID
         val capacity = 5
         val startDate = "2030-04-03 18:40:00"
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate.toDate(), gid, listOf(pid)))
@@ -175,15 +175,15 @@ class ServiceMemSessionTests {
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
         val pid = 1
-        val gid = INITIAL_GAME_ID
+        val gid = FIRST_GAME_ID
         val capacity = 2
         val startDate = "2030-04-03 18:40:00"
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate.toDate(), gid, listOf(pid)))
-        sRepo.addPlayerToSession(sid, 2)
+        sRepo.addPlayerToSession(sid, FIRST_PLAYER_ID + 1)
 
 
         //act
-        val fPlayer = pRepo.getPlayer(3) ?: throw Exception("Error occured")
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID + 2) ?: throw Exception("Error occured")
         val token = fPlayer.token
 
         assertFailsWith<DomainException.SessionClosed> {
@@ -197,7 +197,7 @@ class ServiceMemSessionTests {
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
         val pid = 1
-        val gid = INITIAL_GAME_ID
+        val gid = FIRST_GAME_ID
         val capacity = 5
         val startDate = "2030-04-03 18:40:00"
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate.toDate(), gid, listOf(pid)))
@@ -214,7 +214,7 @@ class ServiceMemSessionTests {
         //arrange
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
-        val gid = INITIAL_GAME_ID
+        val gid = FIRST_GAME_ID
         val startDate = "2019-04-03 184000"
 
         //act && assert
