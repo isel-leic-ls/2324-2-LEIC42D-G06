@@ -1,12 +1,10 @@
-package pt.isel.ls.api
+package pt.isel.ls.api.mem.session
 
 import kotlinx.serialization.json.Json
-import org.http4k.core.Method
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
-import org.junit.Before
 import org.junit.Test
-import org.junit.runner.Request
+import pt.isel.ls.api.SessionRoutes
 import pt.isel.ls.api.model.CreateSessionOutputModel
 import pt.isel.ls.repo.mem.MemGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
