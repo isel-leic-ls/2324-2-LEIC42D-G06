@@ -1,5 +1,6 @@
 package pt.isel.ls
 
+import org.slf4j.LoggerFactory
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import pt.isel.ls.api.SessionRoutes
@@ -9,7 +10,9 @@ import pt.isel.ls.repo.mem.MemSessionRepo
 import pt.isel.ls.services.Services
 import java.util.*
 
+
 fun main() {
+    val logger = LoggerFactory.getLogger("pt.isel.ls.Server")
     val port = 8080
 
     // initialize the repositories
@@ -33,6 +36,8 @@ fun main() {
     // start the server
     val server = serviceRoutes.routes.asServer(Jetty(port)).start()
 
+    logger.info("Server started on port $port")
+    println("Press enter to stop the server")
     readln()
 
     server.stop()

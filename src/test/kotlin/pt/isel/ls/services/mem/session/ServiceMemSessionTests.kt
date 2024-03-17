@@ -13,7 +13,7 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
 
 
-class SessionTests {
+class ServiceMemSessionTests {
     private val pRepo = MemPlayersRepo()
     private val gRepo = MemGamesRepo()
 

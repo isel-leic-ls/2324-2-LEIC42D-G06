@@ -3,13 +3,16 @@ package pt.isel.ls.services
 import pt.isel.ls.domain.Game
 import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.interfaces.GamesRepo
+import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.LIMIT_DEFAULT
 import pt.isel.ls.utils.SKIP_DEFAULT
 
 
-class GamesServices(private val gRepo: GamesRepo) {
-    fun createGame(name: String, developer: String, genres: List<String>): Int {
+class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo) {
+    fun createGame(token: String, name: String, developer: String, genres: List<String>): Int {
         //TODO on WebApi check if the arguments are trimmed
+
+        pRepo.getPlayerIdByToken(token) ?: throw DomainException.PlayerNotFound("Player not found with token $token")
 
         if (gRepo.checkGameExistsByName(name))
             throw DomainException.GameAlreadyExists("Game $name already exists")
@@ -20,7 +23,7 @@ class GamesServices(private val gRepo: GamesRepo) {
         return gRepo.insert(name, developer, genres)
     }
 
-    fun getDetailsOfGameById(gid : Int) = gRepo.getGameById(gid)
+    fun getDetailsOfGameById(gid: Int) = gRepo.getGameById(gid)
 
     fun getDetailsOfGameByName(name: String) = gRepo.getGameByName(name)
 
