@@ -4,9 +4,9 @@ import pt.isel.ls.domain.Player
 
 interface PlayersRepo {
     fun createPlayer(name: String, email: String, token: String): Int
-    fun getPlayer(pid: Int): Player?
-    //fun getPlayerToken(pid: Int): String?
+    fun getPlayer(pid: Int): Player
 
-    fun getPlayerIdByToken(token: String): Int?
+
+    fun getPlayerIdByToken(token: String): Int
 
 }

@@ -3,7 +3,9 @@ package pt.isel.ls.repo.mem.players
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import org.junit.Test
+import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.mem.MemPlayersRepo
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotEquals
 
 
@@ -18,7 +20,7 @@ class RepoMemPlayerTests {
         val token = "f907d1b0-105b-455d-acc2-8422a2056f1d"
         val pid = repo.createPlayer(name, email, token)
         val player = repo.getPlayer(pid)
-        assertEquals(pid, player?.id)
+        assertEquals(pid, player.id)
     }
 
     @Test
@@ -43,9 +45,9 @@ class RepoMemPlayerTests {
         val token = "f907d1b0-105b-455d-acc2-8422a2056f2d"
         val pid = repo.createPlayer(name, email, token)
         val player = repo.getPlayer(pid)
-        assertEquals(name, player?.name)
-        assertEquals(email, player?.email)
-        assertEquals(token, player?.token)
+        assertEquals(name, player.name)
+        assertEquals(email, player.email)
+        assertEquals(token, player.token)
     }
 
     @Test
@@ -63,16 +65,15 @@ class RepoMemPlayerTests {
     fun `get nonexistent player by id`() {
         val repo = MemPlayersRepo()
         val pid = 55
-        val player = repo.getPlayer(pid)
-        assertNotEquals(pid, player?.id)
+        assertFailsWith<DomainException.PlayerNotFound>{repo.getPlayer(pid)}
     }
 
     @Test
     fun `get nonexistent player by token`() {
         val repo = MemPlayersRepo()
         val token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        val pid = repo.getPlayerIdByToken(token)
-        assertFalse(pid is Int)
+        assertFailsWith<DomainException.PlayerNotFound>{repo.getPlayerIdByToken(token)}
+
     }
 }
 

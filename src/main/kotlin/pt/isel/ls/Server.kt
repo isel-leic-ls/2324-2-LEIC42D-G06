@@ -24,6 +24,7 @@ fun main() {
     // create some players
     playersRepo.createPlayer("joao", "joao@hotmail.com", UUID.randomUUID().toString())
     playersRepo.createPlayer("pedro", "pedro@gmail.com", UUID.randomUUID().toString())
+    playersRepo.createPlayer("Vasco", "vasco@gmail.com", UUID.randomUUID().toString())
     println(playersRepo.getPlayer(FIRST_PLAYER_ID))
     println(playersRepo.getPlayer(FIRST_PLAYER_ID + 1))
 

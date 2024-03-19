@@ -10,7 +10,7 @@ import java.util.UUID.randomUUID
 class PlayerServices(
     private val pRepo: PlayersRepo
 ) {
-    fun createPlayer(name: String, email: String): Int {
+    fun createPlayer(name: String, email: String): Int{
         //Verifying if the name and email are not empty and if the email length is between the bounds
         require(name.isNotEmpty()) { "Name cannot be empty" }
         require(email.isNotEmpty()) { "Email cannot be empty" }
@@ -26,12 +26,12 @@ class PlayerServices(
         return pRepo.createPlayer(name, email, token)
     }
 
-    fun getPlayer(pid: Int): Player? {
+    fun getPlayer(pid: Int): Player {
         require(pid > 0) { "Player id must be greater than 0" }
         return pRepo.getPlayer(pid)
     }
 
-    fun getPlayerIdByToken(token: String): Int? {
+    fun getPlayerIdByToken(token: String): Int {
         require(token.isNotEmpty()) { "Token cannot be empty" }
         require(token.length < TOKEN_LENGTH) { "Token length must be less than 36" }
         return pRepo.getPlayerIdByToken(token)

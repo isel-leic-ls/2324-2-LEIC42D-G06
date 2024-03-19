@@ -41,3 +41,7 @@ fun Request.getAuthorizationToken(): String {
     if (!token.startsWith(BEARER)) throw IllegalArgumentException("Invalid Authorization header")
     return token.substring(BEARER.length)
 }
+
+fun Request.getPlayerDetails(): Int {
+    return path("pid")?.toInt() ?: throw IllegalArgumentException("Player ID not found")
+}
