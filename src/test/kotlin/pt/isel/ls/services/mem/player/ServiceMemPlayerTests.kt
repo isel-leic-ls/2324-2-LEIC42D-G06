@@ -2,6 +2,7 @@ package pt.isel.ls.services.mem.player
 
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
+import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.PlayerServices
 import pt.isel.ls.utils.CAPACITY_LOWER_BOUND
@@ -58,7 +59,7 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("nameeeeeeeeeeeeeeeeee", "email")
+            service.createPlayer("nameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "email")
         }
         // Assert
         assertEquals(
@@ -92,6 +93,15 @@ class ServiceMemPlayerTests {
         }
         // Assert
         assertEquals("Player id must be greater than 0", exception.message)
+    }
+
+    @Test
+    fun `getPlayer should throw exception when given pid is not found`() {
+        // Arrange
+        val pRepo = MemPlayersRepo()
+        val service = PlayerServices(pRepo)
+        // Act & Assert
+        assertFailsWith<DomainException.PlayerNotFound> { service.getPlayer(1) }
     }
 
     @Test
