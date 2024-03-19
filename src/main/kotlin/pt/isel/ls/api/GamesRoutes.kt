@@ -29,7 +29,12 @@ class GamesRoutes(private val services: GamesServices) {
         exceptionAwareScope {
             val token = request.getAuthorizationToken()
             val inputModel = request.fromJson<GameInputModel>()
-            val gId = services.createGame(token, inputModel.name, inputModel.developer, inputModel.genres)
+            //trim the input
+            val trimmedName = inputModel.name.trim()
+            val trimmedDev = inputModel.developer.trim()
+            val trimmedGenres = inputModel.genres.map { it.trim() }
+            //create the game
+            val gId = services.createGame(token, trimmedName, trimmedDev, trimmedGenres)
             Response(Status.CREATED).toJson(GameOutputModel(gId))
         }
 
