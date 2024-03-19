@@ -66,7 +66,7 @@ class ApiMemGamesTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/games"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${foundPlayer?.token}")
+            .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -97,7 +97,7 @@ class ApiMemGamesTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/games"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${foundPlayer?.token}")
+            .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -115,6 +115,7 @@ class ApiMemGamesTests {
         val name = "FIFA"
         val company = "EA"
         val genres = listOf("Sports", "Football")
+        val invalidToken = "invalid token value" //just to force invalid token
 
         val requestBody = """
             {
@@ -127,7 +128,7 @@ class ApiMemGamesTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/games"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer invalidToken")
+            .header("Authorization", "Bearer $invalidToken")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -151,7 +152,7 @@ class ApiMemGamesTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/games"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${foundPlayer?.token}")
+            .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -178,7 +179,7 @@ class ApiMemGamesTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/games"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${foundPlayer?.token}")
+            .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 

@@ -7,6 +7,7 @@ import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.PlayerServices
 import pt.isel.ls.utils.CAPACITY_LOWER_BOUND
 import pt.isel.ls.utils.CAPACITY_UPPER_BOUND
+import pt.isel.ls.utils.FIRST_PLAYER_ID
 import kotlin.test.assertFailsWith
 
 class ServiceMemPlayerTests {
@@ -92,7 +93,7 @@ class ServiceMemPlayerTests {
             service.getPlayer(0)
         }
         // Assert
-        assertEquals("Player id must be greater than 0", exception.message)
+        assertEquals("Player id must be greater or equal to $FIRST_PLAYER_ID", exception.message)
     }
 
     @Test
@@ -101,7 +102,7 @@ class ServiceMemPlayerTests {
         val pRepo = MemPlayersRepo()
         val service = PlayerServices(pRepo)
         // Act & Assert
-        assertFailsWith<DomainException.PlayerNotFound> { service.getPlayer(1) }
+        assertFailsWith<DomainException.PlayerNotFound> { service.getPlayer(FIRST_PLAYER_ID) }
     }
 
     @Test

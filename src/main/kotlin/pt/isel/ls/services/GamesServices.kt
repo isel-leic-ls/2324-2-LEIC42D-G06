@@ -10,8 +10,6 @@ import pt.isel.ls.utils.SKIP_DEFAULT
 
 class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo) {
     fun createGame(token: String, name: String, developer: String, genres: List<String>): Int {
-        //TODO on WebApi check if the arguments are trimmed
-
         pRepo.getPlayerIdByToken(token) ?: throw DomainException.PlayerNotFound("Player not found with token $token")
 
         if (gRepo.checkGameExistsByName(name))

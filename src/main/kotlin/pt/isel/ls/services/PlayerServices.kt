@@ -4,20 +4,22 @@ import pt.isel.ls.domain.Player
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.CAPACITY_LOWER_BOUND
 import pt.isel.ls.utils.CAPACITY_UPPER_BOUND
+import pt.isel.ls.utils.FIRST_PLAYER_ID
 import pt.isel.ls.utils.TOKEN_LENGTH
 import java.util.UUID.randomUUID
 
-class PlayerServices(
-    private val pRepo: PlayersRepo
-) {
-    fun createPlayer(name: String, email: String): Int{
+
+class PlayerServices(private val pRepo: PlayersRepo) {
+    fun createPlayer(name: String, email: String): Int {
         //Verifying if the name and email are not empty and if the email length is between the bounds
         require(name.isNotEmpty()) { "Name cannot be empty" }
         require(email.isNotEmpty()) { "Email cannot be empty" }
-        require(name.length in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND)
-        { "Name length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND" }
-        require(email.length in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND)
-        { "Email length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND" }
+        require(name.length in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND) {
+            "Name length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND"
+        }
+        require(email.length in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND) {
+            "Email length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND"
+        }
 
         //Creating a random token
         val token = randomUUID().toString()
@@ -27,7 +29,7 @@ class PlayerServices(
     }
 
     fun getPlayer(pid: Int): Player {
-        require(pid > 0) { "Player id must be greater than 0" }
+        require(pid >= FIRST_PLAYER_ID) { "Player id must be greater or equal to $FIRST_PLAYER_ID" }
         return pRepo.getPlayer(pid)
     }
 
