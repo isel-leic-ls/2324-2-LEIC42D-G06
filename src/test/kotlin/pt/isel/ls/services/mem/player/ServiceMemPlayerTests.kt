@@ -2,6 +2,7 @@ package pt.isel.ls.services.mem.player
 
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
+import pt.isel.ls.repo.DomainException
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.PlayerServices
 import kotlin.test.assertFailsWith
@@ -44,20 +45,20 @@ class ServiceMemPlayerTests {
             service.createPlayer("n", "email")
         }
         // Assert
-        assertEquals("Name length must be between 2 and 10", exception.message)
+        assertEquals("Name length must be between 2 and 20", exception.message)
     }
 
     @Test
-    fun `createPlayer should throw IllegalArgumentException when given name length is greater than 10`() {
+    fun `createPlayer should throw IllegalArgumentException when given name length is greater than 20`() {
         // Arrange
         val pRepo = MemPlayersRepo()
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("nameeeeeeee", "email")
+            service.createPlayer("nameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "email")
         }
         // Assert
-        assertEquals("Name length must be between 2 and 10", exception.message)
+        assertEquals("Name length must be between 2 and 20", exception.message)
     }
 
     @Test
@@ -70,7 +71,7 @@ class ServiceMemPlayerTests {
             service.createPlayer("name", "e")
         }
         // Assert
-        assertEquals("Email length must be between 2 and 10", exception.message)
+        assertEquals("Email length must be between 2 and 20", exception.message)
     }
 
     @Test
@@ -87,14 +88,12 @@ class ServiceMemPlayerTests {
     }
 
     @Test
-    fun `getPlayer should return null when given pid is not found`() {
+    fun `getPlayer should throw exception when given pid is not found`() {
         // Arrange
         val pRepo = MemPlayersRepo()
         val service = PlayerServices(pRepo)
-        // Act
-        val player = service.getPlayer(1)
-        // Assert
-        assertEquals(null, player)
+        // Act & Assert
+        assertFailsWith<DomainException.PlayerNotFound> { service.getPlayer(1) }
     }
 
     @Test

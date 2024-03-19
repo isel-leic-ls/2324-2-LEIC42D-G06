@@ -15,9 +15,9 @@ class PlayerServices(
         require(name.isNotEmpty()) { "Name cannot be empty" }
         require(email.isNotEmpty()) { "Email cannot be empty" }
         require(name.length in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND)
-        { "Name length must be between 2 and 10" }
+        { "Name length must be between 2 and 20" }
         require(email.length in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND)
-        { "Email length must be between 2 and 10" }
+        { "Email length must be between 2 and 20" }
 
         //Creating a random token
         val token = randomUUID().toString()

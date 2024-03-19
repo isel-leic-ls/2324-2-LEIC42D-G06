@@ -4,7 +4,6 @@ import kotlinx.serialization.json.Json
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import pt.isel.ls.api.GamesRoutes
-import pt.isel.ls.api.model.GameInputModel
 import pt.isel.ls.api.model.GameOutputModel
 import pt.isel.ls.repo.mem.MemGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
