@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 interface SessionRepo {
     fun createSession(sessionDTO: SessionDTO) : Int
-    fun addPlayerToSession(sid : Int, player : Int)
+    fun addPlayerToSession(updatedSession : Session)
     fun getSession(sid : Int) : Session
 
     fun getListOfSessions(

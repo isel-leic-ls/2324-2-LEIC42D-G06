@@ -180,8 +180,9 @@ class ServiceMemSessionTests {
         val capacity = 2
         val startDate = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate.toDate(), gid, listOf(pid)))
-        sRepo.addPlayerToSession(sid, FIRST_PLAYER_ID + 1)
 
+        val session = sRepo.getSession(sid).addPlayer(FIRST_PLAYER_ID + 1)
+        sRepo.addPlayerToSession(session)
 
         //act
         val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID + 2) ?: throw Exception("Error occured")

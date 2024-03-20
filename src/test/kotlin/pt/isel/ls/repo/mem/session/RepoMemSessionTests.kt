@@ -53,11 +53,12 @@ class RepoMemSessionTests {
         val pid = players[1]
 
         //act
-        repo.addPlayerToSession(sid, pid)
+        val session = repo.getSession(sid).addPlayer(pid)
+        repo.addPlayerToSession(session)
 
-        val session = repo.getSession(sid)
+        val sessionAfterUpdate = repo.getSession(sid)
         // assert
-        assertTrue(session.players.size == 2 && session.players.contains(pid))
+        assertTrue(sessionAfterUpdate.players.size == 2 && sessionAfterUpdate.players.contains(pid))
     }
 
     @Test
@@ -72,11 +73,12 @@ class RepoMemSessionTests {
         val sid = repo.createSession(sessionDTO)
 
         //act
-        repo.addPlayerToSession(sid, players[1])
-        val session = repo.getSession(sid)
+        val session = repo.getSession(sid).addPlayer(players[1])
+        repo.addPlayerToSession(session)
+        val sessionAfterUpdate = repo.getSession(sid)
 
         //assert
-        assertTrue(session.closed)
+        assertTrue(sessionAfterUpdate.closed)
     }
 
     @Test
@@ -147,11 +149,12 @@ class RepoMemSessionTests {
         //arrange
         val repo = MemSessionRepo()
         val sid = 10
+        val gid = 1
         val pid = 1
-
+        val session = Session(sid, 1, LocalDateTime.now(), gid,false, listOf(1))
         //act & assert
         assertFailsWith<DomainException.SessionNotFound> {
-            repo.addPlayerToSession(sid, pid)
+            repo.addPlayerToSession(session)
         }
     }
 
@@ -281,18 +284,21 @@ class RepoMemSessionTests {
         val date = LocalDateTime.now().plusDays(1)
         val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
         val sid2 = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[1])))
-        repo.addPlayerToSession(sid, players[1])
-        repo.addPlayerToSession(sid2, players[0])
+
+        val session = repo.getSession(sid).addPlayer(players[1])
+        val session2 = repo.getSession(sid2).addPlayer(players[0])
+        repo.addPlayerToSession(session)
+        repo.addPlayerToSession(session2)
 
         //act
         val sessions = repo.getListOfSessions(gid, null, true , null, skip, limit)
-        val session1 = repo.getSession(sid)
-        val session2 = repo.getSession(sid2)
+        val sessionRetrieval = repo.getSession(sid)
+        val sessionRetrieval2 = repo.getSession(sid2)
 
         //assert
         assertTrue(sessions.size == 2 &&
                 sessions.all { it.closed } &&
-                sessions.containsAll(listOf(session1, session2))
+                sessions.containsAll(listOf(sessionRetrieval, sessionRetrieval2))
         )
     }
 

@@ -1,8 +1,8 @@
 -- Insert into Player table
-INSERT INTO Player(name, email) VALUES 
-	('Pedro', 'pedro@hotmail.com'),
-	('Vasco', 'vasco@gmail.com'),
-	('Jonny', 'jonny@live.com.pt');
+INSERT INTO Player(name, email, token) VALUES
+	('Pedro', 'pedro@hotmail.com', '3ad7db4b-c5a9-42ee-9094-852f94c57cb7'),
+	('Vasco', 'vasco@gmail.com', '3ad7db4b-c5a9-42ee-9094-852f94c57cb8'),
+	('Jonny', 'jonny@live.com.pt', '3ad7db4b-c5a9-42ee-9094-852f94c57cb9');
 
 
 -- Insert into Game table

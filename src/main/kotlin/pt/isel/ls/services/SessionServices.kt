@@ -15,7 +15,7 @@ class SessionServices(
 ) {
 
     fun createSession(token : String, gid : Int, capacity : Int, startDate: String) : Int {
-        val pid = pRepo.getPlayerIdByToken(token) ?: throw DomainException.PlayerNotFound("Player not found with token $token")
+        val pid = pRepo.getPlayerIdByToken(token)
 
         checkGameExists(gid)
 
@@ -26,14 +26,17 @@ class SessionServices(
     }
 
     fun addPlayerToSession(token : String, sid : Int) {
-        val pid = pRepo.getPlayerIdByToken(token) ?: throw DomainException.PlayerNotFound("Player not found with token $token")
+        val pid = pRepo.getPlayerIdByToken(token)
 
         checkSessionExists(sid)
         val session = sRepo.getSession(sid)
 
         checkSessionClosed(session)
         checkPlayerInSession(session, pid)
-        return sRepo.addPlayerToSession(sid, pid)
+
+        val updatedSession = session.addPlayer(pid)
+
+        return sRepo.addPlayerToSession(updatedSession)
     }
 
     fun getSession(sid : Int) : Session =

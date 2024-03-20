@@ -21,12 +21,11 @@ class MemSessionRepo : SessionRepo {
         return id
     }
 
-    override fun addPlayerToSession(sid: Int, player: Int) {
-        sessions.find { it.id == sid }?.let { session ->
-            val nSession = session.addPlayer(player)
+    override fun addPlayerToSession(updatedSession : Session) {
+        sessions.find { it.id == updatedSession.id }?.let { session ->
             sessions.remove(session)
-            sessions.add(nSession)
-        } ?: throw DomainException.SessionNotFound("Session not found with id $sid")
+            sessions.add(updatedSession)
+        } ?: throw DomainException.SessionNotFound("Session not found with id ${updatedSession.id}")
     }
 
     override fun getSession(sid: Int): Session =
