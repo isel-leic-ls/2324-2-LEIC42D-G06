@@ -13,6 +13,8 @@ import pt.isel.ls.api.model.GameOutputModel
 import pt.isel.ls.api.model.GamesListInputModel
 import pt.isel.ls.api.model.GamesListOutputModel
 import pt.isel.ls.services.GamesServices
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 
 class GamesRoutes(private val services: GamesServices) {
@@ -22,7 +24,7 @@ class GamesRoutes(private val services: GamesServices) {
             GameUrisObj.CREATE bind Method.POST to ::createGame,
             GameUrisObj.GET_BY_ID bind Method.GET to ::getGameDetailsById,
             GameUrisObj.GET_BY_NAME bind Method.GET to ::getGameDetailsByName,
-            GameUrisObj.GET_GAMES bind Method.GET to ::getListOfGames
+            GameUrisObj.GET_GAMES bind Method.POST to ::getListOfGames
         )
 
     private fun createGame(request: Request): Response =
@@ -47,14 +49,19 @@ class GamesRoutes(private val services: GamesServices) {
 
     private fun getGameDetailsByName(request: Request): Response =
         exceptionAwareScope {
-            val name = request.getGameName()
-            val game = services.getDetailsOfGameByName(name)
+            val encodedName = request.getGameName()
+            val decodedName = URLDecoder.decode(encodedName, StandardCharsets.UTF_8.toString())
+            val game = services.getDetailsOfGameByName(decodedName)
             Response(Status.OK).toJson(game)
         }
+
 
     private fun getListOfGames(request: Request): Response =
         exceptionAwareScope {
             val inputModel = request.fromJson<GamesListInputModel>()
+            if (inputModel.genres.isEmpty() || inputModel.genres.any { it.isBlank() })
+                throw IllegalArgumentException("Invalid genres input")
+            if (inputModel.developer.isBlank()) throw IllegalArgumentException("Invalid developer input")
             val (skip, limit) = request.getSkipAndLimit()
             val games = services.getListOfGames(inputModel.genres, inputModel.developer, limit, skip)
             Response(Status.OK).toJson(GamesListOutputModel(games))

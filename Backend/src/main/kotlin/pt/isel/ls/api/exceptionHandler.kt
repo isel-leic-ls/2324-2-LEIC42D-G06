@@ -11,8 +11,6 @@ data class Problem(val description: String)
 fun exceptionAwareScope(block: () -> Response): Response {
     return try {
         block()
-    } catch (e: IllegalAccessException) { //status code 401
-        Response(Status.UNAUTHORIZED).toJson(Problem(e.message ?: "Unauthorized")) //todo: why is this here and not in the errors map?
     } catch (e: Exception) {
         exceptionHandler(e)
     }

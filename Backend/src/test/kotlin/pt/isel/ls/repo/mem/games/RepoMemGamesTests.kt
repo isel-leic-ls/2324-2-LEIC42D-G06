@@ -33,12 +33,12 @@ class RepoMemGamesTests {
     @Test
     fun `insert two games`() {
         val repo = MemGamesRepo()
-        val gid1 = repo.insert("name", "developer", listOf("genre"))
+        val gId1 = repo.insert("name", "developer", listOf("genre"))
 
-        assertEquals(FIRST_GAME_ID, gid1)
+        assertEquals(FIRST_GAME_ID, gId1)
 
-        val gid2 = repo.insert("name", "developer", listOf("genre"))
-        assertEquals(FIRST_GAME_ID + 1, gid2)
+        val gId2 = repo.insert("name", "developer", listOf("genre"))
+        assertEquals(FIRST_GAME_ID + 1, gId2)
     }
 
     @Test

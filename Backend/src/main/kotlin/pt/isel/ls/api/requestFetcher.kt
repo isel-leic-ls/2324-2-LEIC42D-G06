@@ -5,11 +5,13 @@ import org.http4k.routing.path
 import pt.isel.ls.repo.DomainException
 import pt.isel.ls.utils.LIMIT_DEFAULT
 import pt.isel.ls.utils.SKIP_DEFAULT
+import java.util.*
 
 
 const val AUTHORIZATION_HEADER = "Authorization"
 const val BEARER = "Bearer "
 const val gameId = "gid"
+const val gameName = "gname"
 const val SESSION_ID = "sid"
 const val SKIP = "skip"
 const val LIMIT = "limit"
@@ -20,7 +22,7 @@ fun Request.getGameId(): Int {
 }
 
 fun Request.getGameName(): String {
-    return path(gameId) ?: throw IllegalArgumentException("Game name not found")
+    return path(gameName) ?: throw IllegalArgumentException("Game name not found")
 }
 
 fun Request.getSessionID(): Int {
@@ -44,9 +46,12 @@ fun Request.getAuthorizationToken(): String {
     if (!token.startsWith(BEARER)) throw IllegalArgumentException("Invalid Authorization header")
 
     val tokenValue = token.substring(BEARER.length)
-    if (tokenValue.startsWith("invalid") || tokenValue.length != UUID_SIZE) //todo : why we check for invalid ?
-        throw DomainException.InvalidToken("Invalid token")
-    else return tokenValue
+    try {
+        UUID.fromString(tokenValue)
+    } catch (e: Exception) {
+        throw DomainException.InvalidToken("Invalid token format")
+    }
+    return tokenValue
 }
 
 fun Request.getPlayerDetails(): Int {
