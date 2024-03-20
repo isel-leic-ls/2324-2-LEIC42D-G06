@@ -10,6 +10,7 @@ import java.util.UUID.randomUUID
 
 
 class PlayerServices(private val pRepo: PlayersRepo) {
+
     fun createPlayer(name: String, email: String): Int {
         //Verifying if the name and email are not empty and if the email length is between the bounds
         require(name.isNotEmpty()) { "Name cannot be empty" }
@@ -17,9 +18,8 @@ class PlayerServices(private val pRepo: PlayersRepo) {
         require(name.length in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND) {
             "Name length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND"
         }
-        require(email.length in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND) {
-            "Email length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND"
-        }
+        val emailRegex = "^[A-Za-z0-9+_.-]{6,20}@[A-Za-z0-9.-]{9,20}$"
+        require(email.matches(emailRegex.toRegex())) { "Invalid email" }
 
         //Creating a random token
         val token = randomUUID().toString()

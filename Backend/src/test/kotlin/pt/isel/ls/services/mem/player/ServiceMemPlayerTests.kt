@@ -69,7 +69,7 @@ class ServiceMemPlayerTests {
     }
 
     @Test
-    fun `createPlayer should throw IllegalArgumentException when given email length is less than 2`() {
+    fun `createPlayer should throw IllegalArgumentException when given invalid email length`() {
         // Arrange
         val pRepo = MemPlayersRepo()
         val service = PlayerServices(pRepo)
@@ -79,7 +79,7 @@ class ServiceMemPlayerTests {
         }
         // Assert
         assertEquals(
-            "Email length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND", exception.message
+            "Invalid email", exception.message
         )
     }
 
