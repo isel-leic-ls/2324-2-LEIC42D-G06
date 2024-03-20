@@ -14,7 +14,7 @@ class PlayerServices(private val pRepo: PlayersRepo) {
     fun createPlayer(name: String, email: String): Int {
         //Verifying if the name and email are not empty and if the email length is between the bounds
         require(name.isNotEmpty()) { "Name cannot be empty" }
-        require(email.isNotEmpty()) { "Email cannot be empty" }
+        require(!name.contains(" ")){ "Name cannot contain spaces" }
         require(name.length in CAPACITY_LOWER_BOUND..CAPACITY_UPPER_BOUND) {
             "Name length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND"
         }
@@ -28,7 +28,7 @@ class PlayerServices(private val pRepo: PlayersRepo) {
         return pRepo.createPlayer(name, email, token)
     }
 
-    fun getPlayer(pid: Int): Player {
+    fun getPlayer(pid : Int): Player {
         require(pid >= FIRST_PLAYER_ID) { "Player id must be greater or equal to $FIRST_PLAYER_ID" }
         return pRepo.getPlayer(pid)
     }
