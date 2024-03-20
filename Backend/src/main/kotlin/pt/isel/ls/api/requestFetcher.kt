@@ -44,7 +44,7 @@ fun Request.getAuthorizationToken(): String {
     if (!token.startsWith(BEARER)) throw IllegalArgumentException("Invalid Authorization header")
 
     val tokenValue = token.substring(BEARER.length)
-    if (tokenValue.startsWith("invalid") || tokenValue.length != UUID_SIZE)
+    if (tokenValue.startsWith("invalid") || tokenValue.length != UUID_SIZE) //todo : why we check for invalid ?
         throw DomainException.InvalidToken("Invalid token")
     else return tokenValue
 }
