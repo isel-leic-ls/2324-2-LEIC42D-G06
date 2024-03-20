@@ -68,10 +68,10 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
 
     override fun getListOfGames(genres: List<String>, developer: String, limit: Int, skip: Int): List<Game> {
         val stmt = dataSource.connection.prepareStatement(
-            "SELECT * FROM game WHERE genres @> ? OR developer = ? LIMIT ? OFFSET ?"
+            "SELECT * FROM game WHERE developer ILIKE ? OR array(select unnest(genres)) && ? ORDER BY gid LIMIT ? OFFSET ?"
         )
-        stmt.setArray(1, dataSource.connection.createArrayOf("VARCHAR", genres.toTypedArray()))
-        stmt.setString(2, developer)
+        stmt.setString(1, developer)
+        stmt.setArray(2, dataSource.connection.createArrayOf("VARCHAR", genres.toTypedArray()))
         stmt.setInt(3, limit)
         stmt.setInt(4, skip)
         val rs = stmt.executeQuery()
@@ -87,7 +87,6 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
                 )
             )
         }
-
         return games
     }
 }

@@ -1,7 +1,8 @@
-package pt.isel.ls.services.mem.games
+package pt.isel.ls.services.jdbc.games
 
+import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.repo.DomainException
-import pt.isel.ls.repo.mem.MemGamesRepo
+import pt.isel.ls.repo.jdbc.JdbcGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.GamesServices
 import pt.isel.ls.utils.FIRST_GAME_ID
@@ -10,17 +11,29 @@ import pt.isel.ls.utils.generatePlayerDetails
 import kotlin.test.*
 
 
-class ServiceMemGamesTests {
-    private val pRepo = MemPlayersRepo()
+class ServiceJDBCGamesTests {
+    private val dataSource = PGSimpleDataSource().apply {
+        setUrl(System.getenv("JDBC_DATABASE_URL"))
+    }
+
+    private val pRepo = MemPlayersRepo() //TODO change to JdbcPlayersRepo
 
     @BeforeTest
     fun setup() {
+        dataSource.connection.use {
+            val stmt0 = it.prepareStatement("DELETE FROM SessionPlayer")
+            stmt0.executeUpdate()
+            val stmt1 = it.prepareStatement("DELETE FROM Session")
+            stmt1.executeUpdate()
+            val stmt2 = it.prepareStatement("DELETE FROM Game")
+            stmt2.executeUpdate()
+        }
         generatePlayerDetails().let { (n, e, t) -> pRepo.createPlayer(n, e, t) }
     }
 
     @Test
     fun `test createGame successfully`() {
-        val service = GamesServices(MemGamesRepo(), pRepo)
+        val service = GamesServices(JdbcGamesRepo(dataSource), pRepo)
         val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occurred")
         val token = foundPlayer.token
         val gameId1 =
@@ -28,13 +41,13 @@ class ServiceMemGamesTests {
         val gameId2 =
             service.createGame(token, "GTA V", "rockstarGamesDev", listOf("action", "adventure"))
 
-        assertEquals(gameId1, FIRST_GAME_ID)
-        assertEquals(gameId2, FIRST_GAME_ID + 1)
+        assertTrue(gameId1 >= FIRST_GAME_ID)
+        assertTrue(gameId2 >= FIRST_GAME_ID + 1)
     }
 
     @Test
     fun `test createGame creating a game with the same name (case-insensitive)`() {
-        val service = GamesServices(MemGamesRepo(), pRepo)
+        val service = GamesServices(JdbcGamesRepo(dataSource), pRepo)
         val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occurred")
         val token = foundPlayer.token
 
@@ -50,7 +63,7 @@ class ServiceMemGamesTests {
 
     @Test
     fun `test createGame creating a game with invalid data`() {
-        val service = GamesServices(MemGamesRepo(), pRepo)
+        val service = GamesServices(JdbcGamesRepo(dataSource), pRepo)
         val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occurred")
         val token = foundPlayer.token
 
@@ -69,7 +82,7 @@ class ServiceMemGamesTests {
 
     @Test
     fun `test getDetailsOfGameById and getDetailsOfGameByName`() {
-        val service = GamesServices(MemGamesRepo(), pRepo)
+        val service = GamesServices(JdbcGamesRepo(dataSource), pRepo)
         val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occurred")
         val token = foundPlayer.token
         val gName = "CS"
@@ -95,7 +108,7 @@ class ServiceMemGamesTests {
 
     @Test
     fun `test getListOfGames with and without limit and skip`() {
-        val service = GamesServices(MemGamesRepo(), pRepo)
+        val service = GamesServices(JdbcGamesRepo(dataSource), pRepo)
         val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occurred")
         val token = foundPlayer.token
 
