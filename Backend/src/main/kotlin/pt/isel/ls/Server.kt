@@ -1,8 +1,11 @@
 package pt.isel.ls
 
+import org.http4k.routing.routes
 import org.slf4j.LoggerFactory
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
+import pt.isel.ls.api.GamesRoutes
+import pt.isel.ls.api.PlayerRoutes
 import pt.isel.ls.api.SessionRoutes
 import pt.isel.ls.repo.mem.MemGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
@@ -17,11 +20,17 @@ fun main() {
     val port = 8080
 
     // initialize the repositories
+    // todo: the repositories are supposed to be the JDBC ones, for that we get the connection string from the ENV variables
+    // todo: and create the datasource using the connection string
+    // todo: and then pass the datasource to the repositories
     val playersRepo = MemPlayersRepo()
     val gamesRepo = MemGamesRepo()
     val servicesRepo = MemSessionRepo()
 
-    // create some players
+    // insert dummy data
+    // todo: remove this when using the real repositories
+
+    // create players
     playersRepo.createPlayer("joao", "joao@hotmail.com", UUID.randomUUID().toString())
     playersRepo.createPlayer("pedro", "pedro@gmail.com", UUID.randomUUID().toString())
     playersRepo.createPlayer("Vasco", "vasco@gmail.com", UUID.randomUUID().toString())
@@ -33,10 +42,19 @@ fun main() {
 
     // create the services
     val services = Services(gamesRepo, playersRepo, servicesRepo)
-    val serviceRoutes = SessionRoutes(services.sessionService) // server only using the session routes for now...
+    val sessionRoutes = SessionRoutes(services.sessionService) // server only using the session routes for now...
+    val gamesRoutes = GamesRoutes(services.gameService)
+    val playersRoutes = PlayerRoutes(services.playerService)
 
-    // start the server
-    val server = serviceRoutes.routes.asServer(Jetty(port)).start()
+    // combine the routes
+    val routes = routes(
+        sessionRoutes.routes,
+        gamesRoutes.routes,
+        playersRoutes.routes
+    )
+
+    // start the server with the routes
+    val server = routes.asServer(Jetty(port)).start()
 
     logger.info("Server started on port $port")
     println("Press enter to stop the server")
