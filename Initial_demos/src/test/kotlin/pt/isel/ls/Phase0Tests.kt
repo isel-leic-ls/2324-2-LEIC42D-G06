@@ -1,54 +1,11 @@
 package pt.isel.ls
 
-import org.http4k.core.Method
-import org.junit.runner.Request
 import org.postgresql.ds.PGSimpleDataSource
-import pt.isel.ls.api.SessionRoutes
 import pt.isel.ls.phase0.Student
-import pt.isel.ls.repo.mem.MemGamesRepo
-import pt.isel.ls.repo.mem.MemPlayersRepo
-import pt.isel.ls.repo.mem.MemSessionRepo
-import pt.isel.ls.services.Services
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-/*@BeforeTest
-fun setup() {
-    dataSource.connection.use {
-        //Add student to the database for testing how the test behaves when the student is found
-        val stm0 =
-            it.prepareStatement("select * from students where number = ${studentToRetrieve.number}")
-        val rs0 = stm0.executeQuery()
-        if (!rs0.next()) { //if student does not exist
-            val insertStm = it.prepareStatement("insert into students values (?, ?, ?)")
-            insertStm.setInt(1, studentToRetrieve.number)
-            insertStm.setString(2, studentToRetrieve.name)
-            insertStm.setInt(3, studentToRetrieve.course)
-            insertStm.executeUpdate()
-        }
-        //Delete student to update if it exists in the database for testing his insertion and update
-        val stm1 =
-            it.prepareStatement("select * from students where number = ${studentToUpdate.number}")
-        val rs1 = stm1.executeQuery()
-        if (rs1.next()) { //if student exists
-            val deleteStm =
-                it.prepareStatement("delete from students where number = ${studentToUpdate.number}")
-            deleteStm.executeUpdate()
-        }
-        //Add student to the database for testing how the test behaves when the student is deleted
-        val stm2 =
-            it.prepareStatement("select * from students where number = ${studentToDelete.number}")
-        val rs2 = stm2.executeQuery()
-        if (!rs2.next()) { //if student does not exist
-            val insertStm = it.prepareStatement("insert into students values (?, ?, ?)")
-            insertStm.setInt(1, studentToDelete.number)
-            insertStm.setString(2, studentToDelete.name)
-            insertStm.setInt(3, studentToDelete.course)
-            insertStm.executeUpdate()
-        }
-    }
-}*/
 
 class Phase0Tests {
     private val dataSource = PGSimpleDataSource().apply {

@@ -106,8 +106,3 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
         }
     }
 }
-
-fun main() {
-    val token = UUID.randomUUID().toString()
-    println(token)
-}
