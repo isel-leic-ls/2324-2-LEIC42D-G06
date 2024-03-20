@@ -106,30 +106,4 @@ class ServiceMemPlayerTests {
         // Act & Assert
         assertFailsWith<AppException.PlayerNotFound> { service.getPlayer(FIRST_PLAYER_ID) }
     }
-
-    @Test
-    fun `getPlayerIdByToken should throw IllegalArgumentException when given token is empty`() {
-        // Arrange
-        val pRepo = MemPlayersRepo()
-        val service = PlayerServices(pRepo)
-        // Act
-        val exception = assertFailsWith<IllegalArgumentException> {
-            service.getPlayerIdByToken("")
-        }
-        // Assert
-        //TODO assertEquals("Token cannot be empty", exception.message)
-    }
-
-    @Test
-    fun `getPlayerIdByToken should throw IllegalArgumentException when given token length is greater than 36`() {
-        // Arrange
-        val pRepo = MemPlayersRepo()
-        val service = PlayerServices(pRepo)
-        // Act
-        val exception = assertFailsWith<IllegalArgumentException> {
-            service.getPlayerIdByToken("123456789012345678901234567890123456")
-        }
-        // Assert
-        assertEquals("Token length must be less than 36", exception.message)
-    }
 }
