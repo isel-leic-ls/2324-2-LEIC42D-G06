@@ -13,10 +13,10 @@ INSERT INTO Game(name, developer, genres) VALUES
 
 
 -- Insert into Session table
-INSERT INTO Session(capacity, session_date, game_id) VALUES 
-	(3, '2024-02-25', 100),
-	(3, '2024-02-26', 101),
-	(2, '2024-02-27', 102);
+INSERT INTO Session(capacity, session_date, closed, game_id) VALUES
+	(3, '2024-02-25 18:00:00', true, 100),
+	(3, '2024-02-26 18:00:00', true, 101),
+	(2, '202402--27 20:00:00', true, 102);
 
 
 -- Insert into SessionPlayer table

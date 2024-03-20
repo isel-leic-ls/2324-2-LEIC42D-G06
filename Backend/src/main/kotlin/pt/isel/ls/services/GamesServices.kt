@@ -1,7 +1,7 @@
 package pt.isel.ls.services
 
 import pt.isel.ls.domain.Game
-import pt.isel.ls.repo.DomainException
+import pt.isel.ls.AppException
 import pt.isel.ls.repo.interfaces.GamesRepo
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.FIRST_GAME_ID
@@ -11,13 +11,13 @@ import pt.isel.ls.utils.SKIP_DEFAULT
 
 class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo) {
     fun createGame(token: String, name: String, developer: String, genres: List<String>): Int {
-        pRepo.getPlayerIdByToken(token) ?: throw DomainException.PlayerNotFound("Player not found with token $token")
+        pRepo.getPlayerIdByToken(token) ?: throw AppException.PlayerNotFound("Player not found with token $token")
 
         if (gRepo.checkGameExistsByName(name))
-            throw DomainException.GameAlreadyExists("Game $name already exists")
+            throw AppException.GameAlreadyExists("Game $name already exists")
 
         if (name.isBlank() || developer.isBlank() || genres.isEmpty() || genres.any { it.isBlank() })
-            throw DomainException.BadRequestCreateGame("Invalid game data")
+            throw AppException.BadRequestCreateGame("Invalid game data")
 
         return gRepo.insert(name, developer, genres)
     }

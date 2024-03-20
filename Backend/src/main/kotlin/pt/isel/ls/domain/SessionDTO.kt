@@ -1,19 +1,23 @@
 package pt.isel.ls.domain
 
-import pt.isel.ls.repo.DomainException
-import pt.isel.ls.utils.DATE_FORMATTER
+import pt.isel.ls.utils.MIN_SESSION_CAPACITY
+import pt.isel.ls.utils.toDate
 import java.time.LocalDateTime
 
-data class SessionDTO(val capacity: Int, val date: LocalDateTime, val game: Int, val closed : Boolean, val players: List<Int>) {
+data class SessionDTO(val capacity: Int, val date: String, val game: Int, val closed : Boolean = false, val players: List<Int>) {
     init {
-        require(capacity > 1) { "Invalid capacity $capacity" }
-        if(date.isBefore(LocalDateTime.now()))
-            throw DomainException.IllegalDate("Invalid date ${date.format(DATE_FORMATTER)}")
+        require(capacity >= MIN_SESSION_CAPACITY) { "Invalid capacity $capacity" }
+        require(date.toDate().isAfter(LocalDateTime.now())) { "Invalid date $date" }
     }
 }
 
-fun createSessionDTO(capacity: Int, date: LocalDateTime, game: Int, players: List<Int>) =
-    SessionDTO(capacity, date, game, false, players)
+fun createSessionDTO(capacity: Int, date: String, game: Int, players: List<Int>) =
+    SessionDTO(
+        capacity = capacity,
+        date = date,
+        game = game,
+        players = players
+    )
 
 fun SessionDTO.toSession(id : Int) =
     Session(id, capacity, date, game, closed, players)

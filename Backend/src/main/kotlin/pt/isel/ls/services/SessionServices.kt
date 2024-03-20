@@ -2,11 +2,10 @@ package pt.isel.ls.services
 
 import SessionRepo
 import pt.isel.ls.domain.*
-import pt.isel.ls.repo.DomainException
+import pt.isel.ls.AppException
 import pt.isel.ls.repo.interfaces.GamesRepo
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.isDateWellFormatted
-import pt.isel.ls.utils.toDate
 
 class SessionServices(
     private val pRepo : PlayersRepo,
@@ -18,11 +17,9 @@ class SessionServices(
         val pid = pRepo.getPlayerIdByToken(token)
 
         checkGameExists(gid)
-
         checkDateFormat(startDate)
-        val sDate = startDate.toDate()
 
-        return sRepo.createSession(createSessionDTO(capacity, sDate, gid, listOf(pid)))
+        return sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
     }
 
     fun addPlayerToSession(token : String, sid : Int) {
@@ -34,9 +31,7 @@ class SessionServices(
         checkSessionClosed(session)
         checkPlayerInSession(session, pid)
 
-        val updatedSession = session.addPlayer(pid)
-
-        return sRepo.addPlayerToSession(updatedSession)
+        return sRepo.addPlayerToSession(sid, pid)
     }
 
     fun getSession(sid : Int) : Session =
@@ -48,29 +43,28 @@ class SessionServices(
         if(startDate != null) checkDateFormat(startDate)
         if(state != null) checkState(state)
 
-        val date = startDate?.toDate()
         val sState = state?.toState()
 
         require(skip >= 0) { "Skip value must be positive" }
         require(limit >= 0) { "Limit value must be positive"}
 
-        return sRepo.getListOfSessions(gid, date, sState, pid, skip, limit)
+        return sRepo.getListOfSessions(gid, startDate, sState, pid, skip, limit)
 
     }
 
     private fun checkSessionExists(sid : Int) {
         if(!sRepo.checkSessionExists(sid))
-            throw DomainException.SessionNotFound("Session $sid does not exist")
+            throw AppException.SessionNotFound("Session $sid does not exist")
     }
 
     private fun checkGameExists(gid : Int) {
         if(!gRepo.checkGameExistsById(gid))
-            throw DomainException.GameNotFound("Game $gid does not exist")
+            throw AppException.GameNotFound("Game $gid does not exist")
     }
 
     private fun checkDateFormat(date : String) {
         if(!date.isDateWellFormatted())
-            throw DomainException.IllegalDate("Invalid date format $date")
+            throw IllegalArgumentException("Invalid date format $date")
     }
 
     private fun checkState(state : String) {
@@ -80,12 +74,12 @@ class SessionServices(
 
     private fun checkSessionClosed(session: Session) {
         if(session.checkIfSessionClosed())
-            throw DomainException.SessionClosed("Session ${session.id} is closed")
+            throw AppException.SessionClosed("Session ${session.id} is closed")
     }
 
     private fun checkPlayerInSession(session: Session, pid: Int) {
         if(session.checkPlayerInSession(pid))
-            throw DomainException.PlayerAlreadyInSession("Player $pid is already in session ${session.id}")
+            throw AppException.PlayerAlreadyInSession("Player $pid is already in session ${session.id}")
     }
 
 }

@@ -1,7 +1,7 @@
-package pt.isel.ls.repo
+package pt.isel.ls
 
 
-sealed class DomainException : Exception() {
+sealed class AppException : Exception() {
     class InvalidToken(message: String) : Exception(message)
 
     class BadRequestCreateGame(message: String) : Exception(message)
@@ -18,5 +18,4 @@ sealed class DomainException : Exception() {
 
     class PlayerNotFound(message: String) : Exception(message)
 
-    class IllegalDate(message: String) : Exception(message)
 }

@@ -193,7 +193,7 @@ class ApiMemSessionTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/sessions"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${fPlayer?.token}")
+            .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -246,13 +246,12 @@ class ApiMemSessionTests {
          */
     }
 
-    @Ignore("Bugged, needs fixing")
     @Test
     fun `retrieving a session`() {
         //arrange
         val capacity = 2
         val gid = FIRST_GAME_ID
-        val date = LocalDateTime.now().plusDays(1)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
         val sid = sessionRepo.createSession(createSessionDTO(capacity, date, gid, listOf(FIRST_PLAYER_ID)))
 
         // act
@@ -269,11 +268,5 @@ class ApiMemSessionTests {
         val outputModel = Json.decodeFromString<SessionRetrievalOutputModel>(response.body())
         // assert the session structure
         assertEquals(sessionRepo.getSession(sid), outputModel.session)
-
-
-        /** BUG IS :
-            Expected :Session(id=1, capacity=2, date=2024-03-18T19:47:30.579925800, game=100, closed=false, players=[1000])
-            Actual   :Session(id=1, capacity=2, date=2024-03-18T19:47:30, game=100, closed=false, players=[1000])
-        */
     }
 }

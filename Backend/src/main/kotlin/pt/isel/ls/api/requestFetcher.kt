@@ -2,7 +2,7 @@ package pt.isel.ls.api
 
 import org.http4k.core.Request
 import org.http4k.routing.path
-import pt.isel.ls.repo.DomainException
+import pt.isel.ls.AppException
 import pt.isel.ls.utils.LIMIT_DEFAULT
 import pt.isel.ls.utils.SKIP_DEFAULT
 import java.util.*
@@ -15,7 +15,6 @@ const val gameName = "gname"
 const val SESSION_ID = "sid"
 const val SKIP = "skip"
 const val LIMIT = "limit"
-const val UUID_SIZE = 36
 
 fun Request.getGameId(): Int {
     return path(gameId)?.toInt() ?: throw IllegalArgumentException("Game ID not found")
@@ -49,7 +48,7 @@ fun Request.getAuthorizationToken(): String {
     try {
         UUID.fromString(tokenValue)
     } catch (e: Exception) {
-        throw DomainException.InvalidToken("Invalid token format")
+        throw AppException.InvalidToken("Invalid token format")
     }
     return tokenValue
 }

@@ -2,7 +2,7 @@ package pt.isel.ls.services.mem.player
 
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
-import pt.isel.ls.repo.DomainException
+import pt.isel.ls.AppException
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.PlayerServices
 import pt.isel.ls.utils.CAPACITY_LOWER_BOUND
@@ -104,7 +104,7 @@ class ServiceMemPlayerTests {
         val pRepo = MemPlayersRepo()
         val service = PlayerServices(pRepo)
         // Act & Assert
-        assertFailsWith<DomainException.PlayerNotFound> { service.getPlayer(FIRST_PLAYER_ID) }
+        assertFailsWith<AppException.PlayerNotFound> { service.getPlayer(FIRST_PLAYER_ID) }
     }
 
     @Test

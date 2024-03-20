@@ -16,7 +16,8 @@ CREATE TABLE Game(
 CREATE TABLE Session(
     sid INT GENERATED ALWAYS AS IDENTITY (START WITH 10000) PRIMARY KEY,
     capacity INT,
-    session_date DATE,
+    session_date VARCHAR(19),
+    closed BOOLEAN,
     game_id INT REFERENCES Game(gid)
 );
 

@@ -1,12 +1,10 @@
 package pt.isel.ls.repo.mem.players
 
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertFalse
 import org.junit.Test
-import pt.isel.ls.repo.DomainException
+import pt.isel.ls.AppException
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import kotlin.test.assertFailsWith
-import kotlin.test.assertNotEquals
 
 
 class RepoMemPlayerTests {
@@ -65,14 +63,14 @@ class RepoMemPlayerTests {
     fun `get nonexistent player by id`() {
         val repo = MemPlayersRepo()
         val pid = 55
-        assertFailsWith<DomainException.PlayerNotFound>{repo.getPlayer(pid)}
+        assertFailsWith<AppException.PlayerNotFound>{repo.getPlayer(pid)}
     }
 
     @Test
     fun `get nonexistent player by token`() {
         val repo = MemPlayersRepo()
         val token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        assertFailsWith<DomainException.PlayerNotFound>{repo.getPlayerIdByToken(token)}
+        assertFailsWith<AppException.PlayerNotFound>{repo.getPlayerIdByToken(token)}
 
     }
 }

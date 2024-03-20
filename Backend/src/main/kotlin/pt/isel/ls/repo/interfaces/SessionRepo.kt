@@ -4,12 +4,12 @@ import java.time.LocalDateTime
 
 interface SessionRepo {
     fun createSession(sessionDTO: SessionDTO) : Int
-    fun addPlayerToSession(updatedSession : Session)
+    fun addPlayerToSession(sid: Int, pid: Int)
     fun getSession(sid : Int) : Session
 
     fun getListOfSessions(
         gid : Int,
-        date : LocalDateTime?,
+        date : String?,
         state : Boolean?,
         pid : Int?,
         skip : Int,

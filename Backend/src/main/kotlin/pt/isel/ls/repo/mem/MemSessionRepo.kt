@@ -4,8 +4,7 @@ import SessionRepo
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
 import pt.isel.ls.domain.toSession
-import pt.isel.ls.repo.DomainException
-import java.time.LocalDateTime
+import pt.isel.ls.AppException
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -21,19 +20,20 @@ class MemSessionRepo : SessionRepo {
         return id
     }
 
-    override fun addPlayerToSession(updatedSession : Session) {
-        sessions.find { it.id == updatedSession.id }?.let { session ->
-            sessions.remove(session)
-            sessions.add(updatedSession)
-        } ?: throw DomainException.SessionNotFound("Session not found with id ${updatedSession.id}")
+    override fun addPlayerToSession(sid : Int, pid : Int) {
+        sessions.find { it.id == sid }?.let { s ->
+            val nSession = s.copy(players = s.players + pid, closed = s.players.size + 1 == s.capacity)
+            sessions.remove(s)
+            sessions.add(nSession)
+        } ?: throw AppException.SessionNotFound("Session not found with id $sid")
     }
 
     override fun getSession(sid: Int): Session =
-        sessions.find { it.id == sid } ?: throw DomainException.SessionNotFound("Session not found with id $sid")
+        sessions.find { it.id == sid } ?: throw AppException.SessionNotFound("Session not found with id $sid")
 
     override fun getListOfSessions(
         gid: Int,
-        date: LocalDateTime?,
+        date: String?,
         state: Boolean?,
         pid: Int?,
         skip: Int,

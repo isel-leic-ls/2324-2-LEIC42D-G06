@@ -1,7 +1,7 @@
 package pt.isel.ls.services.jdbc.games
 
 import org.postgresql.ds.PGSimpleDataSource
-import pt.isel.ls.repo.DomainException
+import pt.isel.ls.AppException
 import pt.isel.ls.repo.jdbc.JdbcGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.GamesServices
@@ -55,7 +55,7 @@ class ServiceJDBCGamesTests {
 
         val nameVariations = listOf("cs", "cS", "Cs", "CS") //case insensitive
         nameVariations.forEach {
-            assertFailsWith<DomainException.GameAlreadyExists> {
+            assertFailsWith<AppException.GameAlreadyExists> {
                 service.createGame(token, it, "valveDev", listOf("fps"))
             }
         }
@@ -74,7 +74,7 @@ class ServiceJDBCGamesTests {
             Triple("CS", "valveDev", listOf("fps", "")),
         )
         invalidData.forEach {
-            assertFailsWith<DomainException.BadRequestCreateGame> {
+            assertFailsWith<AppException.BadRequestCreateGame> {
                 service.createGame(token, it.first, it.second, it.third)
             }
         }

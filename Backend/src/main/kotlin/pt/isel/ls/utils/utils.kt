@@ -6,4 +6,5 @@ const val SKIP_DEFAULT = 0
 const val LIMIT_DEFAULT = 10
 const val CAPACITY_LOWER_BOUND = 2
 const val CAPACITY_UPPER_BOUND = 20
+const val MIN_SESSION_CAPACITY = 2
 const val TOKEN_LENGTH = 36
