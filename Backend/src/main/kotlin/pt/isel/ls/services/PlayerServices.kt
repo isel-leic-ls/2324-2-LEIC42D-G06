@@ -5,7 +5,6 @@ import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.CAPACITY_LOWER_BOUND
 import pt.isel.ls.utils.CAPACITY_UPPER_BOUND
 import pt.isel.ls.utils.FIRST_PLAYER_ID
-import pt.isel.ls.utils.TOKEN_LENGTH
 import java.util.UUID.randomUUID
 
 
@@ -34,8 +33,6 @@ class PlayerServices(private val pRepo: PlayersRepo) {
     }
 
     fun getPlayerIdByToken(token: String): Int {
-        require(token.isNotEmpty()) { "Token cannot be empty" }
-        require(token.length < TOKEN_LENGTH) { "Token length must be less than 36" }
         return pRepo.getPlayerIdByToken(token)
     }
 }

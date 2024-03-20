@@ -4,8 +4,6 @@ import SessionRepo
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
 import java.sql.Statement
-import java.time.LocalDateTime
-import java.util.*
 import javax.sql.DataSource
 
 class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {

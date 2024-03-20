@@ -2,7 +2,6 @@ package pt.isel.ls.repo.jdbc
 
 import pt.isel.ls.domain.Game
 import pt.isel.ls.repo.interfaces.GamesRepo
-import java.sql.Connection
 import java.sql.Statement
 import javax.sql.DataSource
 

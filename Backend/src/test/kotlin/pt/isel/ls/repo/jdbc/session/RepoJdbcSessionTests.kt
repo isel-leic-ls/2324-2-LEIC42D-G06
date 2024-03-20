@@ -1,4 +1,4 @@
-package pt.isel.ls.repo.jdbc.games
+package pt.isel.ls.repo.jdbc.session
 
 import org.junit.Test
 import org.postgresql.ds.PGSimpleDataSource
