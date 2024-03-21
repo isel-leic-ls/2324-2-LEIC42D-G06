@@ -3,6 +3,7 @@ package pt.isel.ls.services.jdbc.games
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.AppException
 import pt.isel.ls.repo.jdbc.JdbcGamesRepo
+import pt.isel.ls.repo.jdbc.JdbcPlayersRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.GamesServices
 import pt.isel.ls.utils.FIRST_GAME_ID
@@ -16,7 +17,7 @@ class ServiceJDBCGamesTests {
         setUrl(System.getenv("JDBC_DATABASE_URL"))
     }
 
-    private val pRepo = MemPlayersRepo() //TODO change to JdbcPlayersRepo
+    private val pRepo = JdbcPlayersRepo(dataSource)
 
     @BeforeTest
     fun setup() {
@@ -125,7 +126,7 @@ class ServiceJDBCGamesTests {
         assertEquals(1, games1.size)
         assertEquals(g1, games1[0].id)
 
-        val games2 = service.getListOfGames(listOf("action", "adventure"), "", 10, 0)
+        val games2 = service.getListOfGames(listOf("action", "adventure"), "rockstarGamesDev", 10, 0)
         assertEquals(1, games2.size)
         assertEquals(g2, games2[0].id)
 
@@ -142,16 +143,16 @@ class ServiceJDBCGamesTests {
         assertEquals(1, games5.size)
         assertEquals(g3, games5[0].id)
 
-        val games6 = service.getListOfGames(listOf(), "ROCKSTARGAMESDEV", 5, 1)
+        val games6 = service.getListOfGames(listOf("rts"), "ROCKSTARGAMESDEV", 5, 1)
         assertEquals(0, games6.size)
 
-        val games7 = service.getListOfGames(listOf(), "rockstarGamesDev", 5, 2)
+        val games7 = service.getListOfGames(listOf("fps"), "rockstarGamesDev", 5, 2)
         assertEquals(0, games7.size)
 
         val listOfParamsPair = listOf(Pair(-1, 5), Pair(0, 5), Pair(3, -1))
         listOfParamsPair.forEach {
             assertFailsWith<IllegalStateException> {
-                service.getListOfGames(listOf(), "rockstarGamesDev", it.first, it.second)
+                service.getListOfGames(listOf("sports"), "rockstarGamesDev", it.first, it.second)
             }
         }
     }

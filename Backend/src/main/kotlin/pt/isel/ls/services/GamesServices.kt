@@ -34,6 +34,11 @@ class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo
     fun getListOfGames(
         genres: List<String>, developer: String, limit: Int = LIMIT_DEFAULT, skip: Int = SKIP_DEFAULT
     ): List<Game> {
+
+        if (genres.isEmpty() || genres.any { it.isBlank() })
+            throw IllegalArgumentException("Invalid genres input")
+        if (developer.isBlank()) throw IllegalArgumentException("Invalid developer input")
+
         check(limit > 0) { "Limit must be a positive number" }
         check(skip >= 0) { "Skip must be a non-negative number" }
 
