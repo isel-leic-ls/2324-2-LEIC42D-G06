@@ -19,12 +19,12 @@ class ServiceMemSessionTests {
     private val gRepo = MemGamesRepo()
 
     @BeforeTest
-    fun setup()  {
+    fun setup() {
         val playerCount = 3
         val gameCount = 4
         (0 until playerCount)
             .map { generatePlayerDetails() }
-            .forEach { (n, e, t) -> pRepo.createPlayer(n, e, t) }
+            .forEach { (n, e, t, p) -> pRepo.createPlayer(n, e, t, p) }
 
         (0 until gameCount)
             .map { generateGameDetails() }

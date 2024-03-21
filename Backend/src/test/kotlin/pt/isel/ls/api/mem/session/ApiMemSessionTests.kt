@@ -47,8 +47,8 @@ class ApiMemSessionTests {
     @BeforeTest
     fun setup() {
         // create some players
-        playersRepo.createPlayer("joao", "joao@hotmail.com", UUID.randomUUID().toString())
-        playersRepo.createPlayer("pedro", "pedro@gmail.com", UUID.randomUUID().toString())
+        playersRepo.createPlayer("joao", "joao@hotmail.com", UUID.randomUUID().toString(),"joao123")
+        playersRepo.createPlayer("pedro", "pedro@gmail.com", UUID.randomUUID().toString(),"pedro123")
 
         // create some games
         gamesRepo.insert("FIFA", "EA", listOf("Sports", "Football"))

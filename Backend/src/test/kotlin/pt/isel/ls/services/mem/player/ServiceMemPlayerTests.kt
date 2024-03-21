@@ -20,13 +20,13 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("", "email")
+            service.createPlayer("", "email","vasco123")
         }
         // Assert
         assertEquals("Name cannot be empty", exception.message)
     }
 
-    @Ignore //TODO Vasco verifica o assert se realmente queremos que seja este
+    //@Ignore //TODO Vasco verifica o assert se realmente queremos que seja este
     @Test
     fun `createPlayer should throw IllegalArgumentException when given email is empty`() {
         // Arrange
@@ -34,7 +34,7 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("name", "")
+            service.createPlayer("name", "","vasco123")
         }
         // Assert
         assertEquals("Email cannot be empty", exception.message)
@@ -47,7 +47,7 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("n", "email")
+            service.createPlayer("n", "email","vasco123")
         }
         // Assert
         assertEquals(
@@ -62,7 +62,7 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("nameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "email")
+            service.createPlayer("nameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "email","vasco123")
         }
         // Assert
         assertEquals(
@@ -77,7 +77,7 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("name", "e")
+            service.createPlayer("name", "e","vasco123")
         }
         // Assert
         assertEquals(

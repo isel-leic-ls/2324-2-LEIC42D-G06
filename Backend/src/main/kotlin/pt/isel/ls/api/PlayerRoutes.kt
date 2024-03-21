@@ -18,12 +18,13 @@ class PlayerRoutes(private val services: PlayerServices) {
         PlayerUris.CREATE bind Method.POST to ::createPlayer,
         PlayerUris.GET bind Method.GET to ::getPlayerDetails,
         PlayerUris.GET_BY_TOKEN bind Method.GET to ::getPlayerIdByToken
+
     )
 
     private fun createPlayer(request: Request) =
         exceptionAwareScope {
             val inputModel = request.fromJson<PlayerInputModel>()
-            val pid = services.createPlayer(inputModel.name, inputModel.email)
+            val pid = services.createPlayer(inputModel.name, inputModel.email, inputModel.password)
             Response(Status.CREATED).toJson(PlayerOutputModel(pid))
         }
 

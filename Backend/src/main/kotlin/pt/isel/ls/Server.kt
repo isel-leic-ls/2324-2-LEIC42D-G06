@@ -18,7 +18,6 @@ import java.util.*
 fun main() {
     val logger = LoggerFactory.getLogger("pt.isel.ls.Server")
     val port = 8080
-
     // initialize the repositories
     // todo: the repositories are supposed to be the JDBC ones, for that we get the connection string from the ENV variables
     // todo: and create the datasource using the connection string
@@ -31,9 +30,9 @@ fun main() {
     // todo: remove this when using the real repositories
 
     // create players
-    playersRepo.createPlayer("joao", "joao@hotmail.com", UUID.randomUUID().toString())
-    playersRepo.createPlayer("pedro", "pedro@gmail.com", UUID.randomUUID().toString())
-    playersRepo.createPlayer("Vasco", "vasco@gmail.com", UUID.randomUUID().toString())
+    playersRepo.createPlayer("joao", "joao@hotmail.com", UUID.randomUUID().toString(),"joao123")
+    playersRepo.createPlayer("pedro", "pedro@gmail.com", UUID.randomUUID().toString(),"pedro123")
+    playersRepo.createPlayer("Vasco", "vasco@gmail.com", UUID.randomUUID().toString(),"vasco123")
     println(playersRepo.getPlayer(FIRST_PLAYER_ID))
     println(playersRepo.getPlayer(FIRST_PLAYER_ID + 1))
 

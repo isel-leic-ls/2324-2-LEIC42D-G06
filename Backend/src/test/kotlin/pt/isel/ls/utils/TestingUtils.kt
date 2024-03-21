@@ -10,12 +10,13 @@ val DOMAINS = listOf("@gmail.com", "@hotmail.com","@outlook.com")
 val GENRES = listOf("Action", "Adventure", "RPG")
 const val NAME_LENGTH = 10
 
-data class PlayerDetails(val name : String, val email : String, val token : String)
+data class PlayerDetails(val name : String, val email : String, val token : String, val password : String)
 
 fun generatePlayerDetails() : PlayerDetails {
     val name = generateName()
     val email = "$name${DOMAINS.random()}"
-    return PlayerDetails(name, email, UUID.randomUUID().toString())
+    val password = "pedro123"
+    return PlayerDetails(name, email, UUID.randomUUID().toString(),password)
 }
 
 fun generateGameDetails() : GameDetails {

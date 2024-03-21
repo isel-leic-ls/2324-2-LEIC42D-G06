@@ -15,13 +15,13 @@ class ServiceMemGamesTests {
 
     @BeforeTest
     fun setup() {
-        generatePlayerDetails().let { (n, e, t) -> pRepo.createPlayer(n, e, t) }
+        generatePlayerDetails().let { (n, e, t, p) -> pRepo.createPlayer(n, e, t, p) }
     }
 
     @Test
     fun `test createGame successfully`() {
         val service = GamesServices(MemGamesRepo(), pRepo)
-        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occurred")
+        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
         val token = foundPlayer.token
         val gameId1 =
             service.createGame(token, "CS", "valveDev", listOf("fps"))
@@ -35,7 +35,7 @@ class ServiceMemGamesTests {
     @Test
     fun `test createGame creating a game with the same name (case-insensitive)`() {
         val service = GamesServices(MemGamesRepo(), pRepo)
-        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occurred")
+        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
         val token = foundPlayer.token
 
         service.createGame(token, "CS", "valveDev", listOf("fps"))
@@ -51,7 +51,7 @@ class ServiceMemGamesTests {
     @Test
     fun `test createGame creating a game with invalid data`() {
         val service = GamesServices(MemGamesRepo(), pRepo)
-        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occurred")
+        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
         val token = foundPlayer.token
 
         val invalidData = listOf(
@@ -70,7 +70,7 @@ class ServiceMemGamesTests {
     @Test
     fun `test getDetailsOfGameById and getDetailsOfGameByName`() {
         val service = GamesServices(MemGamesRepo(), pRepo)
-        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occurred")
+        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
         val token = foundPlayer.token
         val gName = "CS"
         val gDev = "valveDev"
@@ -96,7 +96,7 @@ class ServiceMemGamesTests {
     @Test
     fun `test getListOfGames with and without limit and skip`() {
         val service = GamesServices(MemGamesRepo(), pRepo)
-        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occurred")
+        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
         val token = foundPlayer.token
 
         val g1 =

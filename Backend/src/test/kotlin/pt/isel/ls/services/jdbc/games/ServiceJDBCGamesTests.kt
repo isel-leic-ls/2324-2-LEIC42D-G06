@@ -28,7 +28,7 @@ class ServiceJDBCGamesTests {
             val stmt2 = it.prepareStatement("DELETE FROM Game")
             stmt2.executeUpdate()
         }
-        generatePlayerDetails().let { (n, e, t) -> pRepo.createPlayer(n, e, t) }
+        generatePlayerDetails().let { (n, e, t,p) -> pRepo.createPlayer(n, e, t,p) }
     }
 
     @Test

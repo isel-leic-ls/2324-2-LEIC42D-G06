@@ -16,7 +16,7 @@ class RepoMemPlayerTests {
         val name = "Vasco Branco"
         val email = "vascobranco13@gmail.com"
         val token = "f907d1b0-105b-455d-acc2-8422a2056f1d"
-        val pid = repo.createPlayer(name, email, token)
+        val pid = repo.createPlayer(name, email, token,"vasco123")
         val player = repo.getPlayer(pid)
         assertEquals(pid, player.id)
     }
@@ -30,8 +30,8 @@ class RepoMemPlayerTests {
         val name2 = "Pedro Diz"
         val email2 = "joaopereira@gmail.com"
         val token2 = "f907d1b0-105b-455d-acc2-8422a2056f3d"
-        val pid = repo.createPlayer(name, email, token)
-        val pid2 = repo.createPlayer(name2, email2, token2)
+        val pid = repo.createPlayer(name, email, token,"vasco123")
+        val pid2 = repo.createPlayer(name2, email2, token2,"pedro123")
         assertEquals(pid + 1, pid2)
     }
 
@@ -41,7 +41,7 @@ class RepoMemPlayerTests {
         val name = "Pedro Diz"
         val email = "pedrodiz@gmail.com"
         val token = "f907d1b0-105b-455d-acc2-8422a2056f2d"
-        val pid = repo.createPlayer(name, email, token)
+        val pid = repo.createPlayer(name, email, token,"pedro123")
         val player = repo.getPlayer(pid)
         assertEquals(name, player.name)
         assertEquals(email, player.email)
@@ -54,7 +54,7 @@ class RepoMemPlayerTests {
         val name = "João Pereira"
         val email = "joaopereira@gmail.com"
         val token = "f907d1b0-105b-455d-acc2-8422a2056f3d"
-        val pid = repo.createPlayer(name, email, token)
+        val pid = repo.createPlayer(name, email, token,"joao123")
         val pid2 = repo.getPlayerIdByToken(token)
         assertEquals(pid, pid2)
     }
