@@ -36,6 +36,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
     }
 
     override fun addPlayerToSession(sid: Int, pid: Int) {
+        // handled with triggers in the database
         dataSource.connection.use {
             val statement = it.prepareStatement(
                 "INSERT INTO SessionPlayer(session_id, player_id) VALUES (?, ?)"
@@ -87,7 +88,48 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
         limit: Int
     ): List<Session> {
         dataSource.connection.use {
-            TODO()
+            var query = "SELECT * FROM Session WHERE game_id = ?"
+            if(date != null) query += " AND session_date = ?"
+            if(state != null) query += " AND closed = ?"
+            if(pid != null) query += " AND sid IN (SELECT session_id FROM SessionPlayer WHERE player_id = ?)"
+            query += " LIMIT ? OFFSET ?"
+
+            val statement = it.prepareStatement(query)
+            statement.setInt(1, gid)
+            var index = 2
+            if(date != null) statement.setString(index++, date)
+            if(state != null) statement.setBoolean(index++, state)
+            if(pid != null) statement.setInt(index++, pid)
+            statement.setInt(index++, limit)
+            statement.setInt(index, skip)
+            val result = statement.executeQuery()
+
+            val sessions = mutableListOf<Session>()
+
+            while(result.next()) {
+                val statement2 = it.prepareStatement(
+                    "SELECT player_id FROM SessionPlayer WHERE session_id = ?"
+                )
+                statement2.setInt(1, result.getInt("sid"))
+                val result2 = statement2.executeQuery()
+
+                val players = mutableListOf<Int>()
+                while(result2.next()) {
+                    players.add(result2.getInt("player_id"))
+                }
+
+                sessions.add(
+                    Session(
+                        id = result.getInt("sid"),
+                        capacity = result.getInt("capacity"),
+                        date = result.getString("session_date"),
+                        game = result.getInt("game_id"),
+                        closed = result.getInt("capacity") == players.size,
+                        players = players
+                    )
+                )
+            }
+            return sessions
         }
     }
 

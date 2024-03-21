@@ -1,5 +1,6 @@
 package pt.isel.ls.repo.jdbc.session
 
+import org.junit.After
 import org.junit.Test
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.domain.createSessionDTO
@@ -25,6 +26,15 @@ class RepoJdbcSessionTests {
             it.prepareCall("Call removeTables()").execute()
             it.prepareCall("Call createTables()").execute()
             it.prepareCall("Call populateTables()").execute()
+        }
+
+    @After
+    fun afterTestCleanup(): Unit =
+        dataSource.connection.use {
+            val stmt = it.prepareStatement("DELETE FROM SessionPlayer")
+            val stmt2 = it.prepareStatement("DELETE FROM Session")
+            stmt.executeUpdate()
+            stmt2.executeUpdate()
         }
 
 
@@ -75,6 +85,32 @@ class RepoJdbcSessionTests {
         assert(sid > 0)
 
         assertTrue(repo.checkSessionExists(sid))
+    }
+
+    @Test
+    fun `get list of sessions`() {
+        val s1 = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            game = FIRST_GAME_ID,
+            players = listOf(FIRST_PLAYER_ID)
+        )
+
+        val s2 = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            game = FIRST_GAME_ID,
+            players = listOf(FIRST_PLAYER_ID + 1)
+        )
+
+        val sid = repo.createSession(s1)
+        assert(sid > 0)
+
+        val sid2 = repo.createSession(s2)
+        assert(sid2 > 0)
+
+        val sessions = repo.getListOfSessions(FIRST_GAME_ID, null, null, null, 0, 2)
+        assertTrue(sessions.size == 2)
     }
 
 }
