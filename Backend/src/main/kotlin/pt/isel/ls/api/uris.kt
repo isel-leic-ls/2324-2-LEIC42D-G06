@@ -18,5 +18,4 @@ object Session {
 object PlayerUris {
     const val CREATE = "/players"
     const val GET = "/players/{pid}"
-    const val GET_BY_TOKEN = "/players/token/{token}"
 }

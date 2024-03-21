@@ -26,7 +26,6 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
             }
             else {
                 throw Exception("Player not inserted")
-
             }
         }
     }
@@ -44,6 +43,15 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
             rs.getString("token"),
             rs.getString("password")
         )
+    }
+
+    override fun checkPlayerExistsByEmail(email: String): Boolean {
+        dataSource.connection.use {
+            val stmt = it.prepareStatement("SELECT * FROM player WHERE email = ?")
+            stmt.setString(1, email)
+            val rs = stmt.executeQuery()
+            return rs.next()
+        }
     }
 
     override fun getPlayerIdByToken(token: String): Int {

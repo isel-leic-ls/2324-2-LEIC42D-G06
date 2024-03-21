@@ -5,8 +5,8 @@ import org.junit.Test
 import pt.isel.ls.AppException
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.PlayerServices
-import pt.isel.ls.utils.CAPACITY_LOWER_BOUND
-import pt.isel.ls.utils.CAPACITY_UPPER_BOUND
+import pt.isel.ls.utils.MIN_LENGTH
+import pt.isel.ls.utils.MAX_LENGTH
 import pt.isel.ls.utils.FIRST_PLAYER_ID
 import kotlin.test.Ignore
 import kotlin.test.assertFailsWith
@@ -51,7 +51,7 @@ class ServiceMemPlayerTests {
         }
         // Assert
         assertEquals(
-            "Name length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND", exception.message
+            "Name length must be between $MIN_LENGTH and $MAX_LENGTH", exception.message
         )
     }
 
@@ -66,7 +66,7 @@ class ServiceMemPlayerTests {
         }
         // Assert
         assertEquals(
-            "Name length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND", exception.message
+            "Name length must be between $MIN_LENGTH and $MAX_LENGTH", exception.message
         )
     }
 
