@@ -4,6 +4,9 @@ import SessionRepo
 import pt.isel.ls.AppException
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
+import java.sql.Connection
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 import java.sql.Statement
 import javax.sql.DataSource
 
@@ -65,11 +68,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
             statement2.setInt(1, sid)
             val result2 = statement2.executeQuery()
 
-            val players = mutableListOf<Int>()
-            while(result2.next()) {
-                players.add(result2.getInt("player_id"))
-            }
-
+            val players = result2.toPlayersList()
             return Session(
                 id = sid,
                 capacity = result.getInt("capacity"),
@@ -90,21 +89,9 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
         limit: Int
     ): List<Session> {
         dataSource.connection.use {
-            var query = "SELECT * FROM Session WHERE game_id = ?"
-            if(date != null) query += " AND session_date = ?"
-            if(state != null) query += " AND closed = ?"
-            if(pid != null) query += " AND sid IN (SELECT session_id FROM SessionPlayer WHERE player_id = ?)"
-            query += " LIMIT ? OFFSET ?"
-
-            val statement = it.prepareStatement(query)
-            statement.setInt(1, gid)
-            var index = 2
-            if(date != null) statement.setString(index++, date)
-            if(state != null) statement.setBoolean(index++, state)
-            if(pid != null) statement.setInt(index++, pid)
-            statement.setInt(index++, limit)
-            statement.setInt(index, skip)
-            val result = statement.executeQuery()
+            val result = it.setupListSessionsStatement(date, state, pid)
+                .bindListSessionParameters(gid, date, state, pid, skip, limit)
+                .executeQuery()
 
             val sessions = mutableListOf<Session>()
 
@@ -115,11 +102,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
                 statement2.setInt(1, result.getInt("sid"))
                 val result2 = statement2.executeQuery()
 
-                val players = mutableListOf<Int>()
-                while(result2.next()) {
-                    players.add(result2.getInt("player_id"))
-                }
-
+                val players = result2.toPlayersList()
                 sessions.add(
                     Session(
                         id = result.getInt("sid"),
@@ -133,6 +116,45 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
             }
             return sessions
         }
+    }
+
+    private fun ResultSet.toPlayersList(): List<Int> {
+        val players = mutableListOf<Int>()
+        while(next()) {
+            players.add(getInt("player_id"))
+        }
+        return players
+    }
+
+    private fun Connection.setupListSessionsStatement(
+        date: String?,
+        state: Boolean?,
+        pid: Int?,
+    ): PreparedStatement {
+        var query = "SELECT * FROM Session WHERE game_id = ?"
+        if(date != null) query += " AND session_date = ?"
+        if(state != null) query += " AND closed = ?"
+        if(pid != null) query += " AND sid IN (SELECT session_id FROM SessionPlayer WHERE player_id = ?)"
+        query += " LIMIT ? OFFSET ?"
+        return prepareStatement(query)
+    }
+
+    private fun PreparedStatement.bindListSessionParameters(
+        gid: Int,
+        date: String?,
+        state: Boolean?,
+        pid: Int?,
+        skip: Int,
+        limit: Int
+    ) : PreparedStatement {
+        var index = 1
+        setInt(index++, gid)
+        if(date != null) setString(index++, date)
+        if(state != null) setBoolean(index++, state)
+        if(pid != null) setInt(index++, pid)
+        setInt(index++, limit)
+        setInt(index, skip)
+        return this
     }
 
     override fun checkSessionExists(sid: Int): Boolean {
