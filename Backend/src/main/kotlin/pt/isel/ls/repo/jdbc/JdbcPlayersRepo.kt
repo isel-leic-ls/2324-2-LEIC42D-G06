@@ -51,6 +51,15 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
         }
     }
 
+    override fun checkPlayerExistsByName(name: String): Boolean {
+        dataSource.connection.use {
+            val stmt = it.prepareStatement("SELECT * FROM player WHERE name = ?")
+            stmt.setString(1, name)
+            val rs = stmt.executeQuery()
+            return rs.next()
+        }
+    }
+
     override fun getPlayerIdByToken(token: String): Int {
         val stmt = dataSource.connection.prepareStatement("SELECT pid FROM player WHERE token = ?")
         stmt.setString(1, token)

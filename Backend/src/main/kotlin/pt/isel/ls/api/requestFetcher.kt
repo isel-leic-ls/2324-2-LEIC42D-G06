@@ -17,7 +17,7 @@ const val SKIP = "skip"
 const val LIMIT = "limit"
 
 fun Request.getGameId(): Int {
-    return path(gameId)?.toInt() ?: throw IllegalArgumentException("Game ID not found")
+    return path(gameId)?.toIntOrNull() ?: throw IllegalArgumentException("Game ID not found")
 }
 
 fun Request.getGameName(): String {
@@ -25,7 +25,7 @@ fun Request.getGameName(): String {
 }
 
 fun Request.getSessionID(): Int {
-    return path(SESSION_ID)?.toInt() ?: throw IllegalArgumentException("Session ID not found")
+    return path(SESSION_ID)?.toIntOrNull() ?: throw IllegalArgumentException("Session ID not found")
 }
 
 fun Request.getSkipAndLimit(): Pair<Int, Int> {
@@ -54,5 +54,5 @@ fun Request.getAuthorizationToken(): String {
 }
 
 fun Request.getPlayerDetails(): Int {
-    return path("pid")?.toInt() ?: throw IllegalArgumentException("Player ID not found")
+    return path("pid")?.toIntOrNull() ?: throw IllegalArgumentException("Player ID not found")
 }

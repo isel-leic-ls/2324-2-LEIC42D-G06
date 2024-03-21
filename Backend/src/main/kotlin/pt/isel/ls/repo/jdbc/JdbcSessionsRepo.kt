@@ -75,7 +75,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
                 capacity = result.getInt("capacity"),
                 date = result.getString("session_date"),
                 game = result.getInt("game_id"),
-                closed = result.getInt("capacity") == players.size,
+                closed = result.getBoolean("closed"),
                 players = players
             )
         }
@@ -126,7 +126,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
                         capacity = result.getInt("capacity"),
                         date = result.getString("session_date"),
                         game = result.getInt("game_id"),
-                        closed = result.getInt("capacity") == players.size,
+                        closed = result.getBoolean("closed"),
                         players = players
                     )
                 )
