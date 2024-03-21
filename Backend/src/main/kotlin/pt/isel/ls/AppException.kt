@@ -18,4 +18,6 @@ sealed class AppException : Exception() {
 
     class PlayerNotFound(message: String) : Exception(message)
 
+    class SQLException(message: String) : Exception(message)
+
 }

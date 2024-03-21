@@ -1,6 +1,7 @@
 package pt.isel.ls.repo.jdbc
 
 import SessionRepo
+import pt.isel.ls.AppException
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
 import java.sql.Statement
@@ -31,12 +32,13 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
                 statement2.executeUpdate()
                 return sid
             }
-            else throw Exception("Session not inserted")
+            else throw AppException.SQLException("Session not inserted")
         }
     }
 
     override fun addPlayerToSession(sid: Int, pid: Int) {
         // handled with triggers in the database
+        // this throws exception if 2 players try to join the same session at the same time
         dataSource.connection.use {
             val statement = it.prepareStatement(
                 "INSERT INTO SessionPlayer(session_id, player_id) VALUES (?, ?)"
@@ -55,6 +57,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
             )
             statement.setInt(1, sid)
             val result = statement.executeQuery()
+            if (!result.next()) throw AppException.SessionNotFound("Session $sid does not exist")
 
             val statement2 = it.prepareStatement(
                 "SELECT player_id FROM SessionPlayer WHERE session_id = ?"
@@ -67,7 +70,6 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
                 players.add(result2.getInt("player_id"))
             }
 
-            if (!result.next()) throw Exception("Session $sid not found")
             return Session(
                 id = sid,
                 capacity = result.getInt("capacity"),

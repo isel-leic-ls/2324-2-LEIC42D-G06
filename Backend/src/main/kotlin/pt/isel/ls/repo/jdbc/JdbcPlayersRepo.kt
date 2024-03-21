@@ -1,5 +1,6 @@
 package pt.isel.ls.repo.jdbc
 
+import pt.isel.ls.AppException
 import pt.isel.ls.domain.Player
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import java.sql.Statement
@@ -13,7 +14,6 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
                 Statement.RETURN_GENERATED_KEYS
             )
 
-
             stmt.setString(1, name)
             stmt.setString(2, email)
             stmt.setString(3, token)
@@ -21,12 +21,9 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
             stmt.executeUpdate()
 
             val rs = stmt.generatedKeys
-            if (rs.next()){
-                return rs.getInt(1)
-            }
-            else {
-                throw Exception("Player not inserted")
-            }
+            if (rs.next()) return rs.getInt(1)
+            else throw AppException.SQLException("Player not inserted")
+
         }
     }
 
@@ -34,7 +31,7 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
         val stmt = dataSource.connection.prepareStatement("SELECT * FROM player WHERE pid = ?")
         stmt.setInt(1, pid)
         val rs = stmt.executeQuery()
-        rs.next()
+        if (!rs.next()) throw AppException.PlayerNotFound("Player $pid does not exist")
 
         return Player(
             rs.getInt("pid"),
@@ -58,7 +55,7 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
         val stmt = dataSource.connection.prepareStatement("SELECT pid FROM player WHERE token = ?")
         stmt.setString(1, token)
         val rs = stmt.executeQuery()
-        rs.next()
+        if (!rs.next()) throw AppException.PlayerNotFound("Player with token $token does not exist")
 
         return rs.getInt("pid")
     }
