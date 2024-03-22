@@ -1,5 +1,6 @@
 package pt.isel.ls.services
 
+import pt.isel.ls.AppException
 import pt.isel.ls.domain.Player
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.*
@@ -15,7 +16,8 @@ class PlayerServices(private val pRepo: PlayersRepo) {
             "Name length must be between $MIN_NAME_LENGTH and $MAX_NAME_LENGTH"
         }
 
-        require(!pRepo.checkPlayerExistsByName(name)) { "Name already exists" }
+        if(pRepo.checkPlayerExistsByName(name))
+            throw AppException.PlayerAlreadyExists("Name $name already exists")
 
         require(password.isNotBlank()) { "Password cannot be blank" }
         require(password.length in MIN_PASSWORD_LENGTH..MAX_PASSWORD_LENGTH ) {
@@ -26,7 +28,8 @@ class PlayerServices(private val pRepo: PlayersRepo) {
         require(email.matches(emailRegex.toRegex())) { "Invalid email" }
 
         //Checking if the email already exists
-        require(!pRepo.checkPlayerExistsByEmail(email)) { "Email already exists" }
+        if(pRepo.checkPlayerExistsByEmail(email))
+            throw AppException.PlayerAlreadyExists("Email $email already exists")
 
         //Creating a random token
         val token = randomUUID().toString()

@@ -21,5 +21,5 @@ class MemPlayersRepo : PlayersRepo {
     override fun checkPlayerExistsByEmail(email: String): Boolean = players.any { it.email == email }
     override fun checkPlayerExistsByName(name: String): Boolean = players.any { it.name == name }
 
-    override fun getPlayerIdByToken(token: String) = players.find { it.token == token }?.id ?: throw AppException.PlayerNotFound("Player not found with token $token")
+    override fun getPlayerIdByToken(token: String) = players.find { it.token == token }?.id
 }

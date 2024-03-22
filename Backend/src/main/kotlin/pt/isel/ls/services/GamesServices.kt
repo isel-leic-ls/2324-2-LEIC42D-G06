@@ -10,6 +10,7 @@ import pt.isel.ls.utils.*
 class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo) {
     fun createGame(token: String, name: String, developer: String, genres: List<String>): Int {
         pRepo.getPlayerIdByToken(token)
+            ?: throw AppException.InvalidAuthorization("Invalid token $token")
 
         if (gRepo.checkGameExistsByName(name))
             throw AppException.GameAlreadyExists("Game $name already exists")
@@ -43,8 +44,8 @@ class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo
         if (developer.isBlank())
             throw IllegalArgumentException("Invalid developer input")
 
-        check(limit > 0) { "Limit must be a positive number" }
-        check(skip >= 0) { "Skip must be a non-negative number" }
+        require(limit > 0) { "Limit must be a positive number" }
+        require(skip >= 0) { "Skip must be a non-negative number" }
 
         return gRepo.getListOfGames(genres, developer, limit, skip)
     }

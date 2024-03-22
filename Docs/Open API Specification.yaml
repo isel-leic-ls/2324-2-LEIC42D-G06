@@ -1,0 +1,589 @@
+openapi: 3.0.1
+info:
+  description: Session Management API
+  version: "1.0.0"
+  title: Session-Manager
+  
+servers:
+  - description: localhost
+    url: http://localhost:8080
+
+tags:
+  - name: Player Management
+  - name: Game Management
+  - name: Session Management
+
+paths:
+  /players:
+    post:
+      tags:
+        - Player Management
+      summary: creates a new player
+      description: |
+        Create a player, given a name, email and password.
+      requestBody:
+        description: Player creation input model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerInputModel'
+
+      responses:
+        '201':
+          description: Player was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerOutputModel'
+        '400':
+          description: Invalid or Missing Request Body
+        '409':
+          description: Email / Name already exists
+        '500':
+          description: Internal Server Error
+
+
+  /players/{pid}:
+    get:
+      tags:
+        - Player Management
+      summary: get the details of a player
+      description: |
+        Get the name and email of a player
+      parameters:
+        - name: pid
+          in: path
+          description: The player's id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The player's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerRetrievalOutputModel'
+        '400':
+          description: Invalid player ID
+        '404':
+          description: Player not found
+        '500':
+          description: Internal Server Error
+          
+  /games:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Game Management
+      summary: Create a game
+      description: |
+        Create a game
+      requestBody:
+        description: Game Input Model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameInputModel'
+              
+      responses:
+        '201':
+          description: Game was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameOutputModel'
+        '400':
+          description: Invalid or Missing Request Body
+        '401':
+          description: Invalid authorization
+        '409':
+          description: Game name already exists
+        '500':
+          description: Internal Server Error
+          
+          
+  /games/id/{gid}:
+    get:
+      tags:
+        - Game Management
+      summary: get the details of a game by id
+      description: |
+        Get the details of a game by id
+      parameters:
+        - name: gid
+          in: path
+          description: The game's id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The game's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: Invalid Game ID
+        '404':
+          description: Game not found
+        '500':
+          description: Internal Server Error
+          
+  /games/name/{gname}:
+    get:
+      tags:
+        - Game Management
+      summary: get the details of a game by name
+      description: |
+        Get the details of a game by name
+      parameters:
+        - name: gname
+          in: path
+          description: The game's name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The game's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: Invalid Game name
+        '404':
+          description: Game not found
+        '500':
+          description: Internal Server Error   
+          
+  /games/list:
+     post:
+      tags:
+        - Game Management
+      summary: get a list of games
+      description: |
+        Get a list of games
+      requestBody:
+        description: Game List Input Model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameListInputModel'
+      responses:
+        '200':
+          description: The game's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameListOutputModel'
+        '400':
+          description: Invalid or missing request body
+        '404':
+          description: Game not found
+        '500':
+          description: Internal Server Error 
+          
+  /sessions:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Session Management
+      summary: Create a session
+      description: |
+        Create a session
+      requestBody:
+        description: Session Input Model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSessionInputModel'
+              
+      responses:
+        '201':
+          description: Game was created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSessionOutputModel'
+        '400':
+          description: Invalid or Missing Request Body
+        '401':
+          description: Invalid authorization
+        '404':
+          description: Game does not exist
+        '500':
+          description: Internal Server Error
+          
+          
+  /sessions/{sid}:
+    get:
+      tags:
+        - Session Management
+      summary: get the details of a session by id
+      description: |
+        Get the details of a session by id
+      parameters:
+        - name: sid
+          in: path
+          description: The session's id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: The session's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionRetrievalOutputModel'
+        '400':
+          description: Invalid Session ID
+        '404':
+          description: Session not found
+        '500':
+          description: Internal Server Error
+          
+  /sessions/{sid}/players:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Session Management
+      summary: Add player to session
+      description: |
+        Add player to session
+      parameters:
+        - name: sid
+          in: path
+          description: The session's ID
+          required: true
+          schema:
+            type: integer
+              
+      responses:
+        '204':
+          description: Player successfully added
+        '400':
+          description: Invalid Session ID / Session closed / Player already in session
+        '401':
+          description: Invalid authorization
+        '404':
+          description: Session does not exist
+        '500':
+          description: Internal Server Error
+          
+  /sessions/list:
+    post:
+      tags:
+        - Session Management
+      summary: Get a list of sessions
+      description: |
+        Get a list of sessions
+      requestBody:
+        description: Session List Retrieval Input Model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionListRetrievalInputModel'
+          
+      responses:
+        '200':
+          description: Sessions list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListRetrievalOutputModel'
+        '400':
+          description: Invalid JSON body
+        '500':
+          description: Internal Server Error  
+  
+        
+        
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: UUID
+    
+  schemas:
+
+  
+    PlayerInputModel:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+          description: Player's Unique Name
+          example: "Pedro Diz"
+        email:
+          type: string
+          description: Player' Email
+          example: "a47718@alunos.isel.pt"
+        password:
+          type: string
+          description: Player's Password
+          example: "binogogo"
+          
+    PlayerOutputModel:
+      type: object
+      required:
+        - token
+        - id
+      properties:
+        token:
+          type: string
+          format: uuid
+          description: Player's Token
+          example: "0103ffff-fff0-11b1-0f39-5ffxdefgfad2"
+        id:
+          type: integer
+          description: Player's Unique Identifier
+          example: 1003
+          
+    PlayerRetrievalOutputModel:
+      type: object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: integer
+          description: Player's Unique Identifier
+          example: 1003
+        name:
+          type: string
+          description: Player's Unique Name
+          example: "Pedro Diz"
+        email:
+          type: string
+          description: Player's Email
+          example: "a47718@alunos.isel.pt"
+          
+          
+          
+    GameInputModel:
+      type: object
+      required:
+        - name
+        - developer
+        - genres
+      properties:
+        name:
+          type: string
+          description: Game name
+          example: "CS2"
+        developer:
+          type: string
+          description: Game developer
+          example: "Valve"
+        genres:
+          type: array
+          description: List of game genres
+          items:
+            type: string
+          example: ["Action", "Shooter"]
+          
+          
+    GameOutputModel:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: Game ID
+          example: 107
+    
+          
+          
+    GameListInputModel:
+       type: object
+       required:
+        - genres
+        - developer
+       properties:
+        developer:
+          type: string
+          description: Game developer
+          example: "Valve"
+        genres:
+          type: array
+          description: List of game genres
+          items:
+            type: string
+          example: ["Action", "Shooter"]
+        
+    GameListOutputModel:
+      type: object
+      required:
+        - games
+      properties:
+        games:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Game'
+            
+            
+            
+    Game:
+      type: object
+      required:
+        - id
+        - name
+        - developer
+        - genres
+      properties:
+        id:
+          type: integer
+          description: Game ID
+          example: 107
+        name:
+          type: string
+          description: Game name
+          example: "CS2"
+        developer:
+          type: string
+          description: Game developer
+          example: "Valve"
+        genres:
+          type: array
+          description: List of game genres
+          items:
+            type: string
+          example: ["Action", "Shooter"]
+          
+          
+    CreateSessionInputModel:
+      type: object
+      required:
+        - gid
+        - capacity
+        - date
+      properties:
+        gid:
+          type: integer
+          description: Game ID
+          example: 107
+        capacity:
+          type: integer
+          description: Session capacity
+          example: 2
+        date:
+          type: string
+          description: Session start date
+          example: "2025-04-05 18:30:00"
+          
+    CreateSessionOutputModel:
+      type: object
+      required:
+        - sid
+      properties:
+        sid:
+          type: integer
+          description: Session ID
+          example: 10030
+          
+          
+          
+    SessionRetrievalOutputModel:
+      type: object
+      required:
+        - session
+      properties:
+        session:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'
+            
+    Session:
+      type: object
+      required:
+        - id
+        - capacity
+        - date
+        - game
+        - closed
+        - players
+      properties:
+        id:
+          type: integer
+          description: Session ID
+          example: 10030
+        capacity:
+          type: integer
+          description: Session capacity
+          example: 2
+        date:
+          type: string
+          description: Session start date
+          example: "2025-04-05 18:30:00"
+        game:
+          type: integer
+          description: Session game ID
+          example: 107
+        closed:
+          type : boolean
+          description: Session closed status
+          example : true
+        players:
+          type: array
+          description: Session players
+          items:
+            type: integer
+            example: [1001, 1002]
+            
+            
+    SessionListRetrievalInputModel:
+      type: object
+      required:
+        - gid
+        - date
+        - state
+        - pid
+      properties:
+        gid:
+          type: integer
+          description: Game ID
+          example: 107
+        date:
+          type: string
+          description: Session start date
+          example: "2025-04-05 18:30:00"
+        state:
+          type: string
+          description: Session closed state
+          example: "open"
+        pid:
+          type: integer
+          description: Player ID
+          example: 1002
+          
+          
+    SessionListRetrievalOutputModel:
+      type: object
+      required:
+        - sessions
+      properties:
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Session'

@@ -140,7 +140,7 @@ class ServiceMemSessionTests {
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
 
         //act
-        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID + 1) ?: throw Exception("Error occured")
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID + 1)
         val token = fPlayer.token
 
         sServices.addPlayerToSession(token, sid)
@@ -162,7 +162,7 @@ class ServiceMemSessionTests {
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
 
         //act
-        val fPlayer = pRepo.getPlayer(pid) ?: throw Exception("Error occured")
+        val fPlayer = pRepo.getPlayer(pid)
         val token = fPlayer.token
 
         assertFailsWith<AppException.PlayerAlreadyInSession> {

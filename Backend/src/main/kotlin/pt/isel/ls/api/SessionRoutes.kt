@@ -20,7 +20,7 @@ class SessionRoutes(private val services : SessionServices) {
             Session.CREATE bind Method.POST to ::createSession,
             Session.GET bind Method.GET to ::getSession,
             Session.ADD_PLAYER bind Method.POST to ::addPlayerToSession,
-            Session.GET_SESSIONS bind Method.GET to ::getListOfSessions
+            Session.GET_SESSIONS bind Method.POST to ::getListOfSessions
         )
 
 

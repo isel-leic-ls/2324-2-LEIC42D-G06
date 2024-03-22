@@ -137,7 +137,7 @@ class ServiceMemGamesTests {
 
         val listOfParamsPair = listOf(Pair(-1, 5), Pair(0, 5), Pair(3, -1))
         listOfParamsPair.forEach {
-            assertFailsWith<IllegalStateException> {
+            assertFailsWith<IllegalArgumentException> {
                 service.getListOfGames(listOf("sports"), "rockstarGamesDev", it.first, it.second)
             }
         }

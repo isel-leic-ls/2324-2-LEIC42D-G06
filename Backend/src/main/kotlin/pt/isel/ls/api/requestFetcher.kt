@@ -17,15 +17,15 @@ const val SKIP = "skip"
 const val LIMIT = "limit"
 
 fun Request.getGameId(): Int {
-    return path(gameId)?.toIntOrNull() ?: throw IllegalArgumentException("Game ID not found")
+    return path(gameId)?.toIntOrNull() ?: throw IllegalArgumentException("Invalid game ID")
 }
 
 fun Request.getGameName(): String {
-    return path(gameName) ?: throw IllegalArgumentException("Game name not found")
+    return path(gameName) ?: throw IllegalArgumentException("Invalid game name")
 }
 
 fun Request.getSessionID(): Int {
-    return path(SESSION_ID)?.toIntOrNull() ?: throw IllegalArgumentException("Session ID not found")
+    return path(SESSION_ID)?.toIntOrNull() ?: throw IllegalArgumentException("Invalid session ID")
 }
 
 fun Request.getSkipAndLimit(): Pair<Int, Int> {
@@ -41,18 +41,18 @@ fun Request.getSkipAndLimit(): Pair<Int, Int> {
 }
 
 fun Request.getAuthorizationToken(): String {
-    val token = header(AUTHORIZATION_HEADER) ?: throw IllegalArgumentException("No Authorization header")
-    if (!token.startsWith(BEARER)) throw IllegalArgumentException("Invalid Authorization header")
+    val token = header(AUTHORIZATION_HEADER) ?: throw AppException.InvalidAuthorization("No Authorization header")
+    if (!token.startsWith(BEARER)) throw AppException.InvalidAuthorization("Invalid Authorization header")
 
     val tokenValue = token.substring(BEARER.length)
     try {
         UUID.fromString(tokenValue)
     } catch (e: Exception) {
-        throw AppException.InvalidToken("Invalid token format")
+        throw AppException.InvalidAuthorization("Invalid token format")
     }
     return tokenValue
 }
 
 fun Request.getPlayerDetails(): Int {
-    return path("pid")?.toIntOrNull() ?: throw IllegalArgumentException("Player ID not found")
+    return path("pid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid player ID")
 }

@@ -81,7 +81,7 @@ class ApiMemPlayerTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/players"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${player?.token}")
+            .header("Authorization", "Bearer ${player.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -105,7 +105,7 @@ class ApiMemPlayerTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/players"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${player?.token}")
+            .header("Authorization", "Bearer ${player.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -130,7 +130,7 @@ class ApiMemPlayerTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/players"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${player?.token}")
+            .header("Authorization", "Bearer ${player.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 

@@ -17,7 +17,11 @@ sealed class AppException : Exception() {
 
     class PlayerAlreadyInSession(message: String) : Exception(message)
 
+    class PlayerAlreadyExists(message: String) : Exception(message)
+
     class PlayerNotFound(message: String) : Exception(message)
+
+    class InvalidAuthorization(message : String) : Exception(message)
 
     class SQLException(message: String) : Exception(message)
 }

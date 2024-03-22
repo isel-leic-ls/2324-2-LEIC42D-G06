@@ -15,6 +15,7 @@ class SessionServices(
 
     fun createSession(token : String, gid : Int, capacity : Int, startDate: String) : Int {
         val pid = pRepo.getPlayerIdByToken(token)
+            ?: throw AppException.InvalidAuthorization("Invalid token $token")
 
         checkGameExists(gid)
         checkDateFormat(startDate)
@@ -24,6 +25,7 @@ class SessionServices(
 
     fun addPlayerToSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
+            ?: throw AppException.InvalidAuthorization("Invalid token $token")
 
         checkSessionExists(sid)
         val session = sRepo.getSession(sid)
