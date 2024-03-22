@@ -81,7 +81,7 @@ class ApiMemSessionTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/sessions"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${fPlayer?.token}")
+            .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -118,7 +118,7 @@ class ApiMemSessionTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/sessions"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${fPlayer?.token}")
+            .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -155,7 +155,7 @@ class ApiMemSessionTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/sessions"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${fPlayer?.token}")
+            .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 

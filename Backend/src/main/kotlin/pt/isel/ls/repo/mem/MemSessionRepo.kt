@@ -16,10 +16,10 @@ class MemSessionRepo : SessionRepo {
     private val sessions = LinkedList<Session>()
     private val currentId = AtomicInteger(1)
     private val monitor = ReentrantLock()
-    override fun createSession(sessionDTO: SessionDTO): Int {
+    override fun createSession(dto: SessionDTO): Int {
         monitor.withLock {
             val id = currentId.getAndIncrement()
-            val session = sessionDTO.toSession(id)
+            val session = dto.toSession(id)
             sessions.add(session)
             return id
         }
