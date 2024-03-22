@@ -1,0 +1,347 @@
+### Run the tests in IntellIj or reset DB info..
+### Player routes
+
+### Create user - success case
+POST http://localhost:8080/players
+content-type: application/json
+
+{
+    "email" : "a47718@alunos.isel.pt",
+    "name" : "pedro3",
+    "password" : "peelrooro"
+}
+
+### Create user - name already exists (call the success case) 
+
+POST http://localhost:8080/players
+content-type: application/json
+
+{
+    "email" : "a47718@hotmail.com",
+    "name" : "pedro3",
+    "password" : "peelrooro"
+}
+
+### Create user - email already exists (call the success case)
+POST http://localhost:8080/players
+content-type: application/json
+
+{
+    "email" : "a47718@alunos.isel.pt",
+    "name" : "pedro33333",
+    "password" : "peelrooro"
+}
+
+### Create user - blank name
+POST http://localhost:8080/players
+content-type: application/json
+
+{
+    "email" : "a47718@alunos.isel.pt",
+    "name" : "       ",
+    "password" : "peelrooro"
+}
+
+
+### Create user - name length lower than 4 chars
+POST http://localhost:8080/players
+content-type: application/json
+
+{
+    "email" : "a47718@alunos.isel.pt",
+    "name" : "joe",
+    "password" : "peelrooro"
+}
+
+### Create user - name length bigger than 50 chars
+
+POST http://localhost:8080/players
+content-type: application/json
+
+{
+    "email" : "a47718@alunos.isel.pt",
+    "name" : "joejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoejoe",
+    "password" : "peelrooro"
+}
+
+### Create user - email doesnt match email format
+POST http://localhost:8080/players
+content-type: application/json
+
+{
+    "email" : "a4771831313141",
+    "name" : "adqldqlld",
+    "password" : "peelrooro"
+}
+
+### Create user - password is blank
+POST http://localhost:8080/players
+content-type: application/json
+
+{
+    "email" : "a44039@gmail.com",
+    "name" : "adqldqlld",
+    "password" : "             "
+}
+
+### Create user - password smaller than 6 chars
+POST http://localhost:8080/players
+content-type: application/json
+
+{
+    "email" : "a44039@gmail.com",
+    "name" : "adqldqlld",
+    "password" : "abc"
+}
+
+
+### Fetch user - successfull case
+GET http://localhost:8080/players/1008
+
+### Fetch user - that doesnt exist
+GET http://localhost:8080/players/130103103
+
+### Game Routes
+
+### Create Game - Successful case
+POST http://localhost:8080/games
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "name" : "APEX LEGENDS",
+    "developer" : "Rampage",
+    "genres" : ["Shooter"]
+}
+
+### Create Game - Repeat game name
+
+POST http://localhost:8080/games
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "name" : "APEX LEGENDS",
+    "developer" : "Rampage",
+    "genres" : ["Shooter"]
+}
+
+### Create Game - Blank name
+
+POST http://localhost:8080/games
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "name" : "           ",
+    "developer" : "Rampage",
+    "genres" : ["Shooter"]
+}
+
+### Create Game - Blank developer
+
+POST http://localhost:8080/games
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "name" : "Battlefield V",
+    "developer" : "      ",
+    "genres" : ["Shooter"]
+}
+
+### Create Game - empty genres
+
+POST http://localhost:8080/games
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "name" : "Battlefield V",
+    "developer" : "Something",
+    "genres" : []
+}
+
+### Create Game - duplicate genres
+
+POST http://localhost:8080/games
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "name" : "Battlefield V",
+    "developer" : "Something",
+    "genres" : ["Shooter", "Shooter"]
+}
+
+### Get Game By ID - Succesfull case
+
+GET http://localhost:8080/games/id/107
+
+### Get Game By ID - Invalid Game ID
+GET http://localhost:8080/games/id/10713131
+
+### Get Game By Name - Successfull case
+GET http://localhost:8080/games/name/CS
+
+###  Get Game By Name - Invalid Name
+GET http://localhost:8080/games/name/CSSADASDADADADADADADADFAFGAFAFAFAFAFAFA
+
+
+### Get List of Games - Successful case
+POST http://localhost:8080/games/list
+content-type : application/json
+
+{
+    "developer" : "Valve",
+    "genres" : ["Shooter"]
+}
+
+### Get List of Games - blank developer
+
+POST http://localhost:8080/games/list
+content-type : application/json
+
+{
+    "developer" : "      ",
+    "genres" : ["Shooter"]
+}
+
+### Get List of Games - empty genres list
+
+POST http://localhost:8080/games/list
+content-type : application/json
+
+{
+    "developer" : "Valve",
+    "genres" : []
+}
+
+
+### Creating a Session - succesful case
+POST http://localhost:8080/sessions
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "gid" : 107,
+    "capacity" : 2,
+    "date" : "2024-04-03 18:00:00"
+}
+
+### Creating a Session - invalid game id
+POST http://localhost:8080/sessions
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "gid" : 107133131,
+    "capacity" : 2,
+    "date" : "2024-04-03 18:00:00"
+}
+
+
+### Creating a Session - invalid capacity
+POST http://localhost:8080/sessions
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "gid" : 107,
+    "capacity" : -1,
+    "date" : "2024-04-03 18:00:00"
+}
+
+### Creating a Session - invalid date format
+POST http://localhost:8080/sessions
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "gid" : 107,
+    "capacity" : 2,
+    "date" : "2024-04-08:00:00"
+}
+
+### Creating a Session - invalid date (past date)
+POST http://localhost:8080/sessions
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "gid" : 107,
+    "capacity" : 2,
+    "date" : "2024-02-08 18:00:00"
+}
+
+### Add Player to Session (use session created in the succesful case )
+POST http://localhost:8080/sessions/10005/players
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb8
+
+### Add Player to Session Again (use session created in the succesful case ), results in error
+POST http://localhost:8080/sessions/10005/players
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb8
+
+### Get Session - succesful case
+GET http://localhost:8080/sessions/10005
+
+### Get Session - wrong session id
+GET http://localhost:8080/sessions/10005313131
+
+### Get list of sessions
+POST http://localhost:8080/sessions/list
+content-type:application/json
+
+{
+    "gid" : 107,
+    "state" : "open",
+    "date" : null,
+    "pid" : null
+}
+
+
+### Authorization invalid token format - Game Creation
+
+POST http://localhost:8080/games
+Authorization: Bearer NOTOKEN
+content-type: application/json
+
+{
+    "name" : "CoolGame",
+    "developer" : "Rampage",
+    "genres" : ["Shooter"]
+}
+
+### Authorization invalid token - Game Creation
+
+POST http://localhost:8080/games
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852fffffffff
+content-type: application/json
+
+{
+    "name" : "CoolGame",
+    "developer" : "Rampage",
+    "genres" : ["Shooter"]
+}
+
+### Authorization no header - Game Creation
+
+POST http://localhost:8080/games
+content-type: application/json
+
+{
+    "name" : "CoolGame",
+    "developer" : "Rampage",
+    "genres" : ["Shooter"]
+}
+
+### JSON mapping error
+
+POST http://localhost:8080/games
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+
+{
+    "nowork" : 10310
+}
