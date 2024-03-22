@@ -1,22 +1,17 @@
 package pt.isel.ls
 
 import org.http4k.routing.routes
-import org.slf4j.LoggerFactory
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import org.postgresql.ds.PGSimpleDataSource
+import org.slf4j.LoggerFactory
 import pt.isel.ls.api.GamesRoutes
 import pt.isel.ls.api.PlayerRoutes
 import pt.isel.ls.api.SessionRoutes
 import pt.isel.ls.repo.jdbc.JdbcGamesRepo
 import pt.isel.ls.repo.jdbc.JdbcPlayersRepo
 import pt.isel.ls.repo.jdbc.JdbcSessionsRepo
-import pt.isel.ls.repo.mem.MemGamesRepo
-import pt.isel.ls.repo.mem.MemPlayersRepo
-import pt.isel.ls.repo.mem.MemSessionRepo
 import pt.isel.ls.services.Services
-import pt.isel.ls.utils.FIRST_PLAYER_ID
-import java.util.*
 
 
 fun main() {

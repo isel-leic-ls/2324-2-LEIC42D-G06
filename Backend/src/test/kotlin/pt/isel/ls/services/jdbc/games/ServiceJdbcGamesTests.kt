@@ -4,7 +4,6 @@ import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.AppException
 import pt.isel.ls.repo.jdbc.JdbcGamesRepo
 import pt.isel.ls.repo.jdbc.JdbcPlayersRepo
-import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.GamesServices
 import pt.isel.ls.utils.FIRST_GAME_ID
 import pt.isel.ls.utils.FIRST_PLAYER_ID
@@ -12,7 +11,7 @@ import pt.isel.ls.utils.generatePlayerDetails
 import kotlin.test.*
 
 
-class ServiceJDBCGamesTests {
+class ServiceJdbcGamesTests {
     private val dataSource = PGSimpleDataSource().apply {
         setUrl(System.getenv("JDBC_DATABASE_URL"))
     }
@@ -29,7 +28,7 @@ class ServiceJDBCGamesTests {
             val stmt2 = it.prepareStatement("DELETE FROM Game")
             stmt2.executeUpdate()
         }
-        generatePlayerDetails().let { (n, e, t,p) -> pRepo.createPlayer(n, e, t,p) }
+        generatePlayerDetails().let { (n, e, t, p) -> pRepo.createPlayer(n, e, t, p) }
     }
 
     @Test
@@ -40,7 +39,7 @@ class ServiceJDBCGamesTests {
         val gameId1 =
             service.createGame(token, "CS", "valveDev", listOf("fps"))
         val gameId2 =
-            service.createGame(token, "GTA V", "rockstarGamesDev", listOf("action", "adventure"))
+            service.createGame(token, "GTA V", "rockstarGamesDev", listOf("action"))
 
         assertTrue(gameId1 >= FIRST_GAME_ID)
         assertTrue(gameId2 >= FIRST_GAME_ID + 1)
@@ -116,7 +115,7 @@ class ServiceJDBCGamesTests {
         val g1 =
             service.createGame(token, "CS", "valveDev", listOf("fps", "tactical"))
         val g2 =
-            service.createGame(token, "GTA V", "rockstarGamesDev", listOf("action", "adventure"))
+            service.createGame(token, "GTA V", "rockstarGamesDev", listOf("action"))
         val g3 =
             service.createGame(token, "FIFA 20", "eaSportsDev", listOf("sports"))
         val g4 =
@@ -126,7 +125,7 @@ class ServiceJDBCGamesTests {
         assertEquals(1, games1.size)
         assertEquals(g1, games1[0].id)
 
-        val games2 = service.getListOfGames(listOf("action", "adventure"), "rockstarGamesDev", 10, 0)
+        val games2 = service.getListOfGames(listOf("action", "adventure"), "rockstarGamesDev")
         assertEquals(1, games2.size)
         assertEquals(g2, games2[0].id)
 

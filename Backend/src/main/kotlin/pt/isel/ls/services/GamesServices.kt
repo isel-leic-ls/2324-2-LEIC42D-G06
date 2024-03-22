@@ -14,11 +14,14 @@ class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo
         if (gRepo.checkGameExistsByName(name))
             throw AppException.GameAlreadyExists("Game $name already exists")
 
-        if (name.isBlank() || developer.isBlank() || genres.isEmpty() || genres.any { it.isBlank() }
+        if (
+            name.isBlank()
+            || developer.isBlank() || genres.isEmpty() || genres.any { it.isBlank() }
             || genres.groupingBy { it }.eachCount().any { it.value > 1 }
             || name.length > MAX_GAME_LENGTH
             || developer.length > MAX_DEVELOPER_LENGTH
-            || genres.any { it.length > MAX_GENRE_LENGTH })
+            || genres.any { it.length > MAX_GENRE_LENGTH }
+        )
             throw AppException.BadRequestCreateGame("Invalid game data")
 
         return gRepo.insert(name, developer, genres)
@@ -37,7 +40,8 @@ class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo
 
         if (genres.isEmpty() || genres.any { it.isBlank() })
             throw IllegalArgumentException("Invalid genres input")
-        if (developer.isBlank()) throw IllegalArgumentException("Invalid developer input")
+        if (developer.isBlank())
+            throw IllegalArgumentException("Invalid developer input")
 
         check(limit > 0) { "Limit must be a positive number" }
         check(skip >= 0) { "Skip must be a non-negative number" }

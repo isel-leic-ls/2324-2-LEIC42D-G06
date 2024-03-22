@@ -112,7 +112,7 @@ class ServiceMemGamesTests {
         assertEquals(1, games1.size)
         assertEquals(g1, games1[0].id)
 
-        val games2 = service.getListOfGames(listOf("action", "adventure"), "rockstarGamesDev", 10, 0)
+        val games2 = service.getListOfGames(listOf("action", "adventure"), "rockstarGamesDev")
         assertEquals(1, games2.size)
         assertEquals(g2, games2[0].id)
 

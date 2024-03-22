@@ -1,6 +1,7 @@
 package pt.isel.ls
 
 
+/** Represents the custom exceptions that can be thrown by the application. */
 sealed class AppException : Exception() {
     class InvalidToken(message: String) : Exception(message)
 
@@ -19,5 +20,4 @@ sealed class AppException : Exception() {
     class PlayerNotFound(message: String) : Exception(message)
 
     class SQLException(message: String) : Exception(message)
-
 }

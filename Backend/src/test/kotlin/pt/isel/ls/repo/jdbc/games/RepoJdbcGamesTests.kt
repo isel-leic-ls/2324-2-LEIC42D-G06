@@ -55,13 +55,13 @@ class RepoJdbcGamesTests {
     fun `game insertion given a name, a developer and a list of genres twice`() {
         val repo = JdbcGamesRepo(dataSource)
         val gId1 = repo.insert(
-            "Game Name 1 - Insertion Test Jdbc", "Generic Game Developer", listOf("genre1", "genre2")
+            "gName1 - Insertion Test Jdbc", "Developer XPTO", listOf("genre1", "genre2")
         )
 
         assertTrue(gId1 >= FIRST_GAME_ID)
 
         val gId2 = repo.insert(
-            "Game Name 2 - Insertion Test Jdbc", "Generic Game Developer", listOf("genre1", "genre2")
+            "gName2 - Insertion Test Jdbc", "Developer ABC", listOf("genreA")
         )
 
         assertTrue(gId2 >= FIRST_GAME_ID + 1)
@@ -101,7 +101,6 @@ class RepoJdbcGamesTests {
         assertTrue { game.genres.contains("genre2") }
     }
 
-    //TODO add tests for getListOfGames
     @Test
     fun `get list of games`() {
         val repo = JdbcGamesRepo(dataSource)
