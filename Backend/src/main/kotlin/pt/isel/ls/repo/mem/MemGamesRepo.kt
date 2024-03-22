@@ -30,11 +30,14 @@ class MemGamesRepo : GamesRepo {
     override fun getGameByName(name: String): Game =
         games.find { it.name == name } ?: throw AppException.GameNotFound("Game not found with name $name")
 
-    override fun getListOfGames(genres: List<String>, developer: String, limit: Int, skip: Int): List<Game> {
+    override fun getListOfGames(
+        genres: List<String>, developer: String, limit: Int, skip: Int
+    ): List<Game> {
         val genresUpperCased = genres.map { it.uppercase() } //to make the search case-insensitive
         val devUpperCased = developer.uppercase() //to make the search case-insensitive
         val fullList = games.filter {
-            it.dev.uppercase() == devUpperCased || it.genres.any { g -> g.uppercase() in genresUpperCased }
+            it.dev.uppercase() == devUpperCased
+                    || it.genres.any { g -> g.uppercase() in genresUpperCased }
         }
 
         val fullListSize = fullList.size

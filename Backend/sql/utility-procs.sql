@@ -54,26 +54,6 @@ INSERT INTO Game(name, developer, genres) VALUES
 	('Apex Legends', NULL, ARRAY['Shooter', 'Action']),
 	('Civilization VI', NULL, ARRAY['Turn-Based', 'Strategy']);
 
-
--- Insert into Session table
-INSERT INTO Session(capacity, session_date, closed, game_id) VALUES
-	(3, '2024-02-25 18:00:00', true, 100),
-	(3, '2024-02-26 18:00:00', true, 101),
-	(2, '202402--27 20:00:00', true, 102);
-
-
--- Insert into SessionPlayer table
-INSERT INTO SessionPlayer(session_id, player_id) VALUES 
-	(10000, 1000),
-	(10000, 1001),
-	(10000, 1002),
-	(10001, 1000),
-	(10001, 1001),
-	(10001, 1002),
-	(10002, 1000),
-	(10002, 1002);
-
-
 end;
 $$;
 

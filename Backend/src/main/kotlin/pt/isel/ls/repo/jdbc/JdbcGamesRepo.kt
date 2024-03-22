@@ -1,5 +1,6 @@
 package pt.isel.ls.repo.jdbc
 
+import pt.isel.ls.AppException
 import pt.isel.ls.domain.Game
 import pt.isel.ls.repo.interfaces.GamesRepo
 import java.sql.Statement
@@ -15,7 +16,8 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
     }
 
     override fun checkGameExistsByName(name: String): Boolean {
-        val stmt = dataSource.connection.prepareStatement("SELECT * FROM game WHERE name ILIKE ?")
+        val stmt =
+            dataSource.connection.prepareStatement("SELECT * FROM game WHERE name ILIKE ?")
         stmt.setString(1, name)
         val rs = stmt.executeQuery()
         return rs.next()
@@ -34,14 +36,15 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
 
         val rs = stmt.generatedKeys
         if (rs.next()) return rs.getInt(1)
-        else throw Exception("Game not inserted")
+        else throw AppException.SQLException("Game not inserted")
     }
 
     override fun getGameById(gid: Int): Game {
-        val stmt = dataSource.connection.prepareStatement("SELECT * FROM game WHERE gid = ?")
+        val stmt =
+            dataSource.connection.prepareStatement("SELECT * FROM game WHERE gid = ?")
         stmt.setInt(1, gid)
         val rs = stmt.executeQuery()
-        rs.next()
+        if (!rs.next()) throw AppException.GameNotFound("Game $gid does not exist")
 
         return Game(
             rs.getInt("gid"),
@@ -52,10 +55,11 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
     }
 
     override fun getGameByName(name: String): Game {
-        val stmt = dataSource.connection.prepareStatement("SELECT * FROM game WHERE name ILIKE ?")
+        val stmt =
+            dataSource.connection.prepareStatement("SELECT * FROM game WHERE name ILIKE ?")
         stmt.setString(1, name)
         val rs = stmt.executeQuery()
-        rs.next()
+        if (!rs.next()) throw AppException.GameNotFound("Game $name does not exist")
 
         return Game(
             rs.getInt("gid"),
@@ -65,9 +69,12 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
         )
     }
 
-    override fun getListOfGames(genres: List<String>, developer: String, limit: Int, skip: Int): List<Game> {
+    override fun getListOfGames(
+        genres: List<String>, developer: String, limit: Int, skip: Int
+    ): List<Game> {
         val stmt = dataSource.connection.prepareStatement(
-            "SELECT * FROM game WHERE developer ILIKE ? OR array(select unnest(genres)) && ? ORDER BY gid LIMIT ? OFFSET ?"
+            "SELECT * FROM game WHERE developer ILIKE ? OR array(select unnest(genres)) " +
+                    "&& ? ORDER BY gid LIMIT ? OFFSET ?"
         )
         stmt.setString(1, developer)
         stmt.setArray(2, dataSource.connection.createArrayOf("VARCHAR", genres.toTypedArray()))

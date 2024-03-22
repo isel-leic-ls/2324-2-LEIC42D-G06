@@ -81,7 +81,7 @@ class ApiMemSessionTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/sessions"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${fPlayer?.token}")
+            .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -118,7 +118,7 @@ class ApiMemSessionTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/sessions"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${fPlayer?.token}")
+            .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -155,7 +155,7 @@ class ApiMemSessionTests {
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8080/sessions"))
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${fPlayer?.token}")
+            .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
 
@@ -224,7 +224,6 @@ class ApiMemSessionTests {
         assertEquals(response.statusCode(), Status.NOT_FOUND.code)
     }
 
-    @Ignore("Bugged, needs fixing")
     @Test
     fun `retrieving a session by passing in a string in the uri should return status code 400`() {
         // arrange
@@ -241,9 +240,6 @@ class ApiMemSessionTests {
         // assert the status code is 400 (bad req)
         assertEquals(response.statusCode(), Status.BAD_REQUEST.code)
 
-        /** BUG IS :
-         * input string \bolacha
-         */
     }
 
     @Test

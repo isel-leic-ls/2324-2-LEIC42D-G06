@@ -13,5 +13,6 @@ val errors = mapOf(
     AppException.PlayerNotFound::class to Status.NOT_FOUND,
     AppException.SessionClosed::class to Status.BAD_REQUEST,
     AppException.SessionNotFound::class to Status.NOT_FOUND,
+    AppException.SQLException::class to Status.INTERNAL_SERVER_ERROR,
     IllegalArgumentException::class to Status.BAD_REQUEST,
 )

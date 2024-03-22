@@ -46,7 +46,7 @@ class SessionServices(
         val sState = state?.toState()
 
         require(skip >= 0) { "Skip value must be positive" }
-        require(limit >= 0) { "Limit value must be positive"}
+        require(limit > 0) { "Limit value must be positive non-zero"}
 
         return sRepo.getListOfSessions(gid, startDate, sState, pid, skip, limit)
 

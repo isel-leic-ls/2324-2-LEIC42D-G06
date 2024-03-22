@@ -119,7 +119,7 @@ class ServiceMemSessionTests {
         val startDate = LocalDateTime.now().minusDays(1).format(DATE_FORMATTER)
 
         //act && assert
-        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID) ?: throw Exception("Error occured")
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
         val token = fPlayer.token
 
         assertFailsWith<IllegalArgumentException> {

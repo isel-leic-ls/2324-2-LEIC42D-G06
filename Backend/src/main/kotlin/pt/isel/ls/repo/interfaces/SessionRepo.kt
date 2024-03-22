@@ -3,7 +3,7 @@ import pt.isel.ls.domain.SessionDTO
 import java.time.LocalDateTime
 
 interface SessionRepo {
-    fun createSession(sessionDTO: SessionDTO) : Int
+    fun createSession(dto: SessionDTO) : Int
     fun addPlayerToSession(sid: Int, pid: Int)
     fun getSession(sid : Int) : Session
 

@@ -59,9 +59,6 @@ class GamesRoutes(private val services: GamesServices) {
     private fun getListOfGames(request: Request): Response =
         exceptionAwareScope {
             val inputModel = request.fromJson<GamesListInputModel>()
-            if (inputModel.genres.isEmpty() || inputModel.genres.any { it.isBlank() })
-                throw IllegalArgumentException("Invalid genres input")
-            if (inputModel.developer.isBlank()) throw IllegalArgumentException("Invalid developer input")
             val (skip, limit) = request.getSkipAndLimit()
             val games = services.getListOfGames(inputModel.genres, inputModel.developer, limit, skip)
             Response(Status.OK).toJson(GamesListOutputModel(games))

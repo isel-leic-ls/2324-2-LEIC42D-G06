@@ -5,10 +5,9 @@ import org.junit.Test
 import pt.isel.ls.AppException
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.PlayerServices
-import pt.isel.ls.utils.CAPACITY_LOWER_BOUND
-import pt.isel.ls.utils.CAPACITY_UPPER_BOUND
+import pt.isel.ls.utils.MIN_NAME_LENGTH
 import pt.isel.ls.utils.FIRST_PLAYER_ID
-import kotlin.test.Ignore
+import pt.isel.ls.utils.MAX_NAME_LENGTH
 import kotlin.test.assertFailsWith
 
 class ServiceMemPlayerTests {
@@ -23,10 +22,9 @@ class ServiceMemPlayerTests {
             service.createPlayer("", "email","vasco123")
         }
         // Assert
-        assertEquals("Name cannot be empty", exception.message)
+        assertEquals("Name cannot be blank", exception.message)
     }
 
-    //@Ignore //TODO Vasco verifica o assert se realmente queremos que seja este
     @Test
     fun `createPlayer should throw IllegalArgumentException when given email is empty`() {
         // Arrange
@@ -37,7 +35,7 @@ class ServiceMemPlayerTests {
             service.createPlayer("name", "","vasco123")
         }
         // Assert
-        assertEquals("Email cannot be empty", exception.message)
+        assertEquals("Invalid email", exception.message)
     }
 
     @Test
@@ -51,7 +49,7 @@ class ServiceMemPlayerTests {
         }
         // Assert
         assertEquals(
-            "Name length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND", exception.message
+            "Name length must be between $MIN_NAME_LENGTH and $MAX_NAME_LENGTH", exception.message
         )
     }
 
@@ -62,11 +60,11 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("nameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "email","vasco123")
+            service.createPlayer("nameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "name@gmail.com","vasco123")
         }
         // Assert
         assertEquals(
-            "Name length must be between $CAPACITY_LOWER_BOUND and $CAPACITY_UPPER_BOUND", exception.message
+            "Name length must be between $MIN_NAME_LENGTH and $MAX_NAME_LENGTH", exception.message
         )
     }
 
