@@ -1,4 +1,3 @@
-
 import kotlinx.serialization.json.Json
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
@@ -32,7 +31,7 @@ class ApiMemPlayerTests {
 
     @BeforeTest
     fun setup() {
-        playerServices.createPlayer("Pedro","pedrodiz@gmail.com","pedro123")
+        playerServices.createPlayer("Pedro", "pedrodiz@gmail.com", "pedro123")
         server.start()
     }
 
@@ -42,13 +41,38 @@ class ApiMemPlayerTests {
     }
 
     @Test
-    fun `create a player`(){
-        val name = "Pedro"
+    fun `create a player`() {
+        val name = "Vasco"
+        val email = "vascobranco@gmail.com"
+        val password = "vasco123"
+        //val player = playerServices.getPlayer(FIRST_PLAYER_ID)
+        val requestBody = """
+        {
+            "name": "$name",
+            "email": "$email",
+            "password": "$password"
+        }
+        """.trimIndent()
+
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:8080/players"))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+            .build()
+
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        assertEquals(201, response.statusCode())
+
+    }
+
+    @Test
+    fun `creating a player without name that should return 400 status code`() {
         val email = "pedrodiz@gmail.com"
         val player = playerServices.getPlayer(FIRST_PLAYER_ID)
         val requestBody = """
             {
-                "name": "$name",
+                "name": ,
                 "email": "$email",
                 "token": "${player.token}"
             }
@@ -62,11 +86,83 @@ class ApiMemPlayerTests {
             .build()
 
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
-        assertEquals(201, response.statusCode())
-
-        val outputModel = Json.decodeFromString<PlayerOutputModel>(response.body())
-        assertEquals(FIRST_PLAYER_ID + 1, outputModel.id)
+        assertEquals(400, response.statusCode())
     }
 
+    @Test
+    fun `creating a player without email that should return 400 status code`() {
+        val name = "Pedro"
+        //val email = "pedrodiz@gmail.com"
+        val player = playerServices.getPlayer(FIRST_PLAYER_ID)
+        val requestBody = """
+            {
+                "name": "$name",
+                "email": ,
+                "token": "${player.token}"
+            }
+        """.trimIndent()
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:8080/players"))
+            .header("Content-Type", "application/json")
+            .header("Authorization", "Bearer ${player?.token}")
+            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+            .build()
+
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        assertEquals(400, response.statusCode())
+
+    }
+
+    @Test
+    fun `creating a player without token that should return 400 status code`() {
+        val name = "Pedro"
+        val email = "pedrodiz@gmail.com"
+        val player = playerServices.getPlayer(FIRST_PLAYER_ID)
+        val requestBody = """
+            {
+                "name": "$name",
+                "email": "$email,
+                "token": 
+            }
+        """.trimIndent()
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:8080/players"))
+            .header("Content-Type", "application/json")
+            .header("Authorization", "Bearer ${player?.token}")
+            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
+            .build()
+
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        assertEquals(400, response.statusCode())
+    }
+
+    @Test
+    fun `retrieving an existing player`() {
+        val player = playerServices.getPlayer(FIRST_PLAYER_ID)
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:8080/players/$FIRST_PLAYER_ID"))
+            .header("Content-Type", "application/json")
+            .header("Authorization", "Bearer ${player.token}")
+            .GET()
+            .build()
+
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        assertEquals(200, response.statusCode())
+    }
+
+    @Test
+    fun `retrieving a non existent player`() {
+        val player = playerServices.getPlayer(FIRST_PLAYER_ID)
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:8080/players/100"))
+            .header("Content-Type", "application/json")
+            .header("Authorization", "Bearer ${player.token}")
+            .GET()
+            .build()
+
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        assertEquals(400, response.statusCode())
+    }
 }
