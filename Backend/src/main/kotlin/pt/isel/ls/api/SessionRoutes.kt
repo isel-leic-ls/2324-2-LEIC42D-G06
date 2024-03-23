@@ -13,13 +13,11 @@ import pt.isel.ls.services.SessionServices
 
 class SessionRoutes(private val services : SessionServices) {
 
-    private val logger = LoggerFactory.getLogger(SessionRoutes::class.java)
-
     val routes: RoutingHttpHandler =
         routes(
             Session.CREATE bind Method.POST to ::createSession,
             Session.GET bind Method.GET to ::getSession,
-            Session.ADD_PLAYER bind Method.POST to ::addPlayerToSession,
+            Session.ADD_PLAYER bind Method.PUT to ::addPlayerToSession,
             Session.GET_SESSIONS bind Method.POST to ::getListOfSessions
         )
 
@@ -36,7 +34,6 @@ class SessionRoutes(private val services : SessionServices) {
     private fun getSession(request: Request): Response =
         exceptionAwareScope {
             val sid = request.getSessionID()
-            logger.debug("The session id in this request ${request.uri} is $sid")
             val session = services.getSession(sid)
             Response(Status.OK).toJson(SessionRetrievalOutputModel(session))
         }
@@ -46,7 +43,7 @@ class SessionRoutes(private val services : SessionServices) {
             val token = request.getAuthorizationToken()
             val sid = request.getSessionID()
             services.addPlayerToSession(token, sid)
-            Response(Status.NO_CONTENT)// STATUS 204
+            Response(Status.NO_CONTENT)
         }
 
     private fun getListOfSessions(request: Request) : Response =

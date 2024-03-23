@@ -275,11 +275,11 @@ content-type: application/json
 }
 
 ### Add Player to Session (use session created in the succesful case )
-POST http://localhost:8080/sessions/10005/players
+PUT http://localhost:8080/sessions/10005/players
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb8
 
 ### Add Player to Session Again (use session created in the succesful case ), results in error
-POST http://localhost:8080/sessions/10005/players
+PUT http://localhost:8080/sessions/10005/players
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb8
 
 ### Get Session - succesful case
