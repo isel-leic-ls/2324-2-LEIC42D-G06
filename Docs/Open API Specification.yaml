@@ -185,8 +185,6 @@ paths:
                 $ref: '#/components/schemas/GameListOutputModel'
         '400':
           description: Invalid or missing request body
-        '404':
-          description: Game not found
         '500':
           description: Internal Server Error 
           
