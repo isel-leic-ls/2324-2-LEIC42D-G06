@@ -1,5 +1,7 @@
 ### Run the tests in IntellIj or reset DB info..
-### Player routes
+
+
+###     Player routes
 
 ### Create user - success case
 POST http://localhost:8080/players
@@ -12,7 +14,6 @@ content-type: application/json
 }
 
 ### Create user - name already exists (call the success case) 
-
 POST http://localhost:8080/players
 content-type: application/json
 
@@ -42,7 +43,6 @@ content-type: application/json
     "password" : "peelrooro"
 }
 
-
 ### Create user - name length lower than 4 chars
 POST http://localhost:8080/players
 content-type: application/json
@@ -54,7 +54,6 @@ content-type: application/json
 }
 
 ### Create user - name length bigger than 50 chars
-
 POST http://localhost:8080/players
 content-type: application/json
 
@@ -94,14 +93,14 @@ content-type: application/json
     "password" : "abc"
 }
 
-
 ### Fetch user - successfull case
 GET http://localhost:8080/players/1008
 
 ### Fetch user - that doesnt exist
 GET http://localhost:8080/players/130103103
 
-### Game Routes
+
+###     Game Routes
 
 ### Create Game - Successful case
 POST http://localhost:8080/games
@@ -115,7 +114,6 @@ content-type: application/json
 }
 
 ### Create Game - Repeat game name
-
 POST http://localhost:8080/games
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
 content-type: application/json
@@ -127,7 +125,6 @@ content-type: application/json
 }
 
 ### Create Game - Blank name
-
 POST http://localhost:8080/games
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
 content-type: application/json
@@ -139,7 +136,6 @@ content-type: application/json
 }
 
 ### Create Game - Blank developer
-
 POST http://localhost:8080/games
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
 content-type: application/json
@@ -151,7 +147,6 @@ content-type: application/json
 }
 
 ### Create Game - empty genres
-
 POST http://localhost:8080/games
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
 content-type: application/json
@@ -163,7 +158,6 @@ content-type: application/json
 }
 
 ### Create Game - duplicate genres
-
 POST http://localhost:8080/games
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
 content-type: application/json
@@ -175,7 +169,6 @@ content-type: application/json
 }
 
 ### Get Game By ID - Succesfull case
-
 GET http://localhost:8080/games/id/107
 
 ### Get Game By ID - Invalid Game ID
@@ -187,7 +180,6 @@ GET http://localhost:8080/games/name/CS
 ###  Get Game By Name - Invalid Name
 GET http://localhost:8080/games/name/CSSADASDADADADADADADADFAFGAFAFAFAFAFAFA
 
-
 ### Get List of Games - Successful case
 POST http://localhost:8080/games/list
 content-type : application/json
@@ -198,7 +190,6 @@ content-type : application/json
 }
 
 ### Get List of Games - blank developer
-
 POST http://localhost:8080/games/list
 content-type : application/json
 
@@ -208,7 +199,6 @@ content-type : application/json
 }
 
 ### Get List of Games - empty genres list
-
 POST http://localhost:8080/games/list
 content-type : application/json
 
@@ -216,7 +206,6 @@ content-type : application/json
     "developer" : "Valve",
     "genres" : []
 }
-
 
 ### Creating a Session - succesful case
 POST http://localhost:8080/sessions
@@ -239,7 +228,6 @@ content-type: application/json
     "capacity" : 2,
     "date" : "2024-04-03 18:00:00"
 }
-
 
 ### Creating a Session - invalid capacity
 POST http://localhost:8080/sessions
@@ -274,16 +262,16 @@ content-type: application/json
     "date" : "2024-02-08 18:00:00"
 }
 
-### Add Player to Session (use session created in the succesful case )
-PUT http://localhost:8080/sessions/10005/players
+### Add Player to Session (use session created in the succesful case)
+PUT http://localhost:8080/sessions/10001/players
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb8
 
 ### Add Player to Session Again (use session created in the succesful case ), results in error
-PUT http://localhost:8080/sessions/10005/players
+PUT http://localhost:8080/sessions/10001/players
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb8
 
 ### Get Session - succesful case
-GET http://localhost:8080/sessions/10005
+GET http://localhost:8080/sessions/10001
 
 ### Get Session - wrong session id
 GET http://localhost:8080/sessions/10005313131
@@ -300,8 +288,7 @@ content-type:application/json
 }
 
 
-### Authorization invalid token format - Game Creation
-
+###     Authorization invalid token format - Game Creation
 POST http://localhost:8080/games
 Authorization: Bearer NOTOKEN
 content-type: application/json
@@ -312,8 +299,7 @@ content-type: application/json
     "genres" : ["Shooter"]
 }
 
-### Authorization invalid token - Game Creation
-
+###     Authorization invalid token - Game Creation
 POST http://localhost:8080/games
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852fffffffff
 content-type: application/json
@@ -324,8 +310,7 @@ content-type: application/json
     "genres" : ["Shooter"]
 }
 
-### Authorization no header - Game Creation
-
+###     Authorization no header - Game Creation
 POST http://localhost:8080/games
 content-type: application/json
 
@@ -335,12 +320,10 @@ content-type: application/json
     "genres" : ["Shooter"]
 }
 
-### JSON mapping error
-
+###     JSON mapping error
 POST http://localhost:8080/games
 Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
 content-type: application/json
-
 
 {
     "nowork" : 10310
