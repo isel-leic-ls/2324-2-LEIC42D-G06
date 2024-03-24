@@ -39,7 +39,7 @@ class ApiMemGamesTests {
 
     @BeforeTest
     fun setup() {
-        playerServices.createPlayer("joao", "joaojoao@gmail.com","joao123")
+        playerServices.createPlayer("joao", "joaojoao@gmail.com", "joao123")
         val fPlayer = playerServices.getPlayer(FIRST_PLAYER_ID)
         gamesServices.createGame(fPlayer.token, "GTA V", "Rockstar Games", listOf("Action"))
         server.start()

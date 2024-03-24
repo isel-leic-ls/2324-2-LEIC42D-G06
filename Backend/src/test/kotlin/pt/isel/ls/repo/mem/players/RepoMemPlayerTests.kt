@@ -8,8 +8,6 @@ import kotlin.test.assertFailsWith
 
 
 class RepoMemPlayerTests {
-
-
     @Test
     fun `create a player`() {
         val repo = MemPlayersRepo()
@@ -74,4 +72,3 @@ class RepoMemPlayerTests {
         assertEquals(null, player)
     }
 }
-

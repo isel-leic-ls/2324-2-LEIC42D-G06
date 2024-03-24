@@ -4,7 +4,6 @@ import kotlinx.serialization.json.Json
 import org.http4k.core.Status
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
-import org.junit.Ignore
 import org.junit.Test
 import pt.isel.ls.api.Problem
 import pt.isel.ls.api.SessionRoutes
@@ -15,9 +14,9 @@ import pt.isel.ls.repo.mem.MemGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.repo.mem.MemSessionRepo
 import pt.isel.ls.services.Services
-import pt.isel.ls.utils.FIRST_PLAYER_ID
 import pt.isel.ls.utils.DATE_FORMATTER
 import pt.isel.ls.utils.FIRST_GAME_ID
+import pt.isel.ls.utils.FIRST_PLAYER_ID
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -28,6 +27,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+
 
 class ApiMemSessionTests {
     private val client = HttpClient.newBuilder().build()

@@ -7,16 +7,16 @@ INSERT INTO Player(name, email, token, password) VALUES
 
 -- Insert into Game table
 INSERT INTO Game(name, developer, genres) VALUES 
-	('Lord of the Rings Online', NULL, ARRAY['RPG', 'Adventure']),
-	('Apex Legends', NULL, ARRAY['Shooter', 'Action']),
-	('Civilization VI', NULL, ARRAY['Turn-Based', 'Strategy']);
+	('Lord of the Rings Online', 'Dev123', ARRAY['RPG', 'Adventure']),
+	('Apex Legends', 'Rampage', ARRAY['Shooter', 'Action']),
+	('Civilization VI', 'DevABC', ARRAY['Turn-Based', 'Strategy']);
 
 
 -- Insert into Session table
 INSERT INTO Session(capacity, session_date, closed, game_id) VALUES
-	(3, '2024-02-25 18:00:00', true, 100),
-	(3, '2024-02-26 18:00:00', true, 101),
-	(2, '202402--27 20:00:00', true, 102);
+	(3, '2025-02-25 18:00:00', true, 100),
+	(3, '2025-02-26 18:00:00', true, 101),
+	(2, '2025-02-27 20:00:00', true, 102);
 
 
 -- Insert into SessionPlayer table

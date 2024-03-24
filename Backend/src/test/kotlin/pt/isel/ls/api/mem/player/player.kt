@@ -1,11 +1,10 @@
-import kotlinx.serialization.json.Json
+package pt.isel.ls.api.mem.player
+
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import pt.isel.ls.api.PlayerRoutes
-import pt.isel.ls.api.model.PlayerOutputModel
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.PlayerServices
-
 import pt.isel.ls.utils.FIRST_PLAYER_ID
 import java.net.URI
 import java.net.http.HttpClient
@@ -15,6 +14,7 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+
 
 class ApiMemPlayerTests {
     private val client = HttpClient.newBuilder().build()
