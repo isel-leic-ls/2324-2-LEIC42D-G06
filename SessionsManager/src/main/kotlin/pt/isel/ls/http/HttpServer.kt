@@ -1,4 +1,4 @@
-package pt.isel.ls
+package pt.isel.ls.http
 
 import org.http4k.routing.ResourceLoader
 import org.http4k.routing.routes

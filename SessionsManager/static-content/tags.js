@@ -5,16 +5,16 @@ function createElement(tag, attributes = {}, ...children) {
     const element = document.createElement(tag);
 
     // set attributes
-    for(const attribute in attributes) {
+    for (const attribute in attributes) {
         const value = attributes[attribute];
-        if(events.includes(attribute) && typeof value === "function") {
+        if (events.includes(attribute) && typeof value === "function") {
             element.addEventListener(attribute, value);
         }
         else element.setAttribute(attribute, value);
     }
 
     // append child nodes
-    children.forEach( child => {
+    children.forEach(child => {
         const content = (typeof child === "string") ? document.createTextNode(child) : child;
         element.appendChild(content);
     });
@@ -22,6 +22,6 @@ function createElement(tag, attributes = {}, ...children) {
     return element;
 }
 
-export function div(attributes={}, ...children) {
-    return createElement("div", attributes, children);
+export function div(attributes = {}, ...children) {
+    return createElement("div", attributes, ...children);
 }
