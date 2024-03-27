@@ -38,7 +38,6 @@ class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo
     fun getListOfGames(
         genres: List<String>, developer: String, limit: Int = LIMIT_DEFAULT, skip: Int = SKIP_DEFAULT
     ): List<Game> {
-
         if (genres.isEmpty() || genres.any { it.isBlank() })
             throw IllegalArgumentException("Invalid genres input")
         if (developer.isBlank())

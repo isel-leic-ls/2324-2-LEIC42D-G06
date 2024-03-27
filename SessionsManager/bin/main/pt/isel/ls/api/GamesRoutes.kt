@@ -18,7 +18,6 @@ import java.nio.charset.StandardCharsets
 
 
 class GamesRoutes(private val services: GamesServices) {
-    private val logger = LoggerFactory.getLogger(GamesRoutes::class.java)
     val routes: RoutingHttpHandler =
         routes(
             GameUrisObj.CREATE bind Method.POST to ::createGame,

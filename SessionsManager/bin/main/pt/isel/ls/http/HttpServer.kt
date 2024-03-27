@@ -20,7 +20,7 @@ fun main() {
     val logger = LoggerFactory.getLogger("pt.isel.ls.Server")
 
     // set the port and datasource
-    val port = 8080
+    val port = 9000
 
     val dataSource = PGSimpleDataSource().apply {
         setUrl(System.getenv("JDBC_DATABASE_URL"))
