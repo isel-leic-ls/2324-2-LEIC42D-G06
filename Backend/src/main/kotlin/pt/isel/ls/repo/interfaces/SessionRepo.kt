@@ -7,6 +7,12 @@ interface SessionRepo {
     fun addPlayerToSession(sid: Int, pid: Int)
     fun getSession(sid : Int) : Session
 
+    fun updateSession(sid : Int, date : String, capacity : Int)
+
+    fun deleteSession(sid : Int)
+
+    fun deletePlayerFromSession(sid : Int, pid : Int)
+
     fun getListOfSessions(
         gid : Int,
         date : String?,

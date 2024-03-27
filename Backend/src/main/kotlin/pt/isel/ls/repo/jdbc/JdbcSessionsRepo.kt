@@ -72,6 +72,38 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
         }
     }
 
+    override fun updateSession(sid: Int, date: String, capacity: Int) {
+        dataSource.connection.use {
+            val query = "UPDATE Session SET session_date = ?, capacity = ? WHERE sid = ?"
+            it.prepareStatement(query)
+                .bindParameters(date, capacity, sid)
+                .executeUpdate()
+        }
+    }
+
+    override fun deleteSession(sid: Int) {
+        dataSource.connection.use {
+            val query = "DELETE FROM SessionPlayer WHERE session_id = ?"
+            it.prepareStatement(query)
+                .bindParameters(sid)
+                .executeUpdate()
+
+            val query2 = "DELETE FROM Session WHERE sid = ?"
+            it.prepareStatement(query2)
+                .bindParameters(sid)
+                .executeUpdate()
+        }
+    }
+
+    override fun deletePlayerFromSession(sid: Int, pid: Int) {
+        dataSource.connection.use {
+            val query = "DELETE FROM SessionPlayer WHERE session_id = ? AND player_id = ?"
+            it.prepareStatement(query)
+                .bindParameters(sid, pid)
+                .executeUpdate()
+        }
+    }
+
     override fun getListOfSessions(
         gid: Int,
         date: String?,

@@ -5,6 +5,7 @@ import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
 import pt.isel.ls.domain.toSession
 import pt.isel.ls.AppException
+import pt.isel.ls.domain.checkIfSessionFullCapacity
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
@@ -41,6 +42,32 @@ class MemSessionRepo : SessionRepo {
             sessions.find { it.id == sid }
             ?: throw AppException.SessionNotFound("Session not found with id $sid")
         }
+
+    override fun updateSession(sid: Int, date: String, capacity: Int) {
+        monitor.withLock {
+            sessions.find { it.id == sid }?.let { s ->
+                val nSession = s.copy(date = date, capacity = capacity)
+                sessions.remove(s)
+                sessions.add(nSession)
+            } ?: throw AppException.SessionNotFound("Session not found with id $sid")
+        }
+    }
+
+    override fun deleteSession(sid: Int) {
+        monitor.withLock {
+            sessions.removeIf { it.id == sid }
+        }
+    }
+
+    override fun deletePlayerFromSession(sid: Int, pid: Int) {
+        monitor.withLock {
+            sessions.find { it.id == sid }?.let { s ->
+                val nSession = s.copy(players = s.players - pid, closed = false)
+                sessions.remove(s)
+                sessions.add(nSession)
+            } ?: throw AppException.SessionNotFound("Session not found with id $sid")
+        }
+    }
 
     override fun getListOfSessions(
         gid: Int,

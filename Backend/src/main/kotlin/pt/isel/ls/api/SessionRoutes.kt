@@ -18,7 +18,10 @@ class SessionRoutes(private val services : SessionServices) {
             Session.CREATE bind Method.POST to ::createSession,
             Session.GET bind Method.GET to ::getSession,
             Session.ADD_PLAYER bind Method.PUT to ::addPlayerToSession,
-            Session.GET_SESSIONS bind Method.POST to ::getListOfSessions
+            Session.GET_SESSIONS bind Method.POST to ::getListOfSessions,
+            Session.DELETE_SESSION bind Method.DELETE to ::deleteSession,
+            Session.DELETE_PLAYER bind Method.DELETE to ::deletePlayerFromSession,
+            Session.UPDATE_SESSION bind Method.PUT to ::updateSession
         )
 
 
@@ -43,6 +46,31 @@ class SessionRoutes(private val services : SessionServices) {
             val token = request.getAuthorizationToken()
             val sid = request.getSessionID()
             services.addPlayerToSession(token, sid)
+            Response(Status.NO_CONTENT)
+        }
+
+    private fun deleteSession(request: Request) : Response =
+        exceptionAwareScope {
+            val token = request.getAuthorizationToken()
+            val sid = request.getSessionID()
+            services.deleteSession(token, sid)
+            Response(Status.NO_CONTENT)
+        }
+
+    private fun updateSession(request: Request) : Response =
+        exceptionAwareScope {
+            val token = request.getAuthorizationToken()
+            val sid = request.getSessionID()
+            val (capacity, date) = request.fromJson<SessionUpdateInputModel>()
+            services.updateSession(token, sid, date, capacity)
+            Response(Status.NO_CONTENT)
+        }
+
+    private fun deletePlayerFromSession(request: Request) : Response =
+        exceptionAwareScope {
+            val token = request.getAuthorizationToken()
+            val sid = request.getSessionID()
+            services.deletePlayerFromSession(token, sid)
             Response(Status.NO_CONTENT)
         }
 

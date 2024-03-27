@@ -11,4 +11,6 @@ val DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern(DATE_PATTERN
 
 fun String.isDateWellFormatted() = DATE_REGEX.matches(this)
 
+fun String.checkIfDateIsAfterNow() = this.toDate().isAfter(LocalDateTime.now())
+
 fun String.toDate(): LocalDateTime = LocalDateTime.parse(this, DATE_FORMATTER)

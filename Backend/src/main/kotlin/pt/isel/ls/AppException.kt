@@ -11,6 +11,8 @@ sealed class AppException : Exception() {
 
     class GameNotFound(message: String) : Exception(message)
 
+    class PlayerNotFoundInSession(message: String) : Exception(message)
+
     class SessionNotFound(message: String) : Exception(message)
 
     class SessionClosed(message: String) : Exception(message)
@@ -20,6 +22,8 @@ sealed class AppException : Exception() {
     class PlayerAlreadyExists(message: String) : Exception(message)
 
     class PlayerNotFound(message: String) : Exception(message)
+
+    class PlayerCantDeleteSession(message: String) : Exception(message)
 
     class InvalidAuthorization(message : String) : Exception(message)
 

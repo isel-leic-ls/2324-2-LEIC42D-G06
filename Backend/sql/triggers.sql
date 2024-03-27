@@ -28,7 +28,65 @@ begin
 end;
 $$;
 
+
 create trigger before_insert_session_player
 before insert on SessionPlayer
 for each row
 execute function check_session_capacity();
+
+
+create or replace function check_player_count()
+returns trigger
+language plpgsql
+as $$
+
+declare
+    current_count INT;
+begin
+    select count(sp.*)
+    into current_count
+    from SessionPlayer sp
+    where sp.session_id = OLD.session_id;
+
+    if current_count = 0 then
+        delete from Session where sid = OLD.session_id;
+    end if;
+
+    return null;
+end;
+$$;
+
+create trigger after_delete_session_player
+after delete on SessionPlayer
+for each row
+execute function check_player_count();
+
+
+create or replace function check_session_capacity_update()
+returns trigger
+language plpgsql
+as $$
+
+declare
+    current_players_count INT;
+begin
+    select count(sp.*)
+    into current_players_count
+    from SessionPlayer sp
+    where sp.session_id = NEW.sid;
+
+    if NEW.capacity > OLD.capacity And OLD.closed = true then
+        update Session set closed = false where sid = NEW.sid;
+    elsif NEW.capacity < OLD.capacity And current_players_count = NEW.capacity then
+        update Session set closed = true where sid = NEW.sid;
+    end if;
+
+    return NEW;
+end;
+$$;
+
+
+create trigger after_update_session
+after update on Session
+for each row
+execute function check_session_capacity_update();
