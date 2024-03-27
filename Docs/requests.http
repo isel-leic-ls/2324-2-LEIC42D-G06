@@ -288,6 +288,189 @@ content-type:application/json
 }
 
 
+### First Create A Session
+
+POST http://localhost:8080/sessions
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "gid" : 107,
+    "capacity" : 2,
+    "date" : "2024-04-03 18:00:00"
+}
+
+### Update Session - Successful Case 
+PUT http://localhost:8080/sessions/10006
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "capacity" : "3",
+    "date" : "2025-04-04 18:00:00"
+}
+
+### Update Session - Not the Owner of the Session
+PUT http://localhost:8080/sessions/10006
+Authorization: Bearer 0b6b9396-b062-4803-a8bc-804849de85eb
+content-type: application/json
+
+{
+    "capacity" : "3",
+    "date" : "2025-04-04 18:00:00"
+}
+
+### Add 2 players and test if can reduce capacity
+
+PUT http://localhost:8080/sessions/10006/players
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb8
+
+### Add second player
+PUT http://localhost:8080/sessions/10006/players
+Authorization: Bearer fe9423b1-0951-4f17-9826-381b0532ce16
+
+### Test 1 - Reduce Capacity
+
+PUT http://localhost:8080/sessions/10006
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "capacity" : "2",
+    "date" : "2025-04-04 18:00:00"
+}
+
+### Test 2 - Increase Capacity - Succesfull
+PUT http://localhost:8080/sessions/10006
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "capacity" : "4",
+    "date" : "2025-04-04 18:00:00"
+}
+
+### Create a session and test that cant update because session is ongoing
+POST http://localhost:8080/sessions
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "gid" : 107,
+    "capacity" : 2,
+    "date" : "2024-03-27 13:25:40"
+}
+
+### Try to update a session 1 min later
+PUT http://localhost:8080/sessions/10008
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "capacity" : 3,
+    "date" : "2025-04-04 18:00:00"
+}
+
+### Update on a session that doesnt exist
+PUT http://localhost:8080/sessions/1000310310
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "capacity" : 3,
+    "date" : "2025-04-04 18:00:00"
+}
+
+### Session Deletion
+
+### Create A Session for Testing
+
+POST http://localhost:8080/sessions
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "gid" : 107,
+    "capacity" : 2,
+    "date" : "2025-03-27 13:25:40"
+}
+
+
+### Delete Session - Not the Owner 
+
+DELETE http://localhost:8080/sessions/10011
+Authorization: Bearer fe9423b1-0951-4f17-9826-381b0532ce16
+
+
+### Deletion successful
+DELETE http://localhost:8080/sessions/10011
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+
+
+### Delete a session that does not exist
+DELETE http://localhost:8080/sessions/10010313131
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+
+
+### Delete player from session
+
+### First create session
+
+POST http://localhost:8080/sessions
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "gid" : 107,
+    "capacity" : 2,
+    "date" : "2025-03-27 13:25:40"
+}
+
+### Delete a player that isnt involved in the session
+DELETE http://localhost:8080/sessions/10013/players
+Authorization: Bearer 0b6b9396-b062-4803-a8bc-804849de85eb
+
+### Delete a player from a session that doesnt exist
+DELETE http://localhost:8080/sessions/100133/players
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+
+### Delete the only player from a session is successful and also deletes the session
+
+DELETE http://localhost:8080/sessions/10013/players
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+
+### retrieve session
+GET http://localhost:8080/sessions/10013
+
+
+### Delete a player from a full/closed session
+
+### First create a session
+
+POST http://localhost:8080/sessions
+Authorization: Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7
+content-type: application/json
+
+{
+    "gid" : 107,
+    "capacity" : 2,
+    "date" : "2025-03-27 13:25:40"
+}
+
+### Add a second player
+
+PUT http://localhost:8080/sessions/10014/players
+Authorization: Bearer fe9423b1-0951-4f17-9826-381b0532ce16
+
+### Remove the second player should make the session open again
+
+DELETE http://localhost:8080/sessions/10014/players
+Authorization: Bearer fe9423b1-0951-4f17-9826-381b0532ce16
+
+### Retrieve session afterwards
+
+GET http://localhost:8080/sessions/10014
+
 ###     Authorization invalid token format - Game Creation
 POST http://localhost:8080/games
 Authorization: Bearer NOTOKEN

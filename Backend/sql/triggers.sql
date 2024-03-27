@@ -42,14 +42,19 @@ as $$
 
 declare
     current_count INT;
+    closed_flag BOOLEAN;
 begin
     select count(sp.*)
     into current_count
     from SessionPlayer sp
     where sp.session_id = OLD.session_id;
 
+    select closed into closed_flag from Session where sid = OLD.session_id;
+
     if current_count = 0 then
         delete from Session where sid = OLD.session_id;
+    elsif closed_flag = true then
+        update Session set closed = false where sid = OLD.session_id;
     end if;
 
     return null;

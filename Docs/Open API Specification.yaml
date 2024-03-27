@@ -250,6 +250,72 @@ paths:
         '500':
           description: Internal Server Error
           
+          
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Session Management
+      summary: remove a session by ID
+      description: |
+        Remove a session by ID
+      parameters:
+        - name: sid
+          in: path
+          description: The session's id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: The session's details
+        '400':
+          description: Invalid Session ID / Player is not the owner
+        '401':
+          description: Invalid Authorization
+        '404':
+          description: Session not found
+        '500':
+          description: Internal Server Error
+          
+          
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Session Management
+      summary: update a session's capacity and date by ID
+      description: |
+        update a session's capacity and date by ID
+      parameters:
+        - name: sid
+          in: path
+          description: The session's id
+          required: true
+          schema:
+            type: integer
+            
+      requestBody:
+        description: Session Update Input Model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SessionUpdateInputModel'
+            
+      responses:
+        '204':
+          description: The session's details
+        '400':
+          description: Invalid Session ID / Invalid Body / Session can't be updated
+        '401':
+          description: Invalid Authorization
+        '404':
+          description: Session not found
+        '500':
+          description: Internal Server Error
+      
+          
   /sessions/{sid}/players:
     put:
       security:
@@ -279,6 +345,37 @@ paths:
         '500':
           description: Internal Server Error
           
+          
+    delete:
+      security:
+       - bearerAuth: []
+       
+      tags:
+        - Session Management
+      summary: Delete a player from a session
+      description: |
+        Delete a player from a session
+      parameters:
+        - name: sid
+          in: path
+          description: The session's ID
+          required: true
+          schema:
+            type: integer
+              
+      responses:
+        '204':
+          description: Player successfully removed from session
+        '400':
+          description: Invalid Session ID / Player not in Session / Session Ongoing
+        '401':
+          description: Invalid authorization
+        '404':
+          description: Session does not exist
+        '500':
+          description: Internal Server Error
+      
+          
   /sessions/list:
     post:
       tags:
@@ -304,7 +401,8 @@ paths:
         '400':
           description: Invalid JSON body
         '500':
-          description: Internal Server Error  
+          description: Internal Server Error
+          
   
         
         
@@ -585,3 +683,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Session'
+            
+            
+    SessionUpdateInputModel:
+      type: object
+      required:
+        - capacity
+        - date
+      properties:
+        capacity:
+          type: integer
+          description: Session capacity
+          example: 2
+        date:
+          type: string
+          description: Session start date
+          example: "2025-04-05 18:30:00"
+      
