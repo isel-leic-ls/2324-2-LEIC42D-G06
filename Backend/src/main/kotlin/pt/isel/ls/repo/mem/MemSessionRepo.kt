@@ -46,7 +46,7 @@ class MemSessionRepo : SessionRepo {
     override fun updateSession(sid: Int, date: String, capacity: Int) {
         monitor.withLock {
             sessions.find { it.id == sid }?.let { s ->
-                val nSession = s.copy(date = date, capacity = capacity)
+                val nSession = s.copy(date = date, capacity = capacity, closed = s.players.size == capacity)
                 sessions.remove(s)
                 sessions.add(nSession)
             } ?: throw AppException.SessionNotFound("Session not found with id $sid")
@@ -64,7 +64,7 @@ class MemSessionRepo : SessionRepo {
             sessions.find { it.id == sid }?.let { s ->
                 val nSession = s.copy(players = s.players - pid, closed = false)
                 sessions.remove(s)
-                sessions.add(nSession)
+                if(nSession.players.isNotEmpty()) sessions.add(nSession)
             } ?: throw AppException.SessionNotFound("Session not found with id $sid")
         }
     }

@@ -8,6 +8,7 @@ import pt.isel.ls.repo.jdbc.JdbcSessionsRepo
 import pt.isel.ls.utils.DATE_FORMATTER
 import pt.isel.ls.utils.FIRST_GAME_ID
 import pt.isel.ls.utils.FIRST_PLAYER_ID
+import pt.isel.ls.utils.toDate
 import java.time.LocalDateTime
 import kotlin.test.BeforeTest
 import kotlin.test.assertTrue
@@ -111,6 +112,113 @@ class RepoJdbcSessionTests {
 
         val sessions = repo.getListOfSessions(FIRST_GAME_ID, null, null, null, 0, 2)
         assertTrue(sessions.size == 2)
+    }
+
+
+    @Test
+    fun `delete a session`() {
+        val s = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            game = FIRST_GAME_ID,
+            players = listOf(FIRST_PLAYER_ID)
+        )
+
+        val sid = repo.createSession(s)
+        assert(sid > 0)
+
+        repo.deleteSession(sid)
+        assertTrue(!repo.checkSessionExists(sid))
+    }
+
+    @Test
+    fun `delete the only player from a session should remove the session`() {
+        val s = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            game = FIRST_GAME_ID,
+            players = listOf(FIRST_PLAYER_ID)
+        )
+
+        val sid = repo.createSession(s)
+        assert(sid > 0)
+
+        repo.deletePlayerFromSession(sid, FIRST_PLAYER_ID)
+        assertTrue(!repo.checkSessionExists(sid))
+    }
+
+    @Test
+    fun `delete a player from a session`() {
+        val s = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            game = FIRST_GAME_ID,
+            players = listOf(FIRST_PLAYER_ID, FIRST_PLAYER_ID + 1)
+        )
+
+        val sid = repo.createSession(s)
+        assert(sid > 0)
+
+        repo.addPlayerToSession(sid, FIRST_PLAYER_ID + 2)
+
+        repo.deletePlayerFromSession(sid, FIRST_PLAYER_ID)
+        val session = repo.getSession(sid)
+        assertTrue(session.players.size == 1)
+    }
+
+    @Test
+    fun `update session`() {
+        val s = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            game = FIRST_GAME_ID,
+            players = listOf(FIRST_PLAYER_ID)
+        )
+
+        val sid = repo.createSession(s)
+        assert(sid > 0)
+
+        repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_FORMATTER), 3)
+        val session = repo.getSession(sid)
+        assertTrue(session.capacity == 3 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)))
+    }
+
+    @Test
+    fun `update session capacity of almost full session`() {
+        val s = createSessionDTO(
+            capacity = 3,
+            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            game = FIRST_GAME_ID,
+            players = listOf(FIRST_PLAYER_ID)
+        )
+
+        val sid = repo.createSession(s)
+        assert(sid > 0)
+
+        repo.addPlayerToSession(sid, FIRST_PLAYER_ID + 1)
+
+        repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_FORMATTER), 2)
+        val session = repo.getSession(sid)
+        assertTrue(session.capacity == 2 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)) && session.closed)
+    }
+
+    @Test
+    fun `update a full session to a bigger capacity`() {
+        val s = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            game = FIRST_GAME_ID,
+            players = listOf(FIRST_PLAYER_ID, FIRST_PLAYER_ID + 1)
+        )
+
+        val sid = repo.createSession(s)
+        assert(sid > 0)
+
+        repo.addPlayerToSession(sid, FIRST_PLAYER_ID + 2)
+
+        repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_FORMATTER), 3)
+        val session = repo.getSession(sid)
+        assertTrue(session.capacity == 3 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)) && !session.closed)
     }
 
 }

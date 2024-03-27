@@ -329,4 +329,145 @@ class RepoMemSessionTests {
         // check that every session id is in the range [1, threadCount] and that there are no duplicates
         assertTrue(sids.all { it in 1..threadCount } && sids.groupingBy { it }.eachCount().all { it.value == 1 })
     }
+
+    @Test
+    fun `removing a session`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val gid = 1
+        val players = listOf(1, 2)
+        val capacity = 5
+        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
+
+        // act
+        repo.deleteSession(sid)
+
+        // assert
+        assertFailsWith<AppException.SessionNotFound> {
+            repo.getSession(sid)
+        }
+    }
+
+    @Test
+    fun `removing a player from a session`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val gid = 1
+        val players = listOf(1, 2)
+        val capacity = 5
+        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
+
+        repo.addPlayerToSession(sid, players[1])
+        // act
+        repo.deletePlayerFromSession(sid, players[1])
+
+        // assert
+        val session = repo.getSession(sid)
+        assertTrue(session.players.size == 1 && session.players.contains(players[0]))
+    }
+
+    @Test
+    fun `removing the only player from a session`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val gid = 1
+        val players = listOf(1)
+        val capacity = 5
+        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
+
+        // act
+        repo.deletePlayerFromSession(sid, players[0])
+
+        // assert
+        assertFailsWith<AppException.SessionNotFound> {
+            repo.getSession(sid)
+        }
+    }
+
+    @Test
+    fun `removing a player from a full session should yield an open session`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val gid = 1
+        val players = listOf(1, 2)
+        val capacity = 2
+        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
+
+        repo.addPlayerToSession(sid, players[1])
+
+        // act
+        repo.deletePlayerFromSession(sid, players[1])
+
+        // assert
+        val session = repo.getSession(sid)
+        assertTrue(session.players.size == 1 && !session.closed)
+    }
+
+    @Test
+    fun `update a session`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val gid = 1
+        val players = listOf(1, 2)
+        val capacity = 5
+        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
+
+        // act
+        val newDate = LocalDateTime.now().plusDays(2).format(DATE_FORMATTER)
+        val newCapacity = 10
+        repo.updateSession(sid, newDate, newCapacity)
+
+        // assert
+        val session = repo.getSession(sid)
+        assertTrue(session.date == newDate && session.capacity == newCapacity)
+    }
+
+    @Test
+    fun `update a session that is almost full to a full capacity`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val gid = 1
+        val players = listOf(1, 2)
+        val capacity = 3
+        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
+
+        repo.addPlayerToSession(sid, players[1])
+
+        // act
+        val newDate = LocalDateTime.now().plusDays(2).format(DATE_FORMATTER)
+        val newCapacity = 2
+        repo.updateSession(sid, newDate, newCapacity)
+
+        // assert
+        val session = repo.getSession(sid)
+        assertTrue(session.date == newDate && session.capacity == newCapacity && session.closed)
+    }
+
+    @Test
+    fun `update a session that is full to a bigger capacity`() {
+        //arrange
+        val repo = MemSessionRepo()
+        val gid = 1
+        val players = listOf(1, 2)
+        val capacity = 2
+        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
+
+        repo.addPlayerToSession(sid, players[1])
+
+        // act
+        val newDate = LocalDateTime.now().plusDays(2).format(DATE_FORMATTER)
+        val newCapacity = 3
+        repo.updateSession(sid, newDate, newCapacity)
+
+        // assert
+        val session = repo.getSession(sid)
+        assertTrue(session.date == newDate && session.capacity == newCapacity && !session.closed)
+    }
 }
