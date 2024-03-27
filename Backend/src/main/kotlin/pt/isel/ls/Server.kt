@@ -1,6 +1,8 @@
 package pt.isel.ls
 
+import org.http4k.routing.ResourceLoader
 import org.http4k.routing.routes
+import org.http4k.routing.singlePageApp
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import org.postgresql.ds.PGSimpleDataSource
@@ -39,7 +41,8 @@ fun main() {
     val routes = routes(
         sessionRoutes.routes,
         gamesRoutes.routes,
-        playersRoutes.routes
+        playersRoutes.routes,
+        singlePageApp(ResourceLoader.Directory("static-content"))
     )
 
     // start the server with the routes
