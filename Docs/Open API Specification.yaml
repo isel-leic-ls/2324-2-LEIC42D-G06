@@ -6,7 +6,7 @@ info:
   
 servers:
   - description: localhost
-    url: http://localhost:8080
+    url: http://localhost:9000/api
 
 tags:
   - name: Player Management
