@@ -79,7 +79,7 @@ class ApiMemSessionTests {
 
         // act
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/sessions"))
+            .uri(URI.create("http://localhost:8080/api/sessions"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -116,7 +116,7 @@ class ApiMemSessionTests {
 
         // act
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/sessions"))
+            .uri(URI.create("http://localhost:8080/api/sessions"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -153,7 +153,7 @@ class ApiMemSessionTests {
 
         // act
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/sessions"))
+            .uri(URI.create("http://localhost:8080/api/sessions"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -191,7 +191,7 @@ class ApiMemSessionTests {
 
         // act
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/sessions"))
+            .uri(URI.create("http://localhost:8080/api/sessions"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${fPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -214,7 +214,7 @@ class ApiMemSessionTests {
         val id = 10101131 // using a bigger number results in status code 500 (?????????)
         // act..
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/sessions/${id}"))
+            .uri(URI.create("http://localhost:8080/api/sessions/${id}"))
             .GET()
             .build()
 
@@ -231,7 +231,7 @@ class ApiMemSessionTests {
 
         // act
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/sessions/${id}"))
+            .uri(URI.create("http://localhost:8080/api/sessions/${id}"))
             .GET()
             .build()
 
@@ -252,7 +252,7 @@ class ApiMemSessionTests {
 
         // act
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/sessions/${sid}"))
+            .uri(URI.create("http://localhost:8080/api/sessions/${sid}"))
             .GET()
             .build()
 
