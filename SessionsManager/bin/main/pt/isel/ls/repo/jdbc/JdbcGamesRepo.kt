@@ -73,8 +73,9 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
         genres: List<String>, developer: String, limit: Int, skip: Int
     ): List<Game> {
         val stmt = dataSource.connection.prepareStatement(
-            "SELECT * FROM game WHERE developer ILIKE ? OR array(select unnest(genres)) " +
-                    "&& ? ORDER BY gid LIMIT ? OFFSET ?"
+            "SELECT * FROM game WHERE developer ILIKE ? OR " +
+                    "EXISTS (SELECT 1 FROM UNNEST(genres) AS genre WHERE genre ILIKE ANY(?)) " +
+                    "ORDER BY gid LIMIT ? OFFSET ?"
         )
         stmt.setString(1, developer)
         stmt.setArray(2, dataSource.connection.createArrayOf("VARCHAR", genres.toTypedArray()))

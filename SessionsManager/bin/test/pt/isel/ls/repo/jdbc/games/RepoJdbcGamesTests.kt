@@ -124,7 +124,7 @@ class RepoJdbcGamesTests {
         val list2 = repo.getListOfGames(genres23, dev1, 5, 0)
         assertTrue { list2.containsAll(listOf(game1, game2, game3, game4)) && list2.size == 4 }
 
-        val list3 = repo.getListOfGames(listOf(genres12[0]), dev2, 5, 0)
+        val list3 = repo.getListOfGames(listOf(genres12[0].uppercase()), dev2, 5, 0)
         assertTrue { list3.containsAll(listOf(game1, game3, game4)) && list3.size == 3 }
 
         val list4 = repo.getListOfGames(listOf(genres23[1]), dev2, 5, 0)

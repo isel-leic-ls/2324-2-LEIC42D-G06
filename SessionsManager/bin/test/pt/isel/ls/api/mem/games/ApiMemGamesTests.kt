@@ -87,7 +87,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games"))
+            .uri(URI.create("http://localhost:8080/api/games"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -118,7 +118,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games"))
+            .uri(URI.create("http://localhost:8080/api/games"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -149,7 +149,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games"))
+            .uri(URI.create("http://localhost:8080/api/games"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer $invalidToken")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -173,7 +173,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games"))
+            .uri(URI.create("http://localhost:8080/api/games"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -200,7 +200,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games"))
+            .uri(URI.create("http://localhost:8080/api/games"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -219,7 +219,7 @@ class ApiMemGamesTests {
         val foundPlayer = playerServices.getPlayer(FIRST_PLAYER_ID)
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/id/$FIRST_GAME_ID"))
+            .uri(URI.create("http://localhost:8080/api/games/id/$FIRST_GAME_ID"))
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .GET()
             .build()
@@ -234,7 +234,7 @@ class ApiMemGamesTests {
         val foundPlayer = playerServices.getPlayer(FIRST_PLAYER_ID)
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/id/0"))
+            .uri(URI.create("http://localhost:8080/api/games/id/0"))
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .GET()
             .build()
@@ -249,7 +249,7 @@ class ApiMemGamesTests {
         val foundPlayer = playerServices.getPlayer(FIRST_PLAYER_ID)
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/id/${2 * FIRST_GAME_ID}"))
+            .uri(URI.create("http://localhost:8080/api/games/id/${2 * FIRST_GAME_ID}"))
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .GET()
             .build()
@@ -266,7 +266,7 @@ class ApiMemGamesTests {
         val encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8.toString())
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/name/$encodedName"))
+            .uri(URI.create("http://localhost:8080/api/games/name/$encodedName"))
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .GET()
             .build()
@@ -283,7 +283,7 @@ class ApiMemGamesTests {
         val encodedName = URLEncoder.encode(name, StandardCharsets.UTF_8.toString())
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/name/$encodedName"))
+            .uri(URI.create("http://localhost:8080/api/games/name/$encodedName"))
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .GET()
             .build()
@@ -305,7 +305,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/list"))
+            .uri(URI.create("http://localhost:8080/api/games/list"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -331,7 +331,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/list?skip=2&limit=4"))
+            .uri(URI.create("http://localhost:8080/api/games/list?skip=2&limit=4"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -357,7 +357,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/list"))
+            .uri(URI.create("http://localhost:8080/api/games/list"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -381,7 +381,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/list"))
+            .uri(URI.create("http://localhost:8080/api/games/list"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -405,7 +405,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/list"))
+            .uri(URI.create("http://localhost:8080/api/games/list"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -427,7 +427,7 @@ class ApiMemGamesTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/games/list"))
+            .uri(URI.create("http://localhost:8080/api/games/list"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${foundPlayer.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))

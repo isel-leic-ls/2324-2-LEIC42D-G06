@@ -56,7 +56,7 @@ class ApiMemPlayerTests {
 
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/players"))
+            .uri(URI.create("http://localhost:8080/api/players"))
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
@@ -79,7 +79,7 @@ class ApiMemPlayerTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/players"))
+            .uri(URI.create("http://localhost:8080/api/players"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${player.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -103,7 +103,7 @@ class ApiMemPlayerTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/players"))
+            .uri(URI.create("http://localhost:8080/api/players"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${player.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -128,7 +128,7 @@ class ApiMemPlayerTests {
         """.trimIndent()
 
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/players"))
+            .uri(URI.create("http://localhost:8080/api/players"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${player.token}")
             .POST(HttpRequest.BodyPublishers.ofString(requestBody))
@@ -142,7 +142,7 @@ class ApiMemPlayerTests {
     fun `retrieving an existing player`() {
         val player = playerServices.getPlayer(FIRST_PLAYER_ID)
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/players/$FIRST_PLAYER_ID"))
+            .uri(URI.create("http://localhost:8080/api/players/$FIRST_PLAYER_ID"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${player.token}")
             .GET()
@@ -156,7 +156,7 @@ class ApiMemPlayerTests {
     fun `retrieving a non existent player`() {
         val player = playerServices.getPlayer(FIRST_PLAYER_ID)
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/players/100"))
+            .uri(URI.create("http://localhost:8080/api/players/100"))
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${player.token}")
             .GET()

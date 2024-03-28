@@ -106,7 +106,7 @@ class RepoMemGamesTests {
         val list5 = repo.getListOfGames(listOf(genresABC[2]), dev1, 5, 0)
         assertTrue { list5.containsAll(listOf(game1, game2, game3)) && list5.size == 3 }
 
-        val list6 = repo.getListOfGames(listOf(genresXYZ[0]), dev2, 5, 0)
+        val list6 = repo.getListOfGames(listOf(genresXYZ[0].uppercase()), dev2, 5, 0)
         assertTrue { list6.containsAll(listOf(game3, game4)) && list6.size == 2 }
 
         val list7 = repo.getListOfGames(listOf("G"), "developer3", 5, 0)
