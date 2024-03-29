@@ -18,8 +18,8 @@ export function homePage(player) {
                 a({ href: "#sessions" }, "Search sessions")
             ),
             div(
-                {}, //This should redirect to "My details, we need to implement token first"
-                a({ href: `#players/${player.id}` }, "My details - TODO") //HARD-CODED ID
+                {},
+                a({ href: "#players/" + player.id }, "My profile")
             )
         )
     return element;

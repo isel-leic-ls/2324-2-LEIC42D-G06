@@ -68,7 +68,8 @@ class RepoMemPlayerTests {
     fun `get nonexistent player by token`() {
         val repo = MemPlayersRepo()
         val token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-        val player = repo.getPlayerIdByToken(token)
-        assertEquals(null, player)
+        assertFailsWith<AppException.PlayerNotFound> {
+            repo.getPlayerIdByToken(token)
+        }
     }
 }

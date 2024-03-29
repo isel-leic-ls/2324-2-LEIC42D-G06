@@ -48,3 +48,11 @@ export function input(attributes = {}, ...children) {
 export function button(attributes = {}, ...children) {
     return createElement("button", attributes, ...children);
 }
+
+export function br(attributes = {}, ...children) {
+    return createElement("br", attributes, ...children);
+}
+
+export function p(attributes = {}, ...children) {
+    return createElement("p", attributes, ...children);
+}

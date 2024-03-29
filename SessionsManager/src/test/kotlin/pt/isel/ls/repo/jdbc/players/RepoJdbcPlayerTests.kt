@@ -61,7 +61,8 @@ class RepoJdbcPlayerTests {
     @Test
     fun `get non existent player by token`() {
         val repo = JdbcPlayersRepo(dataSource)
-        val player = repo.getPlayerIdByToken("3ad7db4b")
-        assertNull(player)
+        assertFailsWith<AppException.PlayerNotFound> {
+            repo.getPlayerIdByToken("3ad7db4b")
+        }
     }
 }

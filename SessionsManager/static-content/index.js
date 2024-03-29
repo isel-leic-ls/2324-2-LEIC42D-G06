@@ -9,10 +9,10 @@ function loadHandler() { //called when the page is loaded
     router.addRouteHandler("home", handlers.getHome)
     router.addRouteHandler("games", handlers.getGamesSearch)
     router.addRouteHandler("games/list", handlers.getGamesList)
-    router.addRouteHandler("sessions", handlers.getSessions)
-    router.addRouteHandler("players/:pid", handlers.getPlayer) //HARD-CODED ID
-    router.addRouteHandler("games/:gid", handlers.getGame)
-    //router.addRouteHandler("/players", handlers.getPlayerByToken)
+    router.addRouteHandler("sessions", handlers.getSessionsSearch)
+    router.addRouteHandler("sessions/list", handlers.getSessionsList)
+    router.addRouteHandler("players/:pid", handlers.getPlayer)
+    router.addRouteHandler("games/:gid", handlers.getGameDetails)
     router.addDefaultNotFoundRouteHandler(() => window.location.hash = "home")
     hashChangeHandler()
 }

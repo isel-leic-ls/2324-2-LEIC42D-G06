@@ -17,7 +17,6 @@ class SessionServices(
 
     fun createSession(token : String, gid : Int, capacity : Int, startDate: String) : Int {
         val pid = pRepo.getPlayerIdByToken(token)
-            ?: throw AppException.InvalidAuthorization("Invalid token $token")
 
         checkGameExists(gid)
         checkDateFormat(startDate)
@@ -27,7 +26,6 @@ class SessionServices(
 
     fun addPlayerToSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
-            ?: throw AppException.InvalidAuthorization("Invalid token $token")
 
         checkSessionExists(sid)
         val session = sRepo.getSession(sid)
@@ -43,7 +41,6 @@ class SessionServices(
 
     fun updateSession(token : String, sid : Int, date : String, capacity : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
-            ?: throw AppException.InvalidAuthorization("Invalid token $token")
 
         require(capacity >= MIN_SESSION_CAPACITY) {
             "Capacity must be greater than $MIN_SESSION_CAPACITY"
@@ -63,7 +60,6 @@ class SessionServices(
 
     fun deleteSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
-            ?: throw AppException.InvalidAuthorization("Invalid token $token")
 
         checkSessionExists(sid)
         val session = sRepo.getSession(sid)
@@ -73,7 +69,6 @@ class SessionServices(
 
     fun deletePlayerFromSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
-            ?: throw AppException.InvalidAuthorization("Invalid token $token")
 
         checkSessionExists(sid)
         val session = sRepo.getSession(sid)
@@ -83,8 +78,8 @@ class SessionServices(
         sRepo.deletePlayerFromSession(sid, pid)
     }
 
-    fun getListOfSessions(gid : Int, startDate : String?, state : String?, pid : Int?, skip : Int, limit : Int) : List<Session> {
-        checkGameExists(gid)
+    fun getListOfSessions(gid : Int?, startDate : String?, state : String?, pid : Int?, skip : Int, limit : Int) : List<Session> {
+        if (gid != null) checkGameExists(gid)
 
         if(startDate != null) checkDateFormat(startDate)
         if(state != null) checkState(state)

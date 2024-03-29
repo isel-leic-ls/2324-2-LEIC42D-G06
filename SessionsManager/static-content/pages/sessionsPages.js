@@ -1,37 +1,64 @@
-import { div, input, button, label } from "../tags.js"
+import { div, input, button, label, p, ul, li } from "../tags.js"
 
 
-export function sessionsSearchPage() { //this is the search page for sessions by gId, date (optional), state (optional), pId (optional)
-    const gIdInput = input({ type: "text", placeholder: "Game ID" });
-    const dateInput = input({ type: "text", placeholder: "Date" });
-    const stateInput = input({ type: "text", placeholder: "State" });
-    const pIdInput = input({ type: "text", placeholder: "Player ID" });
+export function sessionsSearchPage() { // search sessions by date and state
+
+    const dateInput = input({ type: "text", placeholder: "2034-04-04 18:00:00", disabled : true });
+    const dateCheckBox = input({ type: "checkbox", onChange : () => {
+        dateInput.disabled = !dateInput.disabled;
+        dateInput.value = ""
+    } });
+
+    const stateInput = input({ type: "text", placeholder: "open", disabled : true });
+    const stateCheckBox = input({ type: "checkbox", onChange : () => {
+        stateInput.disabled = !stateInput.disabled;
+        stateInput.value = ""
+    } });
 
     const searchButton = button(
         {
             onClick: () => {
-                const gId = gIdInput.value
-                const date = dateInput.value
-                const state = stateInput.value
-                const pId = pIdInput.value
-                window.location.hash = "sessions/list?gid=" + gId
-                    + "&date=" + date + "&state=" + state + "&pid=" + pId; //TODO check if this is the correct
+                const date = (dateInput.disabled) ? null : dateInput.value
+                const state = (stateInput.disabled) ? null : stateInput.value
+                window.location.hash = "sessions/list?date=" + date + "&state=" + state + "&skip=0&limit=1"
             }
         },
-        "Search TODO good redirect"
+        "Search sessions"
     );
 
     const element = div(
         {},
-        "Search sessions by game ID, date, state and player ID",
+        "Search sessions by date and state:",
         div(
             {},
-            label({}, "Game ID:", gIdInput),
-            label({}, "Date:", dateInput),
-            label({}, "State:", stateInput),
-            label({}, "Player ID:", pIdInput),
+            label({}, "Date:", dateCheckBox, dateInput),
+            p({}),
+            label({}, "State:", stateCheckBox, stateInput),
         ),
         searchButton
+    );
+
+    return element;
+}
+
+
+export function sessionsListPage(sessions, buttons) { // list of sessions
+    const elements = sessions.map(session =>
+        ul({},
+            li({}, "ID: " + session.id),
+            li({}, "Capacity: " + session.capacity),
+            li({}, "Date: " + session.date),
+            li({}, "Game ID: " + session.game),
+            li({}, "Status: " + session.closed),
+            li({}, "Players: " + session.players)
+        )
+    );
+
+    const element = div(
+        {},
+        "Sessions",
+        div({}, buttons),
+        ...elements
     );
 
     return element;

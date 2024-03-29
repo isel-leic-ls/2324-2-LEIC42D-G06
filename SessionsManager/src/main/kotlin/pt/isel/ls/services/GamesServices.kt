@@ -10,7 +10,6 @@ import pt.isel.ls.utils.*
 class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo) {
     fun createGame(token: String, name: String, developer: String, genres: List<String>): Int {
         pRepo.getPlayerIdByToken(token)
-            ?: throw AppException.InvalidAuthorization("Invalid token $token")
 
         if (gRepo.checkGameExistsByName(name))
             throw AppException.GameAlreadyExists("Game $name already exists")

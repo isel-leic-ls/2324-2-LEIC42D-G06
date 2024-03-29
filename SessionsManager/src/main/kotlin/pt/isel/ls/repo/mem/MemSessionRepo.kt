@@ -70,7 +70,7 @@ class MemSessionRepo : SessionRepo {
     }
 
     override fun getListOfSessions(
-        gid: Int,
+        gid: Int?,
         date: String?,
         state: Boolean?,
         pid: Int?,
@@ -79,7 +79,7 @@ class MemSessionRepo : SessionRepo {
     ): List<Session> =
         monitor.withLock {
             sessions.filter {
-                it.game == gid &&
+                gid?.let { g -> it.game == g } ?: true &&
                 date?.let { d -> it.date == d } ?: true &&
                 state?.let { s -> it.closed == s } ?: true &&
                 pid?.let { p -> it.players.contains(p) } ?: true

@@ -1,20 +1,23 @@
 import { fetcher } from "../fetch.js";
-import {filterUriId} from "../uriparsers";
+import {filterUriId} from "../uriparsers.js";
+
+
+let token = "Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7" // hard-coded
 
 export async function handlePlayerDetailsRequest(path) {
     const id = filterUriId(path);
-    const result = await fetcher("/players/" + id, "GET", undefined); // hard-coded
+    const result = await fetcher("/players/" + id, "GET", undefined);
     return result;
 }
 
 export async function handlePlayerId(){
-    const result = await fetch("http://localhost:9000/api/players/token",{
+    const result = await fetch("http://localhost:9000/api/players/token/info",{
         headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
-            "Authorization": "Bearer 4aef5b7b-1693-4e49-a778-634360a3e537" //TOKEN HARDCODED TODO()
+            "Authorization": token
         },
 
     })
-    return result
+    return await result.json();
 }

@@ -7,7 +7,7 @@ import pt.isel.ls.utils.FIRST_PLAYER_ID
 import java.util.concurrent.ConcurrentLinkedQueue
 
 
-/*class MemPlayersRepo : PlayersRepo {
+class MemPlayersRepo : PlayersRepo {
     private val players = ConcurrentLinkedQueue<Player>()
 
     override fun createPlayer(name: String, email: String, token: String, password: String): Int {
@@ -21,5 +21,6 @@ import java.util.concurrent.ConcurrentLinkedQueue
     override fun checkPlayerExistsByEmail(email: String): Boolean = players.any { it.email == email }
     override fun checkPlayerExistsByName(name: String): Boolean = players.any { it.name == name }
 
-    //override fun getPlayerIdByToken(token: String) = players.find { it.token == token }?.id
-}*/
+    override fun getPlayerIdByToken(token: String) = players.find { it.token == token }?.id
+        ?: throw AppException.PlayerNotFound("Player not found with token $token")
+}

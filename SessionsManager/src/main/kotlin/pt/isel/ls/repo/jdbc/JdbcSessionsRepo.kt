@@ -105,7 +105,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
     }
 
     override fun getListOfSessions(
-        gid: Int,
+        gid: Int?,
         date: String?,
         state: Boolean?,
         pid: Int?,
@@ -114,7 +114,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
     ): List<Session> {
         dataSource.connection.use {
 
-            val result = it.setupListSessionsStatement(date, state, pid)
+            val result = it.setupListSessionsStatement(gid, date, state, pid)
                 .bindParameters(gid, date, state, pid, limit, skip)
                 .executeQuery()
 
@@ -149,15 +149,33 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
     }
 
     private fun Connection.setupListSessionsStatement(
+        gid : Int?,
         date: String?,
         state: Boolean?,
         pid: Int?,
     ): PreparedStatement = prepareStatement(
         buildString {
-            append("SELECT * FROM Session WHERE game_id = ?")
-            if(date != null) append(" AND session_date = ?")
-            if(state != null) append(" AND closed = ?")
-            if(pid != null) append(" AND sid IN (SELECT session_id FROM SessionPlayer WHERE player_id = ?)")
+            var firstNonNull = true
+            append("SELECT * FROM Session")
+            if (gid != null) {
+                append(" WHERE")
+                append(" game_id = ?")
+                firstNonNull = false
+            }
+            if (date != null) {
+                append(if (firstNonNull) " WHERE" else " AND")
+                append(" session_date = ?")
+                firstNonNull = false
+            }
+            if (state != null) {
+                append(if (firstNonNull) " WHERE" else " AND")
+                append(" closed = ?")
+                firstNonNull = false
+            }
+            if (pid != null) {
+                append(if (firstNonNull) " WHERE" else " AND")
+                append(" sid IN (SELECT session_id FROM SessionPlayer WHERE player_id = ?)")
+            }
             append(" LIMIT ? OFFSET ?")
         })
 

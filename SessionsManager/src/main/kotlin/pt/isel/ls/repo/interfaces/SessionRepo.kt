@@ -14,7 +14,7 @@ interface SessionRepo {
     fun deletePlayerFromSession(sid : Int, pid : Int)
 
     fun getListOfSessions(
-        gid : Int,
+        gid : Int?,
         date : String?,
         state : Boolean?,
         pid : Int?,

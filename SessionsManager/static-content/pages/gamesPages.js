@@ -11,7 +11,7 @@ export function gamesSearchPage() { //this is the search page for games by genre
                 const genres = genresInput.value
                 const developer = developerInput.value
                 window.location.hash = "games/list?genres=" + genres
-                    + "&developer=" + developer + "&skip=0&limit=10";
+                    + "&developer=" + developer + "&skip=0&limit=1"; // The limit value is set to 1 for testing purposes
             }
         },
         "Search"
@@ -31,7 +31,7 @@ export function gamesSearchPage() { //this is the search page for games by genre
     return element;
 }
 
-export function gamesListPage(games) { //this is the list of games that match the search criteria
+export function gamesListPage(games, buttons) { //this is the list of games that match the search criteria
     const elements = games.map(game =>
         div({},
             a({ href: "#games/" + game.id }, game.name)
@@ -41,6 +41,7 @@ export function gamesListPage(games) { //this is the list of games that match th
     const element = div(
         {},
         "Games",
+        div({}, buttons),
         ...elements
     )
 
@@ -61,6 +62,13 @@ export function gameDetailsPage(game) { //this is the details page for a specifi
                     li({}, "Developer: " + game.dev),
                     li({}, "Genres: " + game.genres.join(", ")),
                 )
+            ),
+            button(
+                {
+                    onClick: () => {
+                        window.location.hash = "sessions/list?gid=" + game.id + "&skip=0&limit=1" // The limit value is set to 1 for testing purposes
+                    }
+                }, "Search sessions with this game"
             )
         );
 
