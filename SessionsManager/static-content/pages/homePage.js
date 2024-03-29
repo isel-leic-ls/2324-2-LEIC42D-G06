@@ -1,9 +1,14 @@
-import { div, a, ul, li, label, input, button } from "../tags.js"
+import { div, a, ul } from "../tags.js"
+
 
 export function homePage() {
     const element =
         div(
             {}, "Hello LS",
+            ul(
+                {}, //TODO better spacing than this
+                ""
+            ),
             div(
                 {},
                 a({ href: "#games" }, "Search games")

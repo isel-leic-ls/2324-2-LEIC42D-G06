@@ -1,19 +1,21 @@
-import { div, a, ul, li, label, input, button } from "../tags.js"
+import { div, ul, li } from "../tags.js"
 
-export function playerDetailsPage(player) {
+
+export function playerDetailsPage(player) { //this is the details page for a specific player
     const element =
+        div(
+            {},
+            "Player 1000 hard-coded", //HARD-CODED ID
             div(
                 {},
-                "Player 1000 hard-coded", //HARD-CODED ID
-                div(
+                ul(
                     {},
-                    ul(
-                        {},
-                        li({}, "ID: " + player.id),
-                        li({}, "Name: " + player.name),
-                        li({}, "E-mail: " + player.email),
-                    )
+                    li({}, "ID: " + player.id),
+                    li({}, "Name: " + player.name),
+                    li({}, "E-mail: " + player.email),
                 )
-            );
-     return element;
+            )
+        );
+
+    return element;
 }

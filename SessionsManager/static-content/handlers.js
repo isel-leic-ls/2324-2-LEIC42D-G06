@@ -1,30 +1,21 @@
-import { div, a, ul, li, label, input, button } from "./tags.js"
+import { div } from "./tags.js"
 import { handleGamesRetrievalRequest, handleGameDetailsRequest } from "./data/gameRequests.js"
 import { handlePlayerDetailsRequest } from "./data/playerRequests.js"
 import { playerDetailsPage } from "./pages/playerPages.js"
-import { gameDetailsPage, gameListPage, gameSearchPage } from "./pages/gamePages.js"
+import { gameDetailsPage, gameListPage, gamesSearchPage } from "./pages/gamePages.js"
 import { homePage } from "./pages/homePage.js"
 
+
+/** Home */
 function getHome(mainContent) {
     const pageContent = homePage();
     mainContent.replaceChildren(pageContent);
 }
 
-function getGames(mainContent) {
-    const pageContent = gameSearchPage();
+/** Games */
+function getGamesSearch(mainContent) {
+    const pageContent = gamesSearchPage();
     mainContent.replaceChildren(pageContent);
-}
-
-async function getGame(mainContent, path) {
-    const game = await handleGameDetailsRequest(path);
-    const pageContent = gameDetailsPage(game);
-    mainContent.replaceChildren(pageContent);
-}
-
-
-function getSessions(mainContent) {
-    const element = div({}, "Sessions");
-    mainContent.replaceChildren(element);
 }
 
 async function getGamesList(mainContent, path) {
@@ -33,7 +24,19 @@ async function getGamesList(mainContent, path) {
     mainContent.replaceChildren(pageContent);
 }
 
+async function getGameDetails(mainContent, path) {
+    const game = await handleGameDetailsRequest(path);
+    const pageContent = gameDetailsPage(game);
+    mainContent.replaceChildren(pageContent);
+}
 
+/** Sessions */
+function getSessions(mainContent) {
+    const element = div({}, "Sessions");
+    mainContent.replaceChildren(element);
+}
+
+/** Players */
 async function getPlayer(mainContent) {
     const player = await handlePlayerDetailsRequest();
     const pageContent = playerDetailsPage(player);
@@ -43,11 +46,11 @@ async function getPlayer(mainContent) {
 
 export const handlers = {
     getHome,
-    getGames,
+    getGamesSearch,
     getSessions,
     getPlayer,
     getGamesList,
-    getGame
+    getGameDetails
 }
 
 export default handlers
