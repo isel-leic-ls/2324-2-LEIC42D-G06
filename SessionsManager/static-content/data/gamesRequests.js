@@ -9,8 +9,9 @@ export async function handleGamesRetrievalRequest(path) {
         genres: genres.includes(',') ? genres.split(",").map(g => g.trim()) : [genres],
         developer: developer
     });
-        return games;
-    }
+    
+    return games;
+}
 
 export async function handleGameDetailsRequest(path) {
     const gid = filterUriId(path);

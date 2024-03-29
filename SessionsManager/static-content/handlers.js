@@ -1,9 +1,9 @@
-import { div } from "./tags.js"
+import { homePage } from "./pages/homePage.js"
+import { gamesSearchPage, gamesListPage, gameDetailsPage } from "./pages/gamesPages.js"
 import { handleGamesRetrievalRequest, handleGameDetailsRequest } from "./data/gamesRequests.js"
 import { handlePlayerDetailsRequest } from "./data/playerRequests.js"
+import { sessionsSearchPage } from "./pages/sessionsPages.js"
 import { playerDetailsPage } from "./pages/playerPages.js"
-import { gameDetailsPage, gameListPage, gamesSearchPage } from "./pages/gamesPages.js"
-import { homePage } from "./pages/homePage.js"
 
 
 /** Home */
@@ -20,7 +20,7 @@ function getGamesSearch(mainContent) {
 
 async function getGamesList(mainContent, path) {
     const result = await handleGamesRetrievalRequest(path);
-    const pageContent = gameListPage(result.games);
+    const pageContent = gamesListPage(result.games);
     mainContent.replaceChildren(pageContent);
 }
 
@@ -31,9 +31,9 @@ async function getGameDetails(mainContent, path) {
 }
 
 /** Sessions */
-function getSessions(mainContent) {
-    const element = div({}, "Sessions");
-    mainContent.replaceChildren(element);
+function getSessionsSearch(mainContent) {
+    const pageContent = sessionsSearchPage();
+    mainContent.replaceChildren(pageContent);
 }
 
 /** Players */
@@ -43,14 +43,13 @@ async function getPlayer(mainContent) {
     mainContent.replaceChildren(pageContent);
 }
 
-
 export const handlers = {
     getHome,
     getGamesSearch,
-    getSessions,
-    getPlayer,
     getGamesList,
-    getGameDetails
+    getGameDetails,
+    getSessionsSearch,
+    getPlayer
 }
 
 export default handlers

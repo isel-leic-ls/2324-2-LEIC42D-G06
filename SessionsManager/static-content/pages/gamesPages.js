@@ -31,7 +31,7 @@ export function gamesSearchPage() { //this is the search page for games by genre
     return element;
 }
 
-export function gameListPage(games) { //this is the list of games that match the search criteria
+export function gamesListPage(games) { //this is the list of games that match the search criteria
     const elements = games.map(game =>
         div({},
             a({ href: "#games/" + game.id }, game.name)
