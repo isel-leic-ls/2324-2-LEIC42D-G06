@@ -1,8 +1,8 @@
 import { div } from "./tags.js"
-import { handleGamesRetrievalRequest, handleGameDetailsRequest } from "./data/gameRequests.js"
+import { handleGamesRetrievalRequest, handleGameDetailsRequest } from "./data/gamesRequests.js"
 import { handlePlayerDetailsRequest } from "./data/playerRequests.js"
 import { playerDetailsPage } from "./pages/playerPages.js"
-import { gameDetailsPage, gameListPage, gamesSearchPage } from "./pages/gamePages.js"
+import { gameDetailsPage, gameListPage, gamesSearchPage } from "./pages/gamesPages.js"
 import { homePage } from "./pages/homePage.js"
 
 

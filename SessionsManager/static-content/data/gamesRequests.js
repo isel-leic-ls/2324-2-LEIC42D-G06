@@ -1,6 +1,7 @@
 import { fetcher } from "../fetch.js";
 import { filterQueryParameters, filterUriId } from "../uriparsers.js";
 
+
 export async function handleGamesRetrievalRequest(path) {
     const { skip, limit, genres, developer } = filterQueryParameters(path);
 
