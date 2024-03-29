@@ -1,4 +1,4 @@
-import { div, input, button, label, p, ul, li } from "../tags.js"
+import { div, input, button, label, p, ul, li, a } from "../tags.js"
 
 
 export function sessionsSearchPage() { // search sessions by date and state
@@ -45,12 +45,8 @@ export function sessionsSearchPage() { // search sessions by date and state
 export function sessionsListPage(sessions, buttons) { // list of sessions
     const elements = sessions.map(session =>
         ul({},
-            li({}, "ID: " + session.id),
-            li({}, "Capacity: " + session.capacity),
-            li({}, "Date: " + session.date),
-            li({}, "Game ID: " + session.game),
-            li({}, "Status: " + session.closed),
-            li({}, "Players: " + session.players)
+            li({}, "ID: ", a({ href: "#sessions/" + session.id }, "" + session.id)),
+            li({}, "Date: " + session.date)
         )
     );
 
@@ -59,6 +55,25 @@ export function sessionsListPage(sessions, buttons) { // list of sessions
         "Sessions",
         div({}, buttons),
         ...elements
+    );
+
+    return element;
+}
+
+export function sessionDetailsPage(session) {
+
+    const pAnchors = session.players.map(p => a({ href: "#players/" + p }, "    " + p));
+    const element = div(
+        {},
+        "Session details",
+        ul({},
+            li({}, "ID: " + session.id),
+            li({}, "Capacity: " + session.capacity),
+            li({}, "Date: " + session.date),
+            li({}, "Game ID: ", a({ href: "#games/" + session.game }, "" + session.game)),
+            li({}, "Closed: " + session.closed),
+            li({}, "Players: ", ...pAnchors)
+        )
     );
 
     return element;

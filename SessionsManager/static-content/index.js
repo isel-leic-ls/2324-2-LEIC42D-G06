@@ -11,6 +11,7 @@ function loadHandler() { //called when the page is loaded
     router.addRouteHandler("games/list", handlers.getGamesList)
     router.addRouteHandler("sessions", handlers.getSessionsSearch)
     router.addRouteHandler("sessions/list", handlers.getSessionsList)
+    router.addRouteHandler("sessions/:sid", handlers.getSessionDetails)
     router.addRouteHandler("players/:pid", handlers.getPlayer)
     router.addRouteHandler("games/:gid", handlers.getGameDetails)
     router.addDefaultNotFoundRouteHandler(() => window.location.hash = "home")

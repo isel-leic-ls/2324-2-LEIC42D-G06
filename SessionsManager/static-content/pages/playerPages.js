@@ -4,6 +4,7 @@ export function playerDetailsPage(player) {
     const element =
         div(
             {},
+            "Player Details",
             div(
                 {},
                 ul(
