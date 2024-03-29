@@ -16,19 +16,19 @@ class PlayerServices(private val pRepo: PlayersRepo) {
             "Name length must be between $MIN_NAME_LENGTH and $MAX_NAME_LENGTH"
         }
 
-        if(pRepo.checkPlayerExistsByName(name))
+        if (pRepo.checkPlayerExistsByName(name))
             throw AppException.PlayerAlreadyExists("Name $name already exists")
 
-        require(password.isNotBlank()) { "Password cannot be blank" }
-        require(password.length in MIN_PASSWORD_LENGTH..MAX_PASSWORD_LENGTH ) {
+        require(password.length in MIN_PASSWORD_LENGTH..MAX_PASSWORD_LENGTH) {
             "Password length must be between $MIN_PASSWORD_LENGTH and $MAX_PASSWORD_LENGTH"
         }
+        require(password.isNotBlank()) { "Password cannot be blank" }
 
         val emailRegex = "^[A-Za-z0-9+_.-]{4,20}@[A-Za-z0-9.-]{9,20}$"
         require(email.matches(emailRegex.toRegex())) { "Invalid email" }
 
         //Checking if the email already exists
-        if(pRepo.checkPlayerExistsByEmail(email))
+        if (pRepo.checkPlayerExistsByEmail(email))
             throw AppException.PlayerAlreadyExists("Email $email already exists")
 
         //Creating a random token
@@ -43,4 +43,6 @@ class PlayerServices(private val pRepo: PlayersRepo) {
         require(pid >= FIRST_PLAYER_ID) { "Player id must be greater or equal to $FIRST_PLAYER_ID" }
         return pRepo.getPlayer(pid)
     }
+
+    fun getPlayerIdByToken(token: String) = pRepo.getPlayerIdByToken(token)
 }

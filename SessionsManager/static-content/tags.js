@@ -9,8 +9,7 @@ function createElement(tag, attributes = {}, ...children) {
         const value = attributes[attribute];
         if (events.includes(attribute) && typeof value === "function") {
             element.addEventListener(attribute.substring(2).toLowerCase(), value);
-        }
-        else element.setAttribute(attribute, value);
+        } else element.setAttribute(attribute, value);
     }
 
     //append child nodes

@@ -8,7 +8,8 @@ import { playerDetailsPage } from "./pages/playerPages.js"
 
 /** Home */
 function getHome(mainContent) {
-    const pageContent = homePage();
+    const player = handlePlayerId()
+    const pageContent = homePage(player);
     mainContent.replaceChildren(pageContent);
 }
 
@@ -36,7 +37,7 @@ function getSessionsSearch(mainContent) {
     mainContent.replaceChildren(pageContent);
 }
 
-/** Players */
+
 async function getPlayer(mainContent) {
     const player = await handlePlayerDetailsRequest();
     const pageContent = playerDetailsPage(player);

@@ -1,7 +1,7 @@
 import { div, a, ul } from "../tags.js"
 
 
-export function homePage() {
+export function homePage(player) {
     const element =
         div(
             {}, "Hello LS",
@@ -19,7 +19,7 @@ export function homePage() {
             ),
             div(
                 {}, //This should redirect to "My details, we need to implement token first"
-                a({ href: "#players/1000" }, "My details - TODO") //HARD-CODED ID
+                a({ href: `#players/${player.id}` }, "My details - TODO") //HARD-CODED ID
             )
         )
     return element;

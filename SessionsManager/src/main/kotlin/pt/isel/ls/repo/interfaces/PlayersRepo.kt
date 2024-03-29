@@ -7,5 +7,5 @@ interface PlayersRepo {
     fun getPlayer(pid: Int): Player
     fun checkPlayerExistsByEmail(email: String): Boolean
     fun checkPlayerExistsByName(name: String): Boolean
-    fun getPlayerIdByToken(token: String): Int?
+    fun getPlayerIdByToken(token: String): Int
 }

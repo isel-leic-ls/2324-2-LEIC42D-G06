@@ -60,11 +60,11 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
         }
     }
 
-    override fun getPlayerIdByToken(token: String): Int? {
+    override fun getPlayerIdByToken(token: String): Int {
         val stmt = dataSource.connection.prepareStatement("SELECT pid FROM player WHERE token = ?")
         stmt.setString(1, token)
         val rs = stmt.executeQuery()
-        if (!rs.next()) return null
+        if (!rs.next()) throw AppException.PlayerNotFound("Player $token does not exist")
 
         return rs.getInt("pid")
     }

@@ -53,6 +53,6 @@ fun Request.getAuthorizationToken(): String {
     return tokenValue
 }
 
-fun Request.getPlayerDetails(): Int {
+fun Request.getPlayerDetails(): Int{
     return path("pid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid player ID")
 }
