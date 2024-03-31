@@ -1,26 +1,34 @@
 import { div, input, button, label, p, ul, li, a } from "../tags.js"
+import { returnHomeButton } from "../components/returnHomeButton.js"
+import { errorToast } from "../components/errorToast.js"
+import { controlledInput } from "../components/controlledInput.js"
+
+
+const pattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+const states = ["open", "closed"]
+
+function sessionsSearchPageClick(dateInput, stateInput) {
+    const date = (dateInput.disabled) ? null : dateInput.value
+    const state = (stateInput.disabled) ? null : stateInput.value
+    if( date != null && pattern.test(date) === false || state != null && states.includes(state) === false) {
+        errorToast("Please enter a valid date and state")
+    }
+    else window.location.hash = "sessions/list?date=" + date + "&state=" + state + "&skip=0&limit=1"
+    // The limit value is set to 1 for testing purposes
+}
 
 
 export function sessionsSearchPage() { // search sessions by date and state
 
-    const dateInput = input({ type: "text", placeholder: "2034-04-04 18:00:00", disabled : true });
-    const dateCheckBox = input({ type: "checkbox", onChange : () => {
-        dateInput.disabled = !dateInput.disabled;
-        dateInput.value = ""
-    } });
+    const homeButton = returnHomeButton();
 
-    const stateInput = input({ type: "text", placeholder: "open", disabled : true });
-    const stateCheckBox = input({ type: "checkbox", onChange : () => {
-        stateInput.disabled = !stateInput.disabled;
-        stateInput.value = ""
-    } });
+    const [dateCheckBox, dateInput] = controlledInput("2025-03-04 18:00:00")
+    const [stateCheckBox, stateInput] = controlledInput("open")
 
     const searchButton = button(
         {
             onClick: () => {
-                const date = (dateInput.disabled) ? null : dateInput.value
-                const state = (stateInput.disabled) ? null : stateInput.value
-                window.location.hash = "sessions/list?date=" + date + "&state=" + state + "&skip=0&limit=1"
+                sessionsSearchPageClick(dateInput, stateInput);
             }
         },
         "Search sessions"
@@ -35,7 +43,8 @@ export function sessionsSearchPage() { // search sessions by date and state
             p({}),
             label({}, "State:", stateCheckBox, stateInput),
         ),
-        searchButton
+        searchButton,
+        homeButton
     );
 
     return element;
@@ -43,6 +52,8 @@ export function sessionsSearchPage() { // search sessions by date and state
 
 
 export function sessionsListPage(sessions, buttons) { // list of sessions
+
+    const homeButton = returnHomeButton();
     const elements = sessions.map(session =>
         ul({},
             li({}, "ID: ", a({ href: "#sessions/" + session.id }, "" + session.id)),
@@ -54,13 +65,16 @@ export function sessionsListPage(sessions, buttons) { // list of sessions
         {},
         "Sessions",
         div({}, buttons),
-        ...elements
+        ...elements,
+        homeButton
     );
 
     return element;
 }
 
 export function sessionDetailsPage(session) {
+
+    const homeButton = returnHomeButton();
 
     const pAnchors = session.players.map(p => a({ href: "#players/" + p }, "    " + p));
     const element = div(
@@ -73,7 +87,8 @@ export function sessionDetailsPage(session) {
             li({}, "Game ID: ", a({ href: "#games/" + session.game }, "" + session.game)),
             li({}, "Closed: " + session.closed),
             li({}, "Players: ", ...pAnchors)
-        )
+        ),
+        homeButton
     );
 
     return element;

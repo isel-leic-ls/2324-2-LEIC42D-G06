@@ -1,17 +1,24 @@
 import { div, a, ul, li, label, input, button } from "../tags.js"
+import { returnHomeButton } from "../components/returnHomeButton.js"
+import { errorToast } from "../components/errorToast.js"
 
+
+function gamesSearchPageClick(genres , developer) {
+    if(genres === "" && developer === "") errorToast("Please enter at least one genre or developer");
+    else window.location.hash = "games/list?genres=" + genres +
+    "&developer=" + developer + "&skip=0&limit=1"; // The limit value is set to 1 for testing purposes
+}
 
 export function gamesSearchPage() { //this is the search page for games by genre(s) and developer
     const genresInput = input({ type: "text", placeHolder: "Action, Adventure" });
     const developerInput = input({ type: "text", placeHolder: "Ubisoft, EA" });
 
+    const homeButton = returnHomeButton();
+
     const searchButton = button(
         {
             onClick: () => {
-                const genres = genresInput.value
-                const developer = developerInput.value
-                window.location.hash = "games/list?genres=" + genres
-                    + "&developer=" + developer + "&skip=0&limit=1"; // The limit value is set to 1 for testing purposes
+                gamesSearchPageClick(genresInput.value, developerInput.value);
             }
         },
         "Search"
@@ -25,7 +32,8 @@ export function gamesSearchPage() { //this is the search page for games by genre
             label({}, "Genres:", genresInput),
             label({}, "Developer:", developerInput),
         ),
-        searchButton
+        searchButton,
+        homeButton
     );
 
     return element;
@@ -49,6 +57,8 @@ export function gamesListPage(games, buttons) { //this is the list of games that
 }
 
 export function gameDetailsPage(game) { //this is the details page for a specific game
+    const homeButton = returnHomeButton();
+
     const element =
         div(
             {},
@@ -69,7 +79,8 @@ export function gameDetailsPage(game) { //this is the details page for a specifi
                         window.location.hash = "sessions/list?gid=" + game.id + "&skip=0&limit=1" // The limit value is set to 1 for testing purposes
                     }
                 }, "Search sessions with this game"
-            )
+            ),
+            homeButton
         );
 
     return element;
