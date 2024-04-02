@@ -56,3 +56,7 @@ export function br(attributes = {}, ...children) {
 export function p(attributes = {}, ...children) {
     return createElement("p", attributes, ...children);
 }
+
+export function radioButton(attributes = {}, ...children) {
+    return createElement("input", { type: "radio", ...attributes }, ...children);
+}

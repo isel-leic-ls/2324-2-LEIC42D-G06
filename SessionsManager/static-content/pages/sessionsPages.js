@@ -1,34 +1,49 @@
-import { div, input, button, label, p, ul, li, a } from "../tags.js"
+import { div, input, button, label, p, ul, li, a, radioButton } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
 import { errorToast } from "../components/errorToast.js"
 import { controlledInput } from "../components/controlledInput.js"
 
 
 const pattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
-const states = ["open", "closed"]
+const states = ["ALL", "OPEN", "CLOSED"]
 
 function sessionsSearchPageClick(dateInput, stateInput) {
-    const date = (dateInput.disabled) ? null : dateInput.value
-    const state = (stateInput.disabled) ? null : stateInput.value
-    if( date != null && pattern.test(date) === false || state != null && states.includes(state) === false) {
-        errorToast("Please enter a valid date and state")
+    const input_date = (dateInput.disabled) ? null : dateInput.value;
+    const input_state = (stateInput.disabled) ? null : stateInput.value;
+
+    if (input_date != null && pattern.test(input_date) === false)
+        errorToast("Please enter a valid date");
+    else if (input_state !== null && !states.includes(input_state))
+        errorToast("Please enter a valid state");
+    else {
+        const state = (input_state === "ALL" ? null : input_state);
+        const url = "sessions/list?date=" + input_date + "&state=" + state + "&skip=0&limit=1";
+        window.location.hash = url;
     }
-    else window.location.hash = "sessions/list?date=" + date + "&state=" + state + "&skip=0&limit=1"
-    // The limit value is set to 1 for testing purposes
 }
 
-
-export function sessionsSearchPage() { // search sessions by date and state
-
+export function sessionsSearchPage() {
     const homeButton = returnHomeButton();
+    const [dateCheckBox, dateInput] = controlledInput("2025-03-04 18:00:00");
 
-    const [dateCheckBox, dateInput] = controlledInput("2025-03-04 18:00:00")
-    const [stateCheckBox, stateInput] = controlledInput("open")
+    const stateRadioButtons = states.map(state => {
+        const radio = radioButton({ name: "state", value: state });
+        if (state === "ALL") radio.checked = true;
+
+        radio.addEventListener("click", () => {
+            stateRadioButtons.forEach(button => {
+                button.checked = (button.value === state);
+            });
+        });
+
+        const stateLabel = label({}, radio, state);
+        return div({}, stateLabel); // Wrap label in a div to ensure correct structure
+    });
 
     const searchButton = button(
         {
             onClick: () => {
-                sessionsSearchPageClick(dateInput, stateInput);
+                sessionsSearchPageClick(dateInput, document.querySelector('input[name="state"]:checked'));
             }
         },
         "Search sessions"
@@ -41,7 +56,8 @@ export function sessionsSearchPage() { // search sessions by date and state
             {},
             label({}, "Date:", dateCheckBox, dateInput),
             p({}),
-            label({}, "State:", stateCheckBox, stateInput),
+            label({}, "State:"),
+            div({}, ...stateRadioButtons) // Use a div to contain state radio buttons
         ),
         searchButton,
         homeButton

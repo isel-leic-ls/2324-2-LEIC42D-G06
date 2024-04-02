@@ -53,7 +53,7 @@ async function getSessionDetails(mainContent, path) {
     mainContent.replaceChildren(pageContent);
 }
 
-
+/** Players */
 async function getPlayer(mainContent, path) {
     const player = await handlePlayerDetailsRequest(path);
     const pageContent = playerDetailsPage(player);
