@@ -1,4 +1,4 @@
-import { div, input, button, label, p, ul, li, a, radioButton } from "../tags.js"
+import { div, button, label, p, ul, li, a, radioButton } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
 import { errorToast } from "../components/errorToast.js"
 import { controlledInput } from "../components/controlledInput.js"
@@ -17,7 +17,7 @@ function sessionsSearchPageClick(dateInput, stateInput) {
         errorToast("Please enter a valid state");
     else {
         const state = (input_state === "ALL" ? null : input_state);
-        const url = "sessions/list?date=" + input_date + "&state=" + state + "&skip=0&limit=1";
+        const url = "sessions/list?date=" + input_date + "&state=" + state + "&skip=0&limit=5";
         window.location.hash = url;
     }
 }
@@ -37,7 +37,7 @@ export function sessionsSearchPage() {
         });
 
         const stateLabel = label({}, radio, state);
-        return div({}, stateLabel); // Wrap label in a div to ensure correct structure
+        return div({}, stateLabel);
     });
 
     const searchButton = button(
@@ -57,7 +57,7 @@ export function sessionsSearchPage() {
             label({}, "Date:", dateCheckBox, dateInput),
             p({}),
             label({}, "State:"),
-            div({}, ...stateRadioButtons) // Use a div to contain state radio buttons
+            div({}, ...stateRadioButtons)
         ),
         searchButton,
         homeButton
@@ -66,10 +66,9 @@ export function sessionsSearchPage() {
     return element;
 }
 
-
-export function sessionsListPage(sessions, buttons) { // list of sessions
-
+export function sessionsListPage(sessions, buttons, skip, limit) { //list of sessions
     const homeButton = returnHomeButton();
+
     const elements = sessions.map(session =>
         ul({},
             li({}, "ID: ", a({ href: "#sessions/" + session.id }, "" + session.id)),

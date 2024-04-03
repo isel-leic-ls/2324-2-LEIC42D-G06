@@ -34,16 +34,16 @@ async function getGameDetails(mainContent, path) {
     mainContent.replaceChildren(pageContent);
 }
 
+/** Sessions */
+function getSessionsSearch(mainContent) {
+    const pageContent = sessionsSearchPage();
+    mainContent.replaceChildren(pageContent);
+}
+
 async function getSessionsList(mainContent, path) {
     const result = await handleSessionsRetrievalRequest(path);
     const buttons = pagingButtons(path)
     const pageContent = sessionsListPage(result.sessions, buttons);
-    mainContent.replaceChildren(pageContent);
-}
-
-/** Sessions */
-function getSessionsSearch(mainContent) {
-    const pageContent = sessionsSearchPage();
     mainContent.replaceChildren(pageContent);
 }
 

@@ -7,9 +7,11 @@ function createElement(tag, attributes = {}, ...children) {
     //set attributes
     for (const attribute in attributes) {
         const value = attributes[attribute];
-        if (events.includes(attribute) && typeof value === "function") {
+        if (events.includes(attribute) && typeof value === "function")
             element.addEventListener(attribute.substring(2).toLowerCase(), value);
-        } else element.setAttribute(attribute, value);
+        else if (attribute == 'disabled' && value == false)
+            element.removeAttribute(attribute);
+        else element.setAttribute(attribute, value);
     }
 
     //append child nodes
