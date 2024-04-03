@@ -78,19 +78,23 @@ class SessionServices(
         sRepo.deletePlayerFromSession(sid, pid)
     }
 
-    fun getListOfSessions(gid : Int?, startDate : String?, state : String?, pid : Int?, skip : Int, limit : Int) : Pair<List<Session>,Int> {
+    fun getListOfSessions(
+        gid: Int?, startDate: String?, state: String?, pid: Int?, skip: Int, limit: Int
+    ): Pair<List<Session>, Int> {
         if (gid != null) checkGameExists(gid)
 
-        if(startDate != null) checkDateFormat(startDate)
-        if(state != null) checkState(state)
+        if (startDate != null) checkDateFormat(startDate)
+        if (state != null) checkState(state)
 
         val sState = state?.toState()
 
         require(skip >= 0) { "Skip value must be positive" }
-        require(limit > 0) { "Limit value must be positive non-zero"}
+        require(limit > 0) { "Limit value must be positive non-zero" }
 
-        return sRepo.getListOfSessions(gid, startDate, sState, pid, skip, limit)
-
+        val result = sRepo.getListOfSessions(gid, startDate, sState, pid, skip, limit)
+        //println(result.first)
+        //println(result.second)
+        return result
     }
 
     private fun checkSessionExists(sid : Int) {
@@ -147,5 +151,4 @@ class SessionServices(
         if(!session.checkIfCapacityCanBeUpdated(capacity))
             throw IllegalArgumentException("Capacity can't be updated")
     }
-
 }

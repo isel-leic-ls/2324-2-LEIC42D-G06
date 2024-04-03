@@ -74,12 +74,14 @@ class SessionRoutes(private val services : SessionServices) {
             Response(Status.NO_CONTENT)
         }
 
-    private fun getListOfSessions(request: Request) : Response =
+    private fun getListOfSessions(request: Request): Response =
         exceptionAwareScope {
             val inputModel = request.fromJson<SessionListRetrievalInputModel>()
             val (skip, limit) = request.getSkipAndLimit()
-            val (sessions,total) = services.getListOfSessions(inputModel.gid, inputModel.date, inputModel.state, inputModel.pid, skip, limit)
-            Response(Status.OK).toJson(SessionListRetrievalOutputModel(sessions,total))
+            val (sessions, total) =
+                services.getListOfSessions(
+                    inputModel.gid, inputModel.date, inputModel.state, inputModel.pid, skip, limit
+                )
+            Response(Status.OK).toJson(SessionListRetrievalOutputModel(sessions, total))
         }
-
 }

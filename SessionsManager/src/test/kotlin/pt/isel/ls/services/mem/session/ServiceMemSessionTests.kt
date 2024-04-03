@@ -223,5 +223,4 @@ class ServiceMemSessionTests {
             sServices.getListOfSessions(gid, startDate, null, null, 0, 10)
         }
     }
-
 }

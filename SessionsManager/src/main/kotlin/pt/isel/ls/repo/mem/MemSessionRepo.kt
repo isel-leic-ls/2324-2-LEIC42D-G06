@@ -26,10 +26,10 @@ class MemSessionRepo : SessionRepo {
         }
     }
 
-    override fun addPlayerToSession(sid : Int, pid : Int) {
+    override fun addPlayerToSession(sid: Int, pid: Int) {
         monitor.withLock {
             sessions.find { it.id == sid }?.let { s ->
-                if(s.closed) throw AppException.SessionClosed("Session is closed")
+                if (s.closed) throw AppException.SessionClosed("Session is closed")
                 val nSession = s.copy(players = s.players + pid, closed = s.players.size + 1 == s.capacity)
                 sessions.remove(s)
                 sessions.add(nSession)
@@ -40,7 +40,7 @@ class MemSessionRepo : SessionRepo {
     override fun getSession(sid: Int): Session =
         monitor.withLock {
             sessions.find { it.id == sid }
-            ?: throw AppException.SessionNotFound("Session not found with id $sid")
+                ?: throw AppException.SessionNotFound("Session not found with id $sid")
         }
 
     override fun updateSession(sid: Int, date: String, capacity: Int) {
@@ -64,7 +64,7 @@ class MemSessionRepo : SessionRepo {
             sessions.find { it.id == sid }?.let { s ->
                 val nSession = s.copy(players = s.players - pid, closed = false)
                 sessions.remove(s)
-                if(nSession.players.isNotEmpty()) sessions.add(nSession)
+                if (nSession.players.isNotEmpty()) sessions.add(nSession)
             } ?: throw AppException.SessionNotFound("Session not found with id $sid")
         }
     }
@@ -76,14 +76,15 @@ class MemSessionRepo : SessionRepo {
         pid: Int?,
         skip: Int,
         limit: Int
-    ): Pair<List<Session>,Int> =
+    ): Pair<List<Session>, Int> =
         monitor.withLock {
-            sessions.filter {
+            val sessions = sessions.filter {
                 gid?.let { g -> it.game == g } ?: true &&
-                date?.let { d -> it.date == d } ?: true &&
-                state?.let { s -> it.closed == s } ?: true &&
-                pid?.let { p -> it.players.contains(p) } ?: true
-            }.drop(skip).take(limit) to 1 //TODO
+                        date?.let { d -> it.date == d } ?: true &&
+                        state?.let { s -> it.closed == s } ?: true &&
+                        pid?.let { p -> it.players.contains(p) } ?: true
+            }.drop(skip).take(limit)
+            return Pair(sessions, sessions.size) //TODO is this correct?
         }
 
     override fun checkSessionExists(sid: Int): Boolean =
