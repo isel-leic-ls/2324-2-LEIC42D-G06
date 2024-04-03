@@ -16,5 +16,5 @@ export async function handleSessionsRetrievalRequest(path) {
 export async function handleSessionDetailsRequest(path) {
     const sid = filterUriId(path);
     const result = await fetcher("/sessions/" + sid, "GET", undefined);
-    return result;
+    return result
 }

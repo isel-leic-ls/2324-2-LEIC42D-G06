@@ -78,7 +78,7 @@ class SessionServices(
         sRepo.deletePlayerFromSession(sid, pid)
     }
 
-    fun getListOfSessions(gid : Int?, startDate : String?, state : String?, pid : Int?, skip : Int, limit : Int) : List<Session> {
+    fun getListOfSessions(gid : Int?, startDate : String?, state : String?, pid : Int?, skip : Int, limit : Int) : Pair<List<Session>,Int> {
         if (gid != null) checkGameExists(gid)
 
         if(startDate != null) checkDateFormat(startDate)

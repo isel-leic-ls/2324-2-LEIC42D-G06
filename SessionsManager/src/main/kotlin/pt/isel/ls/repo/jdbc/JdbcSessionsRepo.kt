@@ -10,7 +10,7 @@ import java.sql.ResultSet
 import java.sql.Statement
 import javax.sql.DataSource
 
-class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
+class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
     override fun createSession(dto: SessionDTO): Int {
         dataSource.connection.use {
             val query = "INSERT INTO Session(capacity, session_date, closed, game_id) VALUES (?, ?, ?, ?)"
@@ -20,7 +20,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
                 .executeUpdate()
 
             val result = statement.generatedKeys
-            if(result.next()) {
+            if (result.next()) {
                 val sid = result.getInt(1)
 
                 val query2 = "INSERT INTO SessionPlayer(session_id, player_id) VALUES (?, ?)"
@@ -29,8 +29,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
                     .executeUpdate()
 
                 return sid
-            }
-            else throw AppException.SQLException("Session not inserted")
+            } else throw AppException.SQLException("Session not inserted")
         }
     }
 
@@ -111,20 +110,20 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
         pid: Int?,
         skip: Int,
         limit: Int
-    ): List<Session> {
+    ): Pair<List<Session>, Int> {
         dataSource.connection.use {
 
-            val result = it.setupListSessionsStatement(gid, date, state, pid)
-                .bindParameters(gid, date, state, pid, limit, skip)
+            val result1 = it.setupListSessionsStatement(gid, date, state, pid)
+                .bindParameters(gid, date, state, pid, skip, limit)
                 .executeQuery()
 
             val sessions = mutableListOf<Session>()
 
-            while(result.next()) {
-                val sid = result.getInt("sid")
+            while (result1.next()) {
+                val sid = result1.getInt("sid")
 
-                val query = "SELECT player_id FROM SessionPlayer WHERE session_id = ?"
-                val result2 = it.prepareStatement(query)
+                val query1 = "SELECT player_id FROM SessionPlayer WHERE session_id = ?"
+                val result2 = it.prepareStatement(query1)
                     .bindParameters(sid)
                     .executeQuery()
 
@@ -132,24 +131,36 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
                 sessions.add(
                     Session(
                         id = sid,
-                        capacity = result.getInt("capacity"),
-                        date = result.getString("session_date"),
-                        game = result.getInt("game_id"),
-                        closed = result.getBoolean("closed"),
+                        capacity = result1.getInt("capacity"),
+                        date = result1.getString("session_date"),
+                        game = result1.getInt("game_id"),
+                        closed = result1.getBoolean("closed"),
                         players = players
                     )
                 )
             }
-            return sessions
+            val result3 = it.setupListSessionsStatement(gid, date, state, pid)
+                .bindParameters(gid, date, state, pid, 0, Int.MAX_VALUE)
+                .executeQuery()
+
+            println(result3)
+            var count = 0
+            while (result3.next()) {
+                count++
+            }
+
+            return sessions to count
         }
     }
 
     private fun ResultSet.toPlayersList(): List<Int> = buildList {
-        while (next()) { add(getInt("player_id")) }
+        while (next()) {
+            add(getInt("player_id"))
+        }
     }
 
     private fun Connection.setupListSessionsStatement(
-        gid : Int?,
+        gid: Int?,
         date: String?,
         state: Boolean?,
         pid: Int?,
@@ -176,7 +187,7 @@ class JdbcSessionsRepo(private val dataSource : DataSource) : SessionRepo {
                 append(if (firstNonNull) " WHERE" else " AND")
                 append(" sid IN (SELECT session_id FROM SessionPlayer WHERE player_id = ?)")
             }
-            append(" LIMIT ? OFFSET ?")
+            append(" OFFSET ? LIMIT ?")
         })
 
     override fun checkSessionExists(sid: Int): Boolean {

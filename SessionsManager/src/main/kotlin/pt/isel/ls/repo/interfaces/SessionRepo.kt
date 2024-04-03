@@ -20,7 +20,7 @@ interface SessionRepo {
         pid : Int?,
         skip : Int,
         limit : Int
-    ) : List<Session>
+    ) : Pair<List<Session>, Int>
 
     fun checkSessionExists(sid : Int) : Boolean
 }

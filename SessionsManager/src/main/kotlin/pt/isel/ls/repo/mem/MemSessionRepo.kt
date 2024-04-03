@@ -76,14 +76,14 @@ class MemSessionRepo : SessionRepo {
         pid: Int?,
         skip: Int,
         limit: Int
-    ): List<Session> =
+    ): Pair<List<Session>,Int> =
         monitor.withLock {
             sessions.filter {
                 gid?.let { g -> it.game == g } ?: true &&
                 date?.let { d -> it.date == d } ?: true &&
                 state?.let { s -> it.closed == s } ?: true &&
                 pid?.let { p -> it.players.contains(p) } ?: true
-            }.drop(skip).take(limit)
+            }.drop(skip).take(limit) to 1 //TODO
         }
 
     override fun checkSessionExists(sid: Int): Boolean =

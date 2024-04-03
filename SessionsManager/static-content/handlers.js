@@ -41,14 +41,14 @@ function getSessionsSearch(mainContent) {
 }
 
 async function getSessionsList(mainContent, path) {
-    const result = await handleSessionsRetrievalRequest(path);
-    const buttons = pagingButtons(path)
-    const pageContent = sessionsListPage(result.sessions, buttons);
+    const {sessions,total} = await handleSessionsRetrievalRequest(path);
+    const buttons = pagingButtons(path,total)
+    const pageContent = sessionsListPage(sessions, buttons);
     mainContent.replaceChildren(pageContent);
 }
 
 async function getSessionDetails(mainContent, path) {
-    const result = await handleSessionDetailsRequest(path);
+    const result= await handleSessionDetailsRequest(path);
     const pageContent = sessionDetailsPage(result.session);
     mainContent.replaceChildren(pageContent);
 }

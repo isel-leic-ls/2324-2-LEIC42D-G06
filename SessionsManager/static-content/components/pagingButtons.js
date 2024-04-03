@@ -2,11 +2,12 @@ import { div, button } from "../tags.js";
 import { filterQueryParameters } from "../uriparsers.js";
 
 
-export function pagingButtons(path) {
+export function pagingButtons(path,total) {
     const { skip, limit } = filterQueryParameters(path);
 
     const skipVal = parseInt(skip);
     const limitVal = parseInt(limit);
+    const nextDisable = total <= skipVal + limitVal
 
     const previousButton = button(
         {
@@ -23,7 +24,7 @@ export function pagingButtons(path) {
             onClick: () => {
                 window.location.hash = path.replace(/(skip=)\d+/, "$1" + (skipVal + limitVal))
             },
-            //TODO disable if there are no more results
+            disabled : nextDisable
         },
         "Next"
     );
