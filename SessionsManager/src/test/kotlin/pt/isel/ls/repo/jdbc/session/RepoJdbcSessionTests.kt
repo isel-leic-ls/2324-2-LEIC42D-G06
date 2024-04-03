@@ -110,8 +110,8 @@ class RepoJdbcSessionTests {
         val sid2 = repo.createSession(s2)
         assert(sid2 > 0)
 
-        val sessions = repo.getListOfSessions(FIRST_GAME_ID, null, null, null, 0, 2)
-        assertTrue(sessions.size == 2)
+        val result = repo.getListOfSessions(FIRST_GAME_ID, null, null, null, 0, 2)
+        assertTrue(result.first.size == 2)
     }
 
 

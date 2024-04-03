@@ -95,12 +95,12 @@ class RepoMemSessionTests {
         val sid2 = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[1])))
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+        val result = repo.getListOfSessions(gid, null, null, null, skip, limit)
         val session1 = repo.getSession(sid)
         val session2 = repo.getSession(sid2)
 
         //assert
-        assertTrue(sessions.contains(session1) && sessions.contains(session2))
+        assertTrue(result.first.contains(session1) && result.first.contains(session2))
     }
 
     @Test
@@ -118,15 +118,14 @@ class RepoMemSessionTests {
             .map { repo.createSession(createSessionDTO(capacity, date, games[it % 2], listOf(players[it % 2]))) }
 
         //act
-        val sessions = repo.getListOfSessions(games[0], null, null, players[0], skip, limit)
+        val result = repo.getListOfSessions(games[0], null, null, players[0], skip, limit)
         val session1 = repo.getSession(sids[0])
         val session2 = repo.getSession(sids[2])
         val session3 = repo.getSession(sids[4])
 
         //assert
         assertTrue(
-            sessions.size == 3 &&
-                    sessions.containsAll(listOf(session1, session2, session3))
+            result.first.size == 3 && result.first.containsAll(listOf(session1, session2, session3))
         )
     }
 
@@ -164,10 +163,10 @@ class RepoMemSessionTests {
         val limit = Int.MAX_VALUE
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+        val result = repo.getListOfSessions(gid, null, null, null, skip, limit)
 
         //assert
-        assertTrue(sessions.isEmpty())
+        assertTrue(result.first.isEmpty())
     }
 
     @Test
@@ -181,14 +180,18 @@ class RepoMemSessionTests {
         val capacity = 5
         val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
 
-        val sids = (0..total).map { repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1))) }
+        val sids = (0..total).map {
+            repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1)))
+        }
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+        val result = repo.getListOfSessions(gid, null, null, null, skip, limit)
 
         //assert
-        assertTrue(sessions.size == (total + 1 - skip) && sessions.all { it.game == gid && sids.contains(it.id) })
-
+        assertTrue(
+            result.first.size == (total + 1 - skip) &&
+                    result.first.all { it.game == gid && sids.contains(it.id) }
+        )
     }
 
     @Test
@@ -201,14 +204,15 @@ class RepoMemSessionTests {
         val gid = 1
         val capacity = 5
         val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
-        val sids = (0..total).map { repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1))) }
+        val sids = (0..total).map {
+            repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1)))
+        }
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+        val result = repo.getListOfSessions(gid, null, null, null, skip, limit)
 
         //assert
-        assertTrue(sessions.size == limit && sessions.all { it.id in sids.take(limit) })
-
+        assertTrue(result.first.size == limit && result.first.all { it.id in sids.take(limit) })
     }
 
     @Test
@@ -224,10 +228,10 @@ class RepoMemSessionTests {
         repo.createSession(createSessionDTO(capacity, date, gid, listOf(pid)))
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+        val result = repo.getListOfSessions(gid, null, null, null, skip, limit)
 
         //assert
-        assertTrue(sessions.isEmpty())
+        assertTrue(result.first.isEmpty())
     }
 
     @Test
@@ -243,10 +247,10 @@ class RepoMemSessionTests {
         repo.createSession(createSessionDTO(capacity, date, gid, listOf(pid)))
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+        val result = repo.getListOfSessions(gid, null, null, null, skip, limit)
 
         //assert
-        assertTrue(sessions.isEmpty())
+        assertTrue(result.first.isEmpty())
     }
 
     @Test
@@ -263,10 +267,10 @@ class RepoMemSessionTests {
         val sids = (0..total).map { repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1))) }
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, null, null, skip, limit)
+        val result = repo.getListOfSessions(gid, null, null, null, skip, limit)
 
         //assert
-        assertTrue(sessions.size == limit && sessions.all { it.id in sids.drop(skip).take(limit) })
+        assertTrue(result.first.size == limit && result.first.all { it.id in sids.drop(skip).take(limit) })
     }
 
     @Test
@@ -286,14 +290,14 @@ class RepoMemSessionTests {
         repo.addPlayerToSession(sid2, players[0])
 
         //act
-        val sessions = repo.getListOfSessions(gid, null, true , null, skip, limit)
+        val result = repo.getListOfSessions(gid, null, true, null, skip, limit)
         val sessionRetrieval = repo.getSession(sid)
         val sessionRetrieval2 = repo.getSession(sid2)
 
         //assert
-        assertTrue(sessions.size == 2 &&
-                sessions.all { it.closed } &&
-                sessions.containsAll(listOf(sessionRetrieval, sessionRetrieval2))
+        assertTrue(result.first.size == 2 &&
+                result.first.all { it.closed } &&
+                result.first.containsAll(listOf(sessionRetrieval, sessionRetrieval2))
         )
     }
 
@@ -324,10 +328,15 @@ class RepoMemSessionTests {
 
         //assert
         assertTrue(sessions.size == threadCount &&
-                sessions.all { it.capacity == capacity && it.date == startDate && it.game == gid && !it.closed }
+                sessions.all {
+                    it.capacity == capacity && it.date == startDate && it.game == gid && !it.closed
+                }
         )
         // check that every session id is in the range [1, threadCount] and that there are no duplicates
-        assertTrue(sids.all { it in 1..threadCount } && sids.groupingBy { it }.eachCount().all { it.value == 1 })
+        assertTrue(
+            sids.all { it in 1..threadCount } &&
+                    sids.groupingBy { it }.eachCount().all { it.value == 1 }
+        )
     }
 
     @Test
