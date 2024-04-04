@@ -1,8 +1,11 @@
 package pt.isel.ls.api.mem.player
 
+import org.http4k.core.Method
+import org.http4k.core.Request
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import pt.isel.ls.api.PlayerRoutes
+import pt.isel.ls.api.PlayerUris
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.PlayerServices
 import pt.isel.ls.utils.FIRST_PLAYER_ID
@@ -17,8 +20,6 @@ import kotlin.test.assertEquals
 
 
 class ApiMemPlayerTests {
-    private val client = HttpClient.newBuilder().build()
-
     //repositories
     private val playersRepo = MemPlayersRepo()
 
@@ -45,7 +46,6 @@ class ApiMemPlayerTests {
         val name = "Vasco"
         val email = "vascobranco@gmail.com"
         val password = "vasco123"
-        //val player = playerServices.getPlayer(FIRST_PLAYER_ID)
         val requestBody = """
         {
             "name": "$name",
@@ -54,63 +54,53 @@ class ApiMemPlayerTests {
         }
         """.trimIndent()
 
-
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/players"))
+        val request = Request(Method.POST, PlayerUris.CREATE)
             .header("Content-Type", "application/json")
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-            .build()
+            .body(requestBody)
 
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        assertEquals(201, response.statusCode())
+        val response = serviceRoutes.routes(request)
+        assertEquals(201, response.status.code)
 
     }
 
     @Test
     fun `creating a player without name that should return 400 status code`() {
         val email = "pedrodiz@gmail.com"
-        val player = playerServices.getPlayer(FIRST_PLAYER_ID)
+        val password = "pedro123"
         val requestBody = """
             {
                 "name": ,
                 "email": "$email",
-                "token": "${player.token}"
+                "password": "$password"
             }
         """.trimIndent()
 
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/players"))
+        val request = Request(Method.POST, PlayerUris.CREATE)
+            .body(requestBody)
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${player.token}")
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-            .build()
 
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        assertEquals(400, response.statusCode())
+        val response = serviceRoutes.routes(request)
+        assertEquals(400, response.status.code)
     }
 
     @Test
     fun `creating a player without email that should return 400 status code`() {
         val name = "Pedro"
-        //val email = "pedrodiz@gmail.com"
-        val player = playerServices.getPlayer(FIRST_PLAYER_ID)
+        val password = "pedro123"
         val requestBody = """
             {
                 "name": "$name",
                 "email": ,
-                "token": "${player.token}"
+                "password": "$password"
             }
         """.trimIndent()
 
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/players"))
+        val request = Request(Method.POST, PlayerUris.CREATE)
+            .body(requestBody)
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${player.token}")
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-            .build()
 
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        assertEquals(400, response.statusCode())
+        val response = serviceRoutes.routes(request)
+        assertEquals(400, response.status.code)
 
     }
 
@@ -118,51 +108,33 @@ class ApiMemPlayerTests {
     fun `creating a player without token that should return 400 status code`() {
         val name = "Pedro"
         val email = "pedrodiz@gmail.com"
-        val player = playerServices.getPlayer(FIRST_PLAYER_ID)
         val requestBody = """
             {
                 "name": "$name",
                 "email": "$email,
-                "token": 
+                "password": 
             }
         """.trimIndent()
 
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/players"))
+        val request = Request(Method.POST, PlayerUris.CREATE)
+            .body(requestBody)
             .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${player.token}")
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-            .build()
 
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        assertEquals(400, response.statusCode())
+        val response = serviceRoutes.routes(request)
+        assertEquals(400, response.status.code)
     }
 
     @Test
     fun `retrieving an existing player`() {
-        val player = playerServices.getPlayer(FIRST_PLAYER_ID)
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/players/$FIRST_PLAYER_ID"))
-            .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${player.token}")
-            .GET()
-            .build()
-
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        assertEquals(200, response.statusCode())
+        val request = Request(Method.GET, PlayerUris.GET.replace("{pid}", FIRST_PLAYER_ID.toString()))
+        val response = serviceRoutes.routes(request)
+        assertEquals(200, response.status.code)
     }
 
     @Test
     fun `retrieving a non existent player`() {
-        val player = playerServices.getPlayer(FIRST_PLAYER_ID)
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/players/100"))
-            .header("Content-Type", "application/json")
-            .header("Authorization", "Bearer ${player.token}")
-            .GET()
-            .build()
-
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-        assertEquals(400, response.statusCode())
+        val request = Request(Method.GET, PlayerUris.GET.replace("{pid}", "100"))
+        val response = serviceRoutes.routes(request)
+        assertEquals(400, response.status.code)
     }
 }

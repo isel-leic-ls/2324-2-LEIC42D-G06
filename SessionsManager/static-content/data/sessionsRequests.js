@@ -4,12 +4,31 @@ import { filterQueryParameters, filterUriId } from "../uriparsers.js";
 export async function handleSessionsRetrievalRequest(path) {
     const { gid, date, state, pid, skip, limit } = filterQueryParameters(path);
 
-    const result = await fetcher("/sessions/list?skip=" + skip + "&limit=" + limit, "POST", {
-        gid : gid == undefined || gid == "null" ? null : gid,
-        date : date == undefined || date == "null" ? null: date,
-        state : state == undefined || state == "null" ? null : state,
-        pid : pid == undefined || pid == "null" ? null : pid
-    });
+    // Construct the query string
+    let queryString = "";
+
+    if (gid !== undefined && gid !== "null") {
+        queryString += `gid=${gid}&`;
+    }
+    if (date !== undefined && date !== "null") {
+        queryString += `date=${date}&`;
+    }
+    if (state !== undefined && state !== "null") {
+        queryString += `state=${state}&`;
+    }
+    if (pid !== undefined && pid !== "null") {
+        queryString += `pid=${pid}&`;
+    }
+
+    // Remove trailing '&' if present
+    if (queryString.endsWith('&')) {
+        queryString = queryString.slice(0, -1);
+    }
+
+    const finalQueryString = queryString == "" ? "" : "?" + queryString
+
+    const result = await fetcher("/sessions" + finalQueryString, "GET", undefined);
+
     return result;
 }
 

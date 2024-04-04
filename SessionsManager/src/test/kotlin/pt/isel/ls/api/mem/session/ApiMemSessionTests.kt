@@ -1,11 +1,14 @@
 package pt.isel.ls.api.mem.session
 
 import kotlinx.serialization.json.Json
+import org.http4k.core.Method
+import org.http4k.core.Request
 import org.http4k.core.Status
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import org.junit.Test
 import pt.isel.ls.api.Problem
+import pt.isel.ls.api.Session
 import pt.isel.ls.api.SessionRoutes
 import pt.isel.ls.api.model.CreateSessionOutputModel
 import pt.isel.ls.api.model.SessionRetrievalOutputModel
@@ -30,8 +33,6 @@ import kotlin.test.assertTrue
 
 
 class ApiMemSessionTests {
-    private val client = HttpClient.newBuilder().build()
-
     // initialize the repositories
     private val playersRepo = MemPlayersRepo()
     private val gamesRepo = MemGamesRepo()
@@ -77,21 +78,18 @@ class ApiMemSessionTests {
         }
         """.trimIndent()
 
-        // act
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/sessions"))
+        //act
+        val request = Request(Method.POST, Session.CREATE)
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${fPlayer.token}")
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-            .build()
+            .body(requestBody)
 
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
+        val response = serviceRoutes.routes(request)
         // assert the session was created
-        assertEquals(201, response.statusCode())
+        assertEquals(201, response.status.code)
 
         // assert the session id is a number bigger than 0
-        val outputModel = Json.decodeFromString<CreateSessionOutputModel>(response.body())
+        val outputModel = Json.decodeFromString<CreateSessionOutputModel>(response.bodyString())
 
         assertTrue(outputModel.sid.toInt() > 0)
     }
@@ -115,20 +113,17 @@ class ApiMemSessionTests {
         val eProblem = Problem("Invalid date $date")
 
         // act
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/sessions"))
+        val request = Request( Method.POST, Session.CREATE)
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${fPlayer.token}")
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-            .build()
+            .body(requestBody)
 
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
+        val response = serviceRoutes.routes(request)
         // assert the status code is 400
-        assertEquals(response.statusCode(), Status.BAD_REQUEST.code)
+        assertEquals(response.status.code, Status.BAD_REQUEST.code)
 
         // assert the description is date format is invalid
-        val problem = Json.decodeFromString<Problem>(response.body())
+        val problem = Json.decodeFromString<Problem>(response.bodyString())
 
         assertEquals(eProblem, problem)
     }
@@ -152,20 +147,17 @@ class ApiMemSessionTests {
         val eProblem = Problem("Invalid capacity $capacity")
 
         // act
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/sessions"))
+        val request = Request(Method.POST, Session.CREATE)
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${fPlayer.token}")
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-            .build()
+            .body(requestBody)
 
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
+        val response = serviceRoutes.routes(request)
         // assert the status code is 400
-        assertEquals(response.statusCode(), Status.BAD_REQUEST.code)
+        assertEquals(response.status.code, Status.BAD_REQUEST.code)
 
         // assert the description is date format is invalid
-        val problem = Json.decodeFromString<Problem>(response.body())
+        val problem = Json.decodeFromString<Problem>(response.bodyString())
 
         assertEquals(eProblem, problem)
 
@@ -190,20 +182,18 @@ class ApiMemSessionTests {
         val eProblem = Problem("Invalid date format $date")
 
         // act
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/sessions"))
+
+        val request = Request(Method.POST, Session.CREATE)
             .header("Content-Type", "application/json")
             .header("Authorization", "Bearer ${fPlayer.token}")
-            .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-            .build()
+            .body(requestBody)
 
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
+        val response = serviceRoutes.routes(request)
         // assert the status code is 400
-        assertEquals(response.statusCode(), Status.BAD_REQUEST.code)
+        assertEquals(response.status.code, Status.BAD_REQUEST.code)
 
         // assert the description is date format is invalid
-        val problem = Json.decodeFromString<Problem>(response.body())
+        val problem = Json.decodeFromString<Problem>(response.bodyString())
 
         assertEquals(eProblem, problem)
     }
@@ -213,15 +203,10 @@ class ApiMemSessionTests {
         // arrange
         val id = 10101131 // using a bigger number results in status code 500 (?????????)
         // act..
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/sessions/${id}"))
-            .GET()
-            .build()
-
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
+        val request = Request(Method.GET, Session.GET.replace("{sid}", id.toString()))
+        val response = serviceRoutes.routes(request)
         // assert the status code is 404 (not found)
-        assertEquals(response.statusCode(), Status.NOT_FOUND.code)
+        assertEquals(response.status.code, Status.NOT_FOUND.code)
     }
 
     @Test
@@ -230,15 +215,10 @@ class ApiMemSessionTests {
         val id = "bolacha"
 
         // act
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/sessions/${id}"))
-            .GET()
-            .build()
-
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
+        val request = Request(Method.GET, Session.GET.replace("{sid}", id))
+        val response = serviceRoutes.routes(request)
         // assert the status code is 400 (bad req)
-        assertEquals(response.statusCode(), Status.BAD_REQUEST.code)
+        assertEquals(response.status.code, Status.BAD_REQUEST.code)
 
     }
 
@@ -251,17 +231,12 @@ class ApiMemSessionTests {
         val sid = sessionRepo.createSession(createSessionDTO(capacity, date, gid, listOf(FIRST_PLAYER_ID)))
 
         // act
-        val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8080/api/sessions/${sid}"))
-            .GET()
-            .build()
-
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
+        val request = Request(Method.GET, Session.GET.replace("{sid}", sid.toString()))
+        val response = serviceRoutes.routes(request)
         // assert the status code is 200 (ok)
-        assertEquals(response.statusCode(), Status.OK.code)
+        assertEquals(response.status.code, Status.OK.code)
 
-        val outputModel = Json.decodeFromString<SessionRetrievalOutputModel>(response.body())
+        val outputModel = Json.decodeFromString<SessionRetrievalOutputModel>(response.bodyString())
         // assert the session structure
         assertEquals(sessionRepo.getSession(sid), outputModel.session)
     }

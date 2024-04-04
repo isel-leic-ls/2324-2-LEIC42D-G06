@@ -22,7 +22,7 @@ class GamesRoutes(private val services: GamesServices) {
             GameUrisObj.CREATE bind Method.POST to ::createGame,
             GameUrisObj.GET_BY_ID bind Method.GET to ::getGameDetailsById,
             GameUrisObj.GET_BY_NAME bind Method.GET to ::getGameDetailsByName,
-            GameUrisObj.GET_GAMES bind Method.POST to ::getListOfGames
+            GameUrisObj.GET_GAMES bind Method.GET to ::getListOfGames
         )
 
     private fun createGame(request: Request): Response =
@@ -56,9 +56,9 @@ class GamesRoutes(private val services: GamesServices) {
 
     private fun getListOfGames(request: Request): Response =
         exceptionAwareScope {
-            val inputModel = request.fromJson<GamesListInputModel>()
+            val (genres, developer) = request.getGamesListInputModel()
             val (skip, limit) = request.getSkipAndLimit()
-            val games = services.getListOfGames(inputModel.genres, inputModel.developer, limit, skip)
+            val games = services.getListOfGames(genres, developer, limit, skip)
             Response(Status.OK).toJson(GamesListOutputModel(games))
         }
 }

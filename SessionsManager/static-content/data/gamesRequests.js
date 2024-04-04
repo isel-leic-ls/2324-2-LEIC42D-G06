@@ -5,11 +5,11 @@ import { filterQueryParameters, filterUriId } from "../uriparsers.js";
 export async function handleGamesRetrievalRequest(path) {
     const { skip, limit, genres, developer } = filterQueryParameters(path);
 
-    const games = await fetcher("/games/list?skip=" + skip + "&limit=" + limit, "POST", {
-        genres: genres.includes(',') ? genres.split(",").map(g => g.trim()) : [genres],
-        developer: developer
-    });
-    
+    const checkedGenres = genres == undefined || genres == "null" ? "" : genres;
+    const checkedDeveloper = developer == undefined || developer == "null" ? "" : developer;
+
+    const games = await fetcher("/games?genres=" + checkedGenres +
+    "&developer=" + checkedDeveloper + "&skip=" + skip + "&limit=" + limit, "GET", undefined);
     return games;
 }
 

@@ -18,7 +18,7 @@ class SessionRoutes(private val services : SessionServices) {
             Session.CREATE bind Method.POST to ::createSession,
             Session.GET bind Method.GET to ::getSession,
             Session.ADD_PLAYER bind Method.PUT to ::addPlayerToSession,
-            Session.GET_SESSIONS bind Method.POST to ::getListOfSessions,
+            Session.GET_SESSIONS bind Method.GET to ::getListOfSessions,
             Session.DELETE_SESSION bind Method.DELETE to ::deleteSession,
             Session.DELETE_PLAYER bind Method.DELETE to ::deletePlayerFromSession,
             Session.UPDATE_SESSION bind Method.PUT to ::updateSession
@@ -76,12 +76,9 @@ class SessionRoutes(private val services : SessionServices) {
 
     private fun getListOfSessions(request: Request): Response =
         exceptionAwareScope {
-            val inputModel = request.fromJson<SessionListRetrievalInputModel>()
+            val (gid, date, state, pid) = request.getSessionsListInputModel()
             val (skip, limit) = request.getSkipAndLimit()
-            val (sessions, total) =
-                services.getListOfSessions(
-                    inputModel.gid, inputModel.date, inputModel.state, inputModel.pid, skip, limit
-                )
+            val (sessions, total) = services.getListOfSessions(gid, date, state, pid, skip, limit)
             Response(Status.OK).toJson(SessionListRetrievalOutputModel(sessions, total))
         }
 }

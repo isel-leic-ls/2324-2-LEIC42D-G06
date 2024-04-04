@@ -7,7 +7,7 @@ object GameUrisObj {
     const val CREATE = "$API/games"
     const val GET_BY_ID = "$API/games/id/{gid}"
     const val GET_BY_NAME = "$API/games/name/{gname}"
-    const val GET_GAMES = "$API/games/list"
+    const val GET_GAMES = "$API/games"
 }
 
 object Session {
@@ -17,7 +17,7 @@ object Session {
     const val DELETE_SESSION = "$API/sessions/{sid}"
     const val DELETE_PLAYER = "$API/sessions/{sid}/players"
     const val UPDATE_SESSION = "$API/sessions/{sid}"
-    const val GET_SESSIONS = "$API/sessions/list"
+    const val GET_SESSIONS = "$API/sessions"
 }
 
 object PlayerUris {

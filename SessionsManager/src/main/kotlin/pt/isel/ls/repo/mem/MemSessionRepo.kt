@@ -80,11 +80,11 @@ class MemSessionRepo : SessionRepo {
         monitor.withLock {
             val sessions = sessions.filter {
                 gid?.let { g -> it.game == g } ?: true &&
-                        date?.let { d -> it.date == d } ?: true &&
-                        state?.let { s -> it.closed == s } ?: true &&
-                        pid?.let { p -> it.players.contains(p) } ?: true
-            }.drop(skip).take(limit)
-            return Pair(sessions, sessions.size) //TODO is this correct?
+                date?.let { d -> it.date == d } ?: true &&
+                state?.let { s -> it.closed == s } ?: true &&
+                pid?.let { p -> it.players.contains(p) } ?: true
+            }
+            return Pair(sessions.drop(skip).take(limit), sessions.size)
         }
 
     override fun checkSessionExists(sid: Int): Boolean =

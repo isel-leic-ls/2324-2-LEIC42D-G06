@@ -3,6 +3,8 @@ package pt.isel.ls.api
 import org.http4k.core.Request
 import org.http4k.routing.path
 import pt.isel.ls.AppException
+import pt.isel.ls.api.model.GamesListInputModel
+import pt.isel.ls.api.model.SessionListRetrievalInputModel
 import pt.isel.ls.utils.LIMIT_DEFAULT
 import pt.isel.ls.utils.SKIP_DEFAULT
 import java.util.*
@@ -39,6 +41,22 @@ fun Request.getSkipAndLimit(): Pair<Int, Int> {
 
     return skip to limit
 }
+
+fun Request.getGamesListInputModel(): GamesListInputModel {
+    val genres = query("genres")?.split(",") ?: emptyList()
+    val developer = query("developer") ?: ""
+    return GamesListInputModel(genres, developer)
+}
+
+fun Request.getSessionsListInputModel(): SessionListRetrievalInputModel {
+    val gid = query("gid")?.toIntOrNull()
+    val date = query("date")
+    val state = query("state")
+    val game = query("game")?.toIntOrNull()
+    return SessionListRetrievalInputModel(gid, date, state, game)
+}
+
+
 
 fun Request.getAuthorizationToken(): String {
     val token = header(AUTHORIZATION_HEADER) ?: throw AppException.InvalidAuthorization("No Authorization header")

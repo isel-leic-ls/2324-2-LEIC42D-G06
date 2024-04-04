@@ -114,7 +114,7 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
         dataSource.connection.use {
 
             val result1 = it.setupListSessionsStatement(gid, date, state, pid)
-                .bindParameters(gid, date, state, pid, skip, limit)
+                .bindParameters(gid, date, state, pid)
                 .executeQuery()
 
             val sessions = mutableListOf<Session>()
@@ -139,17 +139,8 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
                     )
                 )
             }
-            val result3 = it.setupListSessionsStatement(gid, date, state, pid)
-                .bindParameters(gid, date, state, pid, 0, Int.MAX_VALUE)
-                .executeQuery()
 
-            println(result3)
-            var count = 0
-            while (result3.next()) {
-                count++
-            }
-
-            return sessions to count
+            return sessions.drop(skip).take(limit) to sessions.size
         }
     }
 
@@ -187,7 +178,7 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
                 append(if (firstNonNull) " WHERE" else " AND")
                 append(" sid IN (SELECT session_id FROM SessionPlayer WHERE player_id = ?)")
             }
-            append(" OFFSET ? LIMIT ?")
+            //append(" OFFSET ? LIMIT ?")
         })
 
     override fun checkSessionExists(sid: Int): Boolean {
