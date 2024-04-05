@@ -23,7 +23,7 @@ function getGamesSearch(mainContent) {
 
 async function getGamesList(mainContent, path) {
     const result = await handleGamesRetrievalRequest(path);
-    const buttons = pagingButtons(path)
+    const buttons = pagingButtons(path,result.total)
     const pageContent = gamesListPage(result.games, buttons);
     mainContent.replaceChildren(pageContent);
 }

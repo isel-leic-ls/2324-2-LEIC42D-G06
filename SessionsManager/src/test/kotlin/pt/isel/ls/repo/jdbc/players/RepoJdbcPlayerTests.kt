@@ -3,11 +3,12 @@ package pt.isel.ls.repo.jdbc.players
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.AppException
 import pt.isel.ls.repo.jdbc.JdbcPlayersRepo
+import pt.isel.ls.utils.Environment
 import kotlin.test.*
 
 class RepoJdbcPlayerTests {
     private val dataSource = PGSimpleDataSource().apply {
-        setUrl(System.getenv("JDBC_DATABASE_URL"))
+        setUrl(Environment.DATABASE_TEST_URL)
     }
 
     @BeforeTest

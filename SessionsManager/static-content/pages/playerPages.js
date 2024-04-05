@@ -20,7 +20,7 @@ export function playerDetailsPage(player) {
              button(
                  {
                      onClick: () => {
-                         window.location.hash = "sessions/list?pid=" + player.id + "&skip=0&limit=1" // The limit value is set to 1 for testing purposes
+                         window.location.hash = "sessions/list?pid=" + player.id + "&skip=0&limit=5"
                      }
                  }, "Search sessions with this player"
              ),

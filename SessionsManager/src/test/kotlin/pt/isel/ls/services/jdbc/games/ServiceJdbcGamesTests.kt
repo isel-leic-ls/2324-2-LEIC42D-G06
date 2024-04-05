@@ -5,6 +5,7 @@ import pt.isel.ls.AppException
 import pt.isel.ls.repo.jdbc.JdbcGamesRepo
 import pt.isel.ls.repo.jdbc.JdbcPlayersRepo
 import pt.isel.ls.services.GamesServices
+import pt.isel.ls.utils.Environment
 import pt.isel.ls.utils.FIRST_GAME_ID
 import pt.isel.ls.utils.FIRST_PLAYER_ID
 import pt.isel.ls.utils.generatePlayerDetails
@@ -13,7 +14,7 @@ import kotlin.test.*
 
 class ServiceJdbcGamesTests {
     private val dataSource = PGSimpleDataSource().apply {
-        setUrl(System.getenv("JDBC_DATABASE_URL"))
+        setUrl(Environment.DATABASE_TEST_URL)
     }
 
     private val pRepo = JdbcPlayersRepo(dataSource)

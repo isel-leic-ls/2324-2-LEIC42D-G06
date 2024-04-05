@@ -5,10 +5,7 @@ import org.junit.Test
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.domain.createSessionDTO
 import pt.isel.ls.repo.jdbc.JdbcSessionsRepo
-import pt.isel.ls.utils.DATE_FORMATTER
-import pt.isel.ls.utils.FIRST_GAME_ID
-import pt.isel.ls.utils.FIRST_PLAYER_ID
-import pt.isel.ls.utils.toDate
+import pt.isel.ls.utils.*
 import java.time.LocalDateTime
 import kotlin.test.BeforeTest
 import kotlin.test.assertTrue
@@ -16,7 +13,7 @@ import kotlin.test.assertTrue
 class RepoJdbcSessionTests {
 
     private val dataSource = PGSimpleDataSource().apply {
-        setUrl(System.getenv("JDBC_DATABASE_URL"))
+        setUrl(Environment.DATABASE_TEST_URL)
     }
 
     private val repo = JdbcSessionsRepo(dataSource)

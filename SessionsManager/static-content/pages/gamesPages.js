@@ -6,7 +6,7 @@ import { errorToast } from "../components/errorToast.js"
 function gamesSearchPageClick(genres , developer) {
     if(genres === "" && developer === "") errorToast("Please enter at least one genre or developer");
     else window.location.hash = "games/list?genres=" + genres +
-    "&developer=" + developer + "&skip=0&limit=1"; // The limit value is set to 1 for testing purposes
+    "&developer=" + developer + "&skip=0&limit=5"; // The limit value is set to 1 for testing purposes
 }
 
 export function gamesSearchPage() { //this is the search page for games by genre(s) and developer
@@ -76,7 +76,7 @@ export function gameDetailsPage(game) { //this is the details page for a specifi
             button(
                 {
                     onClick: () => {
-                        window.location.hash = "sessions/list?gid=" + game.id + "&skip=0&limit=1" // The limit value is set to 1 for testing purposes
+                        window.location.hash = "sessions/list?gid=" + game.id + "&skip=0&limit=5"
                     }
                 }, "Search sessions with this game"
             ),

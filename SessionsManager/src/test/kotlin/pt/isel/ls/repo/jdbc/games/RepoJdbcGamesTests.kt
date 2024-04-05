@@ -2,13 +2,14 @@ package pt.isel.ls.repo.jdbc.games
 
 import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.repo.jdbc.JdbcGamesRepo
+import pt.isel.ls.utils.Environment
 import pt.isel.ls.utils.FIRST_GAME_ID
 import kotlin.test.*
 
 
 class RepoJdbcGamesTests {
     private val dataSource = PGSimpleDataSource().apply {
-        setUrl(System.getenv("JDBC_DATABASE_URL"))
+        setUrl(Environment.DATABASE_TEST_URL)
     }
 
     //clears the SessionPlayer, Session and Game tables before each test

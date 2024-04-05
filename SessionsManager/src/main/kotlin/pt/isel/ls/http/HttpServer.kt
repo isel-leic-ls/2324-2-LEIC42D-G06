@@ -14,6 +14,7 @@ import pt.isel.ls.repo.jdbc.JdbcGamesRepo
 import pt.isel.ls.repo.jdbc.JdbcPlayersRepo
 import pt.isel.ls.repo.jdbc.JdbcSessionsRepo
 import pt.isel.ls.services.Services
+import pt.isel.ls.utils.Environment
 
 
 fun main() {
@@ -23,7 +24,7 @@ fun main() {
     val port = 9000
 
     val dataSource = PGSimpleDataSource().apply {
-        setUrl(System.getenv("JDBC_DATABASE_URL"))
+        setUrl(Environment.DATABASE_URL)
     }
 
     // initialize the repositories

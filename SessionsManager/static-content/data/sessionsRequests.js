@@ -19,16 +19,7 @@ export async function handleSessionsRetrievalRequest(path) {
     if (pid !== undefined && pid !== "null") {
         queryString += `pid=${pid}&`;
     }
-
-    // Remove trailing '&' if present
-    if (queryString.endsWith('&')) {
-        queryString = queryString.slice(0, -1);
-    }
-
-    const finalQueryString = queryString == "" ? "" : "?" + queryString
-
-    const result = await fetcher("/sessions" + finalQueryString, "GET", undefined);
-
+    const result = await fetcher("/sessions?" + queryString + "skip=" + skip + "&limit=" + limit, "GET", undefined);
     return result;
 }
 
