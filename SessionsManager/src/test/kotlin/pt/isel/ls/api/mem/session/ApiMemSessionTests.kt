@@ -17,13 +17,9 @@ import pt.isel.ls.repo.mem.MemGamesRepo
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.repo.mem.MemSessionRepo
 import pt.isel.ls.services.Services
-import pt.isel.ls.utils.DATE_FORMATTER
+import pt.isel.ls.utils.DATE_TIME_FORMATTER
 import pt.isel.ls.utils.FIRST_GAME_ID
 import pt.isel.ls.utils.FIRST_PLAYER_ID
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.test.AfterTest
@@ -66,7 +62,7 @@ class ApiMemSessionTests {
     fun `creating a session`() {
         // arrange
         val gid = gamesRepo.getGameByName("FIFA").id
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val capacity = 2
         val fPlayer = playersRepo.getPlayer(FIRST_PLAYER_ID)
 
@@ -98,7 +94,7 @@ class ApiMemSessionTests {
     fun `creating a session with past date should return status code 400`() {
         // arrange
         val gid = gamesRepo.getGameByName("FIFA").id
-        val date = LocalDateTime.now().minusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().minusDays(1).format(DATE_TIME_FORMATTER)
         val capacity = 2
         val fPlayer = playersRepo.getPlayer(FIRST_PLAYER_ID)
 
@@ -132,7 +128,7 @@ class ApiMemSessionTests {
     fun `creating a session with invalid capacity should return status code 400`() {
         //arrange
         val gid = gamesRepo.getGameByName("FIFA").id
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val capacity = -1
         val fPlayer = playersRepo.getPlayer(FIRST_PLAYER_ID)
 
@@ -227,7 +223,7 @@ class ApiMemSessionTests {
         //arrange
         val capacity = 2
         val gid = FIRST_GAME_ID
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = sessionRepo.createSession(createSessionDTO(capacity, date, gid, listOf(FIRST_PLAYER_ID)))
 
         // act

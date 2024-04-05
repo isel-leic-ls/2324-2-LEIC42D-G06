@@ -5,7 +5,7 @@ import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.createSessionDTO
 import pt.isel.ls.AppException
 import pt.isel.ls.repo.mem.MemSessionRepo
-import pt.isel.ls.utils.DATE_FORMATTER
+import pt.isel.ls.utils.DATE_TIME_FORMATTER
 import java.time.LocalDateTime
 import java.util.concurrent.ConcurrentLinkedQueue
 import kotlin.test.assertFailsWith
@@ -20,7 +20,7 @@ class RepoMemSessionTests {
         val repo = MemSessionRepo()
         val pid = 1
         val gid = 1
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val capacity = 5
 
         //act
@@ -48,7 +48,7 @@ class RepoMemSessionTests {
         val players = listOf(1, 2)
         val gid = 1
         val capacity = 5
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sessionDTO = createSessionDTO(capacity, date, gid, listOf(players[0]))
         val sid = repo.createSession(sessionDTO)
         val pid = players[1]
@@ -68,7 +68,7 @@ class RepoMemSessionTests {
         val players = listOf(1, 2)
         val gid = 1
         val capacity = 2
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sessionDTO = createSessionDTO(capacity, date, gid, listOf(players[0]))
         val sid = repo.createSession(sessionDTO)
 
@@ -89,7 +89,7 @@ class RepoMemSessionTests {
         val capacity = 5
         val skip = 0
         val limit = Int.MAX_VALUE
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
 
         val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
         val sid2 = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[1])))
@@ -113,7 +113,7 @@ class RepoMemSessionTests {
         val sessionCount = 5
         val skip = 0
         val limit = Int.MAX_VALUE
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sids = (0..sessionCount)
             .map { repo.createSession(createSessionDTO(capacity, date, games[it % 2], listOf(players[it % 2]))) }
 
@@ -178,7 +178,7 @@ class RepoMemSessionTests {
         val total = 5
         val gid = 1
         val capacity = 5
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
 
         val sids = (0..total).map {
             repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1)))
@@ -203,7 +203,7 @@ class RepoMemSessionTests {
         val total = 5
         val gid = 1
         val capacity = 5
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sids = (0..total).map {
             repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1)))
         }
@@ -224,7 +224,7 @@ class RepoMemSessionTests {
         val skip = Int.MAX_VALUE
         val limit = Int.MAX_VALUE
         val pid = 1
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         repo.createSession(createSessionDTO(capacity, date, gid, listOf(pid)))
 
         //act
@@ -243,7 +243,7 @@ class RepoMemSessionTests {
         val skip = 0
         val limit = 0
         val pid = 1
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         repo.createSession(createSessionDTO(capacity, date, gid, listOf(pid)))
 
         //act
@@ -262,7 +262,7 @@ class RepoMemSessionTests {
         val total = 5
         val skip = 2
         val limit = skip
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
 
         val sids = (0..total).map { repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1))) }
 
@@ -282,7 +282,7 @@ class RepoMemSessionTests {
         val skip = 0
         val limit = Int.MAX_VALUE
         val capacity = 2
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
         val sid2 = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[1])))
 
@@ -307,7 +307,7 @@ class RepoMemSessionTests {
         val repo = MemSessionRepo()
         val threadCount = 20
         val gid = 1
-        val startDate = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val capacity = 5
         val sids = ConcurrentLinkedQueue<Int>()
         val sessions = ConcurrentLinkedQueue<Session>()
@@ -346,7 +346,7 @@ class RepoMemSessionTests {
         val gid = 1
         val players = listOf(1, 2)
         val capacity = 5
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
 
         // act
@@ -365,7 +365,7 @@ class RepoMemSessionTests {
         val gid = 1
         val players = listOf(1, 2)
         val capacity = 5
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
 
         repo.addPlayerToSession(sid, players[1])
@@ -384,7 +384,7 @@ class RepoMemSessionTests {
         val gid = 1
         val players = listOf(1)
         val capacity = 5
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
 
         // act
@@ -403,7 +403,7 @@ class RepoMemSessionTests {
         val gid = 1
         val players = listOf(1, 2)
         val capacity = 2
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
 
         repo.addPlayerToSession(sid, players[1])
@@ -423,11 +423,11 @@ class RepoMemSessionTests {
         val gid = 1
         val players = listOf(1, 2)
         val capacity = 5
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
 
         // act
-        val newDate = LocalDateTime.now().plusDays(2).format(DATE_FORMATTER)
+        val newDate = LocalDateTime.now().plusDays(2).format(DATE_TIME_FORMATTER)
         val newCapacity = 10
         repo.updateSession(sid, newDate, newCapacity)
 
@@ -443,13 +443,13 @@ class RepoMemSessionTests {
         val gid = 1
         val players = listOf(1, 2)
         val capacity = 3
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
 
         repo.addPlayerToSession(sid, players[1])
 
         // act
-        val newDate = LocalDateTime.now().plusDays(2).format(DATE_FORMATTER)
+        val newDate = LocalDateTime.now().plusDays(2).format(DATE_TIME_FORMATTER)
         val newCapacity = 2
         repo.updateSession(sid, newDate, newCapacity)
 
@@ -465,13 +465,13 @@ class RepoMemSessionTests {
         val gid = 1
         val players = listOf(1, 2)
         val capacity = 2
-        val date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = repo.createSession(createSessionDTO(capacity, date, gid, listOf(players[0])))
 
         repo.addPlayerToSession(sid, players[1])
 
         // act
-        val newDate = LocalDateTime.now().plusDays(2).format(DATE_FORMATTER)
+        val newDate = LocalDateTime.now().plusDays(2).format(DATE_TIME_FORMATTER)
         val newCapacity = 3
         repo.updateSession(sid, newDate, newCapacity)
 

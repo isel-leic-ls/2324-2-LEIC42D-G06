@@ -9,13 +9,13 @@ insert into Game(name, developer, genres) values
     ('Minecraft', 'Mojang', ARRAY['Sandbox', 'Survival']);
 
 insert into Session(capacity, session_date, closed, game_id) values
-    (2, '2024-09-01', false, 102),
-    (4, '2025-01-02', false, 102),
-    (2, '2024-10-06', true, 101),
-	(2, '2024-10-07', true, 101),
-	(2, '2024-10-08', true, 101),
-	(2, '2024-10-09', true, 101),
-	(2, '2024-10-00', true, 101);
+    (2, '2024-09-01 18:00:00', false, 102),
+    (4, '2024-09-01 19:00:00', false, 102),
+    (2, '2024-10-06 10:00:00', true, 101),
+	(2, '2024-10-06 11:00:00', true, 101),
+	(2, '2024-10-06 12:00:00', true, 101),
+	(2, '2024-10-09 19:00:00', true, 101),
+	(2, '2024-10-04 20:00:00', true, 101);
 
 insert into SessionPlayer(session_id, player_id) values
     (10003, 1000),

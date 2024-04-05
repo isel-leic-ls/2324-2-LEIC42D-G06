@@ -5,9 +5,7 @@ import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
 import pt.isel.ls.domain.toSession
 import pt.isel.ls.AppException
-import pt.isel.ls.domain.checkIfSessionFullCapacity
 import java.util.*
-import java.util.concurrent.ConcurrentLinkedQueue
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -80,7 +78,7 @@ class MemSessionRepo : SessionRepo {
         monitor.withLock {
             val sessions = sessions.filter {
                 gid?.let { g -> it.game == g } ?: true &&
-                date?.let { d -> it.date == d } ?: true &&
+                date?.let { d -> it.date == d.substring(0, 10) } ?: true &&
                 state?.let { s -> it.closed == s } ?: true &&
                 pid?.let { p -> it.players.contains(p) } ?: true
             }

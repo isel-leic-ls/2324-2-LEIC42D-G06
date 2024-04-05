@@ -39,7 +39,7 @@ class ServiceMemSessionTests {
         val sServices = SessionServices(pRepo, gRepo, sRepo)
         val gid = FIRST_GAME_ID
         val capacity = 5
-        val startDate = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
 
         //act
         val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
@@ -59,7 +59,7 @@ class ServiceMemSessionTests {
         val sServices = SessionServices(pRepo, gRepo, sRepo)
         val gid = FIRST_GAME_ID * 10
         val capacity = 5
-        val startDate = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
 
         //act && assert
         val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
@@ -78,7 +78,7 @@ class ServiceMemSessionTests {
         val sServices = SessionServices(pRepo, gRepo, sRepo)
         val gid = FIRST_GAME_ID
         val capacity = 0
-        val startDate = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
 
         //act && assert
         val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
@@ -116,7 +116,7 @@ class ServiceMemSessionTests {
         val sServices = SessionServices(pRepo, gRepo, sRepo)
         val gid = FIRST_GAME_ID
         val capacity = 5
-        val startDate = LocalDateTime.now().minusDays(1).format(DATE_FORMATTER)
+        val startDate = LocalDateTime.now().minusDays(1).format(DATE_TIME_FORMATTER)
 
         //act && assert
         val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
@@ -136,7 +136,7 @@ class ServiceMemSessionTests {
         val pid = 1
         val gid = FIRST_GAME_ID
         val capacity = 5
-        val startDate = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
 
         //act
@@ -158,7 +158,7 @@ class ServiceMemSessionTests {
         val pid = FIRST_PLAYER_ID
         val gid = FIRST_GAME_ID
         val capacity = 5
-        val startDate = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
 
         //act
@@ -178,7 +178,7 @@ class ServiceMemSessionTests {
         val pid = 1
         val gid = FIRST_GAME_ID
         val capacity = 2
-        val startDate = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
 
         sRepo.addPlayerToSession(sid, FIRST_PLAYER_ID + 1)
@@ -200,7 +200,7 @@ class ServiceMemSessionTests {
         val pid = 1
         val gid = FIRST_GAME_ID
         val capacity = 5
-        val startDate = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER)
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
         val sid = sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
 
         //act

@@ -166,7 +166,7 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
             }
             if (date != null) {
                 append(if (firstNonNull) " WHERE" else " AND")
-                append(" session_date = ?")
+                append(" DATE(session_date) = CAST(? AS DATE)")
                 firstNonNull = false
             }
             if (state != null) {

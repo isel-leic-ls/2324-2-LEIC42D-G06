@@ -28,18 +28,20 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
     }
 
     override fun getPlayer(pid: Int): Player {
-        val stmt = dataSource.connection.prepareStatement("SELECT * FROM player WHERE pid = ?")
-        stmt.setInt(1, pid)
-        val rs = stmt.executeQuery()
-        if (!rs.next()) throw AppException.PlayerNotFound("Player $pid does not exist")
+        dataSource.connection.use {
+            val stmt = it.prepareStatement("SELECT * FROM player WHERE pid = ?")
+            stmt.setInt(1, pid)
+            val rs = stmt.executeQuery()
+            if (!rs.next()) throw AppException.PlayerNotFound("Player $pid does not exist")
 
-        return Player(
-            rs.getInt("pid"),
-            rs.getString("name"),
-            rs.getString("email"),
-            rs.getString("token"),
-            rs.getString("password")
-        )
+            return Player(
+                rs.getInt("pid"),
+                rs.getString("name"),
+                rs.getString("email"),
+                rs.getString("token"),
+                rs.getString("password")
+            )
+        }
     }
 
     override fun checkPlayerExistsByEmail(email: String): Boolean {

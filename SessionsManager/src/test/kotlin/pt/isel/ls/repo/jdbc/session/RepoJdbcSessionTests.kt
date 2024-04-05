@@ -40,7 +40,7 @@ class RepoJdbcSessionTests {
     fun `create session and retrieve session`() {
         val s = createSessionDTO(
             capacity = 2,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID)
         )
@@ -56,7 +56,7 @@ class RepoJdbcSessionTests {
     fun `add player to session`() {
         val s = createSessionDTO(
             capacity = 2,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID)
         )
@@ -74,7 +74,7 @@ class RepoJdbcSessionTests {
     fun `check session exists`() {
         val s = createSessionDTO(
             capacity = 2,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID)
         )
@@ -89,14 +89,14 @@ class RepoJdbcSessionTests {
     fun `get list of sessions`() {
         val s1 = createSessionDTO(
             capacity = 2,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID)
         )
 
         val s2 = createSessionDTO(
             capacity = 2,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID + 1)
         )
@@ -116,7 +116,7 @@ class RepoJdbcSessionTests {
     fun `delete a session`() {
         val s = createSessionDTO(
             capacity = 2,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID)
         )
@@ -132,7 +132,7 @@ class RepoJdbcSessionTests {
     fun `delete the only player from a session should remove the session`() {
         val s = createSessionDTO(
             capacity = 2,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID)
         )
@@ -148,7 +148,7 @@ class RepoJdbcSessionTests {
     fun `delete a player from a session`() {
         val s = createSessionDTO(
             capacity = 2,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID, FIRST_PLAYER_ID + 1)
         )
@@ -167,7 +167,7 @@ class RepoJdbcSessionTests {
     fun `update session`() {
         val s = createSessionDTO(
             capacity = 2,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID)
         )
@@ -175,7 +175,7 @@ class RepoJdbcSessionTests {
         val sid = repo.createSession(s)
         assert(sid > 0)
 
-        repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_FORMATTER), 3)
+        repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_TIME_FORMATTER), 3)
         val session = repo.getSession(sid)
         assertTrue(session.capacity == 3 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)))
     }
@@ -184,7 +184,7 @@ class RepoJdbcSessionTests {
     fun `update session capacity of almost full session`() {
         val s = createSessionDTO(
             capacity = 3,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID)
         )
@@ -194,7 +194,7 @@ class RepoJdbcSessionTests {
 
         repo.addPlayerToSession(sid, FIRST_PLAYER_ID + 1)
 
-        repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_FORMATTER), 2)
+        repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_TIME_FORMATTER), 2)
         val session = repo.getSession(sid)
         assertTrue(session.capacity == 2 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)) && session.closed)
     }
@@ -203,7 +203,7 @@ class RepoJdbcSessionTests {
     fun `update a full session to a bigger capacity`() {
         val s = createSessionDTO(
             capacity = 2,
-            date = LocalDateTime.now().plusDays(1).format(DATE_FORMATTER),
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
             game = FIRST_GAME_ID,
             players = listOf(FIRST_PLAYER_ID, FIRST_PLAYER_ID + 1)
         )
@@ -213,7 +213,7 @@ class RepoJdbcSessionTests {
 
         repo.addPlayerToSession(sid, FIRST_PLAYER_ID + 2)
 
-        repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_FORMATTER), 3)
+        repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_TIME_FORMATTER), 3)
         val session = repo.getSession(sid)
         assertTrue(session.capacity == 3 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)) && !session.closed)
     }

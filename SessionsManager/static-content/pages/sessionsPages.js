@@ -4,7 +4,7 @@ import { errorToast } from "../components/errorToast.js"
 import { controlledInput } from "../components/controlledInput.js"
 
 
-const pattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+const pattern = /^\d{4}-\d{2}-\d{2}$/;
 const states = ["ALL", "OPEN", "CLOSED"]
 
 function sessionsSearchPageClick(dateInput, stateInput) {

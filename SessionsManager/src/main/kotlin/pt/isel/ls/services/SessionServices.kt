@@ -7,6 +7,7 @@ import pt.isel.ls.repo.interfaces.GamesRepo
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.MIN_SESSION_CAPACITY
 import pt.isel.ls.utils.checkIfDateIsAfterNow
+import pt.isel.ls.utils.isDateTimeWellFormatted
 import pt.isel.ls.utils.isDateWellFormatted
 
 class SessionServices(
@@ -17,22 +18,17 @@ class SessionServices(
 
     fun createSession(token : String, gid : Int, capacity : Int, startDate: String) : Int {
         val pid = pRepo.getPlayerIdByToken(token)
-
         checkGameExists(gid)
-        checkDateFormat(startDate)
-
+        checkDateTimeFormat(startDate)
         return sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
     }
 
     fun addPlayerToSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
-
-        checkSessionExists(sid)
         val session = sRepo.getSession(sid)
         checkSessionOngoing(session)
         checkSessionFullCapacity(session)
         checkPlayerInSession(session, pid)
-
         return sRepo.addPlayerToSession(sid, pid)
     }
 
@@ -45,22 +41,18 @@ class SessionServices(
         require(capacity >= MIN_SESSION_CAPACITY) {
             "Capacity must be greater than $MIN_SESSION_CAPACITY"
         }
-        require(date.isDateWellFormatted()) { "Invalid date format $date" }
+        require(date.isDateTimeWellFormatted()) { "Invalid date format $date" }
         checkDateAfterNow(date)
 
-        checkSessionExists(sid)
         val session = sRepo.getSession(sid)
         checkIfCapacityCanBeUpdated(session, capacity)
         checkSessionOngoing(session)
-
         checkIfPlayerIsNotOwner(session, pid)
-
         sRepo.updateSession(sid, date, capacity)
     }
 
     fun deleteSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
-        checkSessionExists(sid)
         val session = sRepo.getSession(sid)
         checkIfPlayerIsNotOwner(session, pid)
         sRepo.deleteSession(sid)
@@ -68,12 +60,9 @@ class SessionServices(
 
     fun deletePlayerFromSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
-
-        checkSessionExists(sid)
         val session = sRepo.getSession(sid)
         checkPlayerNotInSession(session, pid)
         checkSessionOngoing(session)
-
         sRepo.deletePlayerFromSession(sid, pid)
     }
 
@@ -83,23 +72,20 @@ class SessionServices(
         if (gid != null) checkGameExists(gid)
         if (startDate != null) checkDateFormat(startDate)
         if (state != null) checkState(state)
-
-        val sState = state?.toState()
-
         require(skip >= 0) { "Skip value must be positive" }
         require(limit > 0) { "Limit value must be positive non-zero" }
 
+        val sState = state?.toState()
         return sRepo.getListOfSessions(gid, startDate, sState, pid, skip, limit)
     }
-
-    private fun checkSessionExists(sid : Int) {
-        if(!sRepo.checkSessionExists(sid))
-            throw AppException.SessionNotFound("Session $sid does not exist")
-    }
-
     private fun checkGameExists(gid : Int) {
         if(!gRepo.checkGameExistsById(gid))
             throw AppException.GameNotFound("Game $gid does not exist")
+    }
+
+    private fun checkDateTimeFormat(date : String) {
+        if(!date.isDateTimeWellFormatted())
+            throw IllegalArgumentException("Invalid date format $date")
     }
 
     private fun checkDateFormat(date : String) {
@@ -113,7 +99,7 @@ class SessionServices(
     }
 
     private fun checkSessionFullCapacity(session: Session) {
-        if(session.checkIfSessionFullCapacity())
+        if(session.closed)
             throw AppException.SessionClosed("Session ${session.id} is closed")
     }
 
