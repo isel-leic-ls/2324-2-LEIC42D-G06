@@ -58,7 +58,7 @@ class GamesRoutes(private val services: GamesServices) {
         exceptionAwareScope {
             val (genres, developer) = request.getGamesListInputModel()
             val (skip, limit) = request.getSkipAndLimit()
-            val games = services.getListOfGames(genres, developer, limit, skip)
-            Response(Status.OK).toJson(GamesListOutputModel(games))
+            val (games, total)  = services.getListOfGames(genres, developer, limit, skip)
+            Response(Status.OK).toJson(GamesListOutputModel(games, total))
         }
 }

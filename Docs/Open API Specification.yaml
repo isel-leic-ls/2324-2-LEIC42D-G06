@@ -105,6 +105,36 @@ paths:
         '500':
           description: Internal Server Error
           
+    get:
+      tags:
+        - Game Management
+      summary: Get a list of games
+      description: |
+        Get a list of games
+      parameters:
+        - name: developer
+          in: query
+          schema:
+            type: string
+          description: The game's developer
+        - name: genres
+          in: query
+          schema:
+            type: string
+          description: The game's genres
+
+      responses:
+        '200':
+          description: The game's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameListOutputModel'
+        '400':
+          description: Invalid or missing request body
+        '500':
+          description: Internal Server Error   
+          
           
   /games/id/{gid}:
     get:
@@ -162,32 +192,6 @@ paths:
         '500':
           description: Internal Server Error   
           
-  /games/list:
-     post:
-      tags:
-        - Game Management
-      summary: get a list of games
-      description: |
-        Get a list of games
-      requestBody:
-        description: Game List Input Model
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GameListInputModel'
-      responses:
-        '200':
-          description: The game's details
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GameListOutputModel'
-        '400':
-          description: Invalid or missing request body
-        '500':
-          description: Internal Server Error 
-          
   /sessions:
     post:
       security:
@@ -220,6 +224,45 @@ paths:
           description: Game does not exist
         '500':
           description: Internal Server Error
+          
+    get:
+      tags:
+        - Session Management
+      summary: Get a list of sessions
+      description: |
+        Get a list of sessions
+      parameters:
+        - in: query
+          name: gid
+          schema:
+            type: integer
+          description: The session's ID
+        - in: query
+          name: date
+          schema:
+            type: string
+          description: The session's date
+        - in: query
+          name: state
+          schema:
+            type: string
+          description: The session's state
+        - in: query
+          name: pid
+          schema:
+            type: string
+          description: The session's participant ID
+      responses:
+        '200':
+          description: Sessions list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionListRetrievalOutputModel'
+        '400':
+          description: Invalid JSON body
+        '500':
+          description: Internal Server Error   
           
           
   /sessions/{sid}:
@@ -376,32 +419,6 @@ paths:
           description: Internal Server Error
       
           
-  /sessions/list:
-    post:
-      tags:
-        - Session Management
-      summary: Get a list of sessions
-      description: |
-        Get a list of sessions
-      requestBody:
-        description: Session List Retrieval Input Model
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SessionListRetrievalInputModel'
-          
-      responses:
-        '200':
-          description: Sessions list
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SessionListRetrievalOutputModel'
-        '400':
-          description: Invalid JSON body
-        '500':
-          description: Internal Server Error
           
   
         
@@ -508,25 +525,6 @@ components:
           type: integer
           description: Game ID
           example: 107
-    
-          
-          
-    GameListInputModel:
-       type: object
-       required:
-        - genres
-        - developer
-       properties:
-        developer:
-          type: string
-          description: Game developer
-          example: "Valve"
-        genres:
-          type: array
-          description: List of game genres
-          items:
-            type: string
-          example: ["Action", "Shooter"]
         
     GameListOutputModel:
       type: object
@@ -647,31 +645,7 @@ components:
             type: integer
             example: [1001, 1002]
             
-            
-    SessionListRetrievalInputModel:
-      type: object
-      required:
-        - gid
-        - date
-        - state
-        - pid
-      properties:
-        gid:
-          type: integer
-          description: Game ID
-          example: 107
-        date:
-          type: string
-          description: Session start date
-          example: "2025-04-05 18:30:00"
-        state:
-          type: string
-          description: Session closed state
-          example: "open"
-        pid:
-          type: integer
-          description: Player ID
-          example: 1002
+          
           
           
     SessionListRetrievalOutputModel:

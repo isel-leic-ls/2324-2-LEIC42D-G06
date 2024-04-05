@@ -60,7 +60,6 @@ class SessionServices(
 
     fun deleteSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
-
         checkSessionExists(sid)
         val session = sRepo.getSession(sid)
         checkIfPlayerIsNotOwner(session, pid)
@@ -82,7 +81,6 @@ class SessionServices(
         gid: Int?, startDate: String?, state: String?, pid: Int?, skip: Int, limit: Int
     ): Pair<List<Session>, Int> {
         if (gid != null) checkGameExists(gid)
-
         if (startDate != null) checkDateFormat(startDate)
         if (state != null) checkState(state)
 
@@ -91,10 +89,7 @@ class SessionServices(
         require(skip >= 0) { "Skip value must be positive" }
         require(limit > 0) { "Limit value must be positive non-zero" }
 
-        val result = sRepo.getListOfSessions(gid, startDate, sState, pid, skip, limit)
-        //println(result.first)
-        //println(result.second)
-        return result
+        return sRepo.getListOfSessions(gid, startDate, sState, pid, skip, limit)
     }
 
     private fun checkSessionExists(sid : Int) {

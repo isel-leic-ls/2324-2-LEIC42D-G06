@@ -121,31 +121,31 @@ class ServiceJdbcGamesTests {
         val g4 =
             service.createGame(token, "WWE 2K20", "eaSportsDev", listOf("sports"))
 
-        val games1 = service.getListOfGames(listOf("fps", "tactical"), "valveDev")
+        val (games1, _) = service.getListOfGames(listOf("fps", "tactical"), "valveDev")
         assertEquals(1, games1.size)
         assertEquals(g1, games1[0].id)
 
-        val games2 = service.getListOfGames(listOf("action", "adventure"), "rockstarGamesDev")
+        val (games2, _) = service.getListOfGames(listOf("action", "adventure"), "rockstarGamesDev")
         assertEquals(1, games2.size)
         assertEquals(g2, games2[0].id)
 
-        val games3 = service.getListOfGames(listOf("sports"), "eaSportsDev")
+        val (games3, _) = service.getListOfGames(listOf("sports"), "eaSportsDev")
         assertEquals(2, games3.size)
         assertEquals(g3, games3[0].id)
         assertEquals(g4, games3[1].id)
 
-        val games4 = service.getListOfGames(listOf("SPORTS"), "eaSportsDev", 5, 1)
+        val (games4, _) = service.getListOfGames(listOf("SPORTS"), "eaSportsDev", 5, 1)
         assertEquals(1, games4.size)
         assertEquals(g4, games4[0].id)
 
-        val games5 = service.getListOfGames(listOf("sports"), "easportsdev", 1, 0)
+        val (games5, _) = service.getListOfGames(listOf("sports"), "easportsdev", 1, 0)
         assertEquals(1, games5.size)
         assertEquals(g3, games5[0].id)
 
-        val games6 = service.getListOfGames(listOf("rts"), "ROCKSTARGAMESDEV", 5, 1)
+        val (games6, _) = service.getListOfGames(listOf("rts"), "ROCKSTARGAMESDEV", 5, 1)
         assertEquals(0, games6.size)
 
-        val games7 = service.getListOfGames(listOf("fps"), "rockstarGamesDev", 5, 2)
+        val (games7, _) = service.getListOfGames(listOf("fps"), "rockstarGamesDev", 5, 2)
         assertEquals(0, games7.size)
 
         val listOfParamsPair = listOf(Pair(-1, 5), Pair(0, 5), Pair(3, -1))

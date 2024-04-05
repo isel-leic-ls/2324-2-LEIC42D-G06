@@ -91,31 +91,31 @@ class RepoMemGamesTests {
         val gameId4 = repo.insert("name4", dev2, genresXYZ)
         val game4 = repo.getGameById(gameId4)
 
-        val list1 = repo.getListOfGames(genresABC, dev1, 5, 0)
+        val (list1, _) = repo.getListOfGames(genresABC, dev1, 5, 0)
         assertTrue { list1.containsAll(listOf(game1, game2, game3)) && list1.size == 3 }
 
-        val list2 = repo.getListOfGames(genresXYZ, dev1, 5, 0)
+        val (list2, _) = repo.getListOfGames(genresXYZ, dev1, 5, 0)
         assertTrue { list2.containsAll(listOf(game1, game2, game3, game4)) && list2.size == 4 }
 
-        val list3 = repo.getListOfGames(genresBCD, dev2, 5, 0)
+        val (list3, _) = repo.getListOfGames(genresBCD, dev2, 5, 0)
         assertTrue { list3.containsAll(listOf(game1, game2, game4)) && list3.size == 3 }
 
-        val list4 = repo.getListOfGames(genresXYZ, dev2, 5, 0)
+        val (list4, _) = repo.getListOfGames(genresXYZ, dev2, 5, 0)
         assertTrue { list4.containsAll(listOf(game3, game4)) && list4.size == 2 }
 
-        val list5 = repo.getListOfGames(listOf(genresABC[2]), dev1, 5, 0)
+        val (list5, _) = repo.getListOfGames(listOf(genresABC[2]), dev1, 5, 0)
         assertTrue { list5.containsAll(listOf(game1, game2, game3)) && list5.size == 3 }
 
-        val list6 = repo.getListOfGames(listOf(genresXYZ[0].uppercase()), dev2, 5, 0)
+        val (list6, _) = repo.getListOfGames(listOf(genresXYZ[0].uppercase()), dev2, 5, 0)
         assertTrue { list6.containsAll(listOf(game3, game4)) && list6.size == 2 }
 
-        val list7 = repo.getListOfGames(listOf("G"), "developer3", 5, 0)
+        val (list7, _) = repo.getListOfGames(listOf("G"), "developer3", 5, 0)
         assertTrue { list7.isEmpty() }
 
-        val list8 = repo.getListOfGames(genresABC, "developer4", 5, 0)
+        val (list8, _) = repo.getListOfGames(genresABC, "developer4", 5, 0)
         assertTrue { list8.containsAll(listOf(game1, game2)) && list8.size == 2 }
 
-        val list9 = repo.getListOfGames(listOf("H"), dev2, 5, 0)
+        val (list9, _) = repo.getListOfGames(listOf("H"), dev2, 5, 0)
         assertTrue { list9.containsAll(listOf(game4)) && list9.size == 1 }
     }
 
@@ -137,7 +137,7 @@ class RepoMemGamesTests {
         val gameId9 = repo.insert("name9", dev, genresABC)
         val gameId10 = repo.insert("name10", "devP", genresABC)
 
-        val list1 = repo.getListOfGames(genresABC, dev, 3, 0)
+        val (list1, _) = repo.getListOfGames(genresABC, dev, 3, 0)
         assertTrue {
             list1.size == 3 && list1.containsAll(
                 listOf(
@@ -148,7 +148,7 @@ class RepoMemGamesTests {
             )
         }
 
-        val list2 = repo.getListOfGames(genresABC, dev, 3, 3)
+        val (list2, _) = repo.getListOfGames(genresABC, dev, 3, 3)
         assertTrue {
             list2.size == 3 && list2.containsAll(
                 listOf(
@@ -159,7 +159,7 @@ class RepoMemGamesTests {
             )
         }
 
-        val list3 = repo.getListOfGames(genresABC, dev, 3, 6)
+        val (list3, _) = repo.getListOfGames(genresABC, dev, 3, 6)
         assertTrue {
             list3.size == 3 && list3.containsAll(
                 listOf(
@@ -170,11 +170,11 @@ class RepoMemGamesTests {
             )
         }
 
-        val list4 = repo.getListOfGames(genresABC, dev, 3, 9)
+        val (list4, _) = repo.getListOfGames(genresABC, dev, 3, 9)
         //limit is 3 but there is only one game left
         assertTrue { list4.size == 1 && list4.contains(repo.getGameById(gameId10)) }
 
-        val list5 = repo.getListOfGames(genresABC, dev, 3, 10)
+        val (list5, _) = repo.getListOfGames(genresABC, dev, 3, 10)
         //skip is 10 but there are no games left
         assertTrue { list5.isEmpty() }
     }

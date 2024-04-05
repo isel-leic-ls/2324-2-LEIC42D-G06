@@ -32,7 +32,7 @@ class MemGamesRepo : GamesRepo {
 
     override fun getListOfGames(
         genres: List<String>, developer: String, limit: Int, skip: Int
-    ): List<Game> {
+    ): Pair<List<Game>, Int> {
         val genresUpperCased = genres.map { it.uppercase() } //to make the search case-insensitive
         val devUpperCased = developer.uppercase() //to make the search case-insensitive
         val fullList = games.filter {
@@ -44,6 +44,6 @@ class MemGamesRepo : GamesRepo {
         val lastIdx = if (skip + limit > fullListSize) fullListSize else skip + limit
         val firstIdx = if (skip > fullListSize) fullListSize else skip
 
-        return fullList.subList(firstIdx, lastIdx)
+        return fullList.subList(firstIdx, lastIdx) to fullList.size
     }
 }

@@ -5,4 +5,4 @@ import pt.isel.ls.domain.Game
 
 
 @Serializable
-data class GamesListOutputModel(val games: List<Game>)
+data class GamesListOutputModel(val games: List<Game>, val total : Int)
