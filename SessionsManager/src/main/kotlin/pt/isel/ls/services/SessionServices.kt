@@ -19,17 +19,20 @@ class SessionServices(
     fun createSession(token : String, gid : Int, capacity : Int, startDate: String) : Int {
         val pid = pRepo.getPlayerIdByToken(token)
         checkGameExists(gid)
-        checkDateTimeFormat(startDate)
         return sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
     }
 
     fun addPlayerToSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
         val session = sRepo.getSession(sid)
-        checkSessionOngoing(session)
-        checkSessionFullCapacity(session)
-        checkPlayerInSession(session, pid)
+        validatePlayerAddition(session, pid)
         return sRepo.addPlayerToSession(sid, pid)
+    }
+
+    private fun validatePlayerAddition(session : Session, pid : Int) {
+        if(session.checkIfSessionOngoing()) throw AppException.SessionClosed("Session ${session.id} is closed")
+        if(session.closed) throw AppException.SessionClosed("Session ${session.id} is closed")
+        if(session.checkPlayerInSession(pid)) throw AppException.PlayerAlreadyInSession("Player $pid is already in session ${session.id}")
     }
 
     fun getSession(sid : Int) : Session =
@@ -37,33 +40,37 @@ class SessionServices(
 
     fun updateSession(token : String, sid : Int, date : String, capacity : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
-
-        require(capacity >= MIN_SESSION_CAPACITY) {
-            "Capacity must be greater than $MIN_SESSION_CAPACITY"
-        }
-        require(date.isDateTimeWellFormatted()) { "Invalid date format $date" }
-        checkDateAfterNow(date)
-
+        validateSessionCredentials(capacity, date)
         val session = sRepo.getSession(sid)
-        checkIfCapacityCanBeUpdated(session, capacity)
-        checkSessionOngoing(session)
-        checkIfPlayerIsNotOwner(session, pid)
+        validateSessionUpdate(session, date, capacity, pid)
         sRepo.updateSession(sid, date, capacity)
+    }
+
+    private fun validateSessionUpdate(session : Session, date: String, capacity: Int, pid: Int) {
+        if(!date.checkIfDateIsAfterNow()) throw IllegalArgumentException("Date must be after now")
+        if(!session.checkIfCapacityCanBeUpdated(capacity)) throw IllegalArgumentException("Capacity can't be updated")
+        if(session.checkIfSessionOngoing()) throw AppException.SessionClosed("Session ${session.id} is closed")
+        if(!session.checkIfPlayerIsOwner(pid)) throw AppException.PlayerCantDeleteSession("Player $pid can't delete session ${session.id}")
     }
 
     fun deleteSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
         val session = sRepo.getSession(sid)
-        checkIfPlayerIsNotOwner(session, pid)
+        if(!session.checkIfPlayerIsOwner(pid))
+            throw AppException.PlayerCantDeleteSession("Player $pid can't delete session ${session.id}")
         sRepo.deleteSession(sid)
     }
 
     fun deletePlayerFromSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
         val session = sRepo.getSession(sid)
-        checkPlayerNotInSession(session, pid)
-        checkSessionOngoing(session)
+        validatePlayerRemoval(session, pid)
         sRepo.deletePlayerFromSession(sid, pid)
+    }
+
+    private fun validatePlayerRemoval(session: Session, pid: Int) {
+        if(!session.checkPlayerInSession(pid)) throw AppException.PlayerNotFoundInSession("Player $pid is not in session ${session.id}")
+        if(session.checkIfSessionOngoing()) throw AppException.SessionClosed("Session ${session.id} is closed")
     }
 
     fun getListOfSessions(
@@ -83,11 +90,6 @@ class SessionServices(
             throw AppException.GameNotFound("Game $gid does not exist")
     }
 
-    private fun checkDateTimeFormat(date : String) {
-        if(!date.isDateTimeWellFormatted())
-            throw IllegalArgumentException("Invalid date format $date")
-    }
-
     private fun checkDateFormat(date : String) {
         if(!date.isDateWellFormatted())
             throw IllegalArgumentException("Invalid date format $date")
@@ -98,38 +100,5 @@ class SessionServices(
             throw IllegalArgumentException("Invalid state $state")
     }
 
-    private fun checkSessionFullCapacity(session: Session) {
-        if(session.closed)
-            throw AppException.SessionClosed("Session ${session.id} is closed")
-    }
 
-    private fun checkSessionOngoing(session: Session) {
-        if(session.checkIfSessionOngoing())
-            throw AppException.SessionClosed("Session ${session.id} is closed")
-    }
-
-    private fun checkPlayerInSession(session: Session, pid: Int) {
-        if(session.checkPlayerInSession(pid))
-            throw AppException.PlayerAlreadyInSession("Player $pid is already in session ${session.id}")
-    }
-
-    private fun checkPlayerNotInSession(session: Session, pid: Int) {
-        if(!session.checkPlayerInSession(pid))
-            throw AppException.PlayerNotFoundInSession("Player $pid is not in session ${session.id}")
-    }
-
-    private fun checkDateAfterNow(date: String) {
-        if(!date.checkIfDateIsAfterNow())
-            throw IllegalArgumentException("Date must be after now")
-    }
-
-    private fun checkIfPlayerIsNotOwner(session: Session, pid: Int) {
-        if(!session.checkIfPlayerIsOwner(pid))
-            throw AppException.PlayerCantDeleteSession("Player $pid can't delete session ${session.id}")
-    }
-
-    private fun checkIfCapacityCanBeUpdated(session: Session, capacity: Int) {
-        if(!session.checkIfCapacityCanBeUpdated(capacity))
-            throw IllegalArgumentException("Capacity can't be updated")
-    }
 }
