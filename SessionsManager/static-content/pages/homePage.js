@@ -4,9 +4,9 @@ import { div, a, ul } from "../tags.js"
 export function homePage(player) {
     const element =
         div(
-            {}, "Hello LS",
+            {}, "Session Finder Home Page",
             ul(
-                {}, //TODO better spacing than this
+                {},
                 ""
             ),
             div(

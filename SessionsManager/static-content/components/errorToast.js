@@ -29,5 +29,5 @@ export function errorToast(message) {
   // Remove popup after 4 seconds
   setTimeout(() => {
     mainContent.removeChild(overlay);
-  }, 2500);
+  }, 1500);
 }

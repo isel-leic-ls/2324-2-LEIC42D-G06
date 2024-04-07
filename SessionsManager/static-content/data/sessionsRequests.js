@@ -1,30 +1,28 @@
-import { fetcher } from "../fetch.js";
-import { filterQueryParameters, filterUriId } from "../uriparsers.js";
+import { CONSTS } from "../utils.js";
 
-export async function handleSessionsRetrievalRequest(path) {
-    const { gid, date, state, pid, skip, limit } = filterQueryParameters(path);
-
-    // Construct the query string
-    let queryString = "";
-
-    if (gid !== undefined && gid !== "null") {
-        queryString += `gid=${gid}&`;
+export async function handleSessionsRetrievalRequest(query) {
+    const response = await fetch(CONSTS.BASE_API_URL + "/sessions?" + query, {
+        headers: {
+            "Accept": "application/json",
+        }
+    })
+    if(response.status === 200) {
+        const sessions = await response.json();
+        return sessions;
     }
-    if (date !== undefined && date !== "null") {
-        queryString += `date=${date}&`;
-    }
-    if (state !== undefined && state !== "null") {
-        queryString += `state=${state}&`;
-    }
-    if (pid !== undefined && pid !== "null") {
-        queryString += `pid=${pid}&`;
-    }
-    const result = await fetcher("/sessions?" + queryString + "skip=" + skip + "&limit=" + limit, "GET", undefined);
-    return result;
+    throw new Error("Failed to retrieve sessions");
 }
 
-export async function handleSessionDetailsRequest(path) {
-    const sid = filterUriId(path);
-    const result = await fetcher("/sessions/" + sid, "GET", undefined);
-    return result
+export async function handleSessionDetailsRequest(sid) {
+    const response = await fetch(CONSTS.BASE_API_URL + "/sessions/" + sid, {
+        headers: {
+            "Accept": "application/json",
+        }
+    })
+
+    if(response.status === 200) {
+        const session = await response.json();
+        return session;
+    }
+    throw new Error("Failed to retrieve session details");
 }

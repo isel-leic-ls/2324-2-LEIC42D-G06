@@ -122,6 +122,16 @@ paths:
           schema:
             type: string
           description: The game's genres
+        - in: query
+          name: skip
+          schema: 
+            type: integer
+          description: Skip x elements
+        - in: query
+          name: limit
+          schema: 
+            type: integer
+          description: Take x elements
 
       responses:
         '200':
@@ -252,6 +262,17 @@ paths:
           schema:
             type: string
           description: The session's participant ID
+        - in: query
+          name: skip
+          schema: 
+            type: integer
+          description: Skip x elements
+        - in: query
+          name: limit
+          schema: 
+            type: integer
+          description: Take x elements
+          
       responses:
         '200':
           description: Sessions list

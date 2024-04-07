@@ -1,20 +1,29 @@
-import { fetcher } from "../fetch.js";
-import { filterQueryParameters, filterUriId } from "../uriparsers.js";
+import { CONSTS } from "../utils.js";
 
-
-export async function handleGamesRetrievalRequest(path) {
-    const { skip, limit, genres, developer } = filterQueryParameters(path);
-
-    const checkedGenres = genres == undefined || genres == "null" ? "" : genres;
-    const checkedDeveloper = developer == undefined || developer == "null" ? "" : developer;
-
-    const games = await fetcher("/games?genres=" + checkedGenres +
-    "&developer=" + checkedDeveloper + "&skip=" + skip + "&limit=" + limit, "GET", undefined);
-    return games;
+export async function handleGamesRetrievalRequest(query) {
+    const response = await fetch(CONSTS.BASE_API_URL + "/games?" + query, {
+        headers: {
+            "Accept": "application/json",
+        }
+    })
+    if(response.status === 200) {
+        const games = await response.json();
+        return games;
+    }
+    throw new Error("Failed to retrieve games");
 }
 
-export async function handleGameDetailsRequest(path) {
-    const gid = filterUriId(path);
-    const game = await fetcher("/games/id/" + gid, "GET", undefined);
-    return game;
+export async function handleGameDetailsRequest(gid) {
+    const response = await fetch(CONSTS.BASE_API_URL + "/games/id/" + gid, {
+        headers: {
+            "Accept": "application/json",
+        }
+    });
+    if(response.status === 200) {
+        const game = await response.json();
+        return game;
+    }
+    throw new Error("Failed to retrieve game details");
 }
+
+

@@ -24,7 +24,7 @@ function sessionsSearchPageClick(dateInput, stateInput) {
 
 export function sessionsSearchPage() {
     const homeButton = returnHomeButton();
-    const [dateCheckBox, dateInput] = controlledInput("2025-03-04 18:00:00");
+    const [dateCheckBox, dateInput] = controlledInput("2025-03-04");
 
     const stateRadioButtons = states.map(state => {
         const radio = radioButton({ name: "state", value: state });
@@ -91,7 +91,7 @@ export function sessionDetailsPage(session) {
 
     const homeButton = returnHomeButton();
 
-    const pAnchors = session.players.map(p => a({ href: "#players/" + p }, "    " + p));
+    const pAnchors = session.players.map(p => div({}, a({ href: "#players/" + p }, "  " + p)));
     const element = div(
         {},
         "Session details",

@@ -20,16 +20,16 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
                 .executeUpdate()
 
             val result = statement.generatedKeys
-            if (result.next()) {
-                val sid = result.getInt(1)
+            if (!result.next()) throw AppException.SQLException("Session not inserted")
+            val sid = result.getInt(1)
 
-                val query2 = "INSERT INTO SessionPlayer(session_id, player_id) VALUES (?, ?)"
-                it.prepareStatement(query2)
-                    .bindParameters(sid, dto.players[0])
-                    .executeUpdate()
+            val query2 = "INSERT INTO SessionPlayer(session_id, player_id) VALUES (?, ?)"
+            it.prepareStatement(query2)
+                .bindParameters(sid, dto.players[0])
+                .executeUpdate()
 
-                return sid
-            } else throw AppException.SQLException("Session not inserted")
+            return sid
+
         }
     }
 
