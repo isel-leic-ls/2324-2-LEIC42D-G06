@@ -13,7 +13,7 @@ inline fun <reified T> Request.fromJson(): T {
     }
 }
 
-inline fun <reified T : Any> Response.toJson(data: T): Response {
+inline fun <reified T : Any> Response.toJson(data: T): Response{
     return header("Content-Type", "application/json")
         .body(Json.encodeToString(data))
 }

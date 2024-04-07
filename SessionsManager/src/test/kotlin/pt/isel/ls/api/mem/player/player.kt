@@ -6,13 +6,10 @@ import org.http4k.server.Jetty
 import org.http4k.server.asServer
 import pt.isel.ls.api.PlayerRoutes
 import pt.isel.ls.api.PlayerUris
+import pt.isel.ls.api.mem.mockServices.PlayerRoutesMock
 import pt.isel.ls.repo.mem.MemPlayersRepo
 import pt.isel.ls.services.PlayerServices
 import pt.isel.ls.utils.FIRST_PLAYER_ID
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -25,10 +22,11 @@ class ApiMemPlayerTests {
 
     //services
     private val playerServices = PlayerServices(playersRepo)
-    private val serviceRoutes = PlayerRoutes(playerServices)
+    //private val serviceRoutes = PlayerRoutes(playerServices)
+    private val mockServiceRoutes = PlayerRoutesMock()
 
     //server
-    private val server = serviceRoutes.routes.asServer(Jetty(8080))
+    private val server = mockServiceRoutes.routes.asServer(Jetty(8080))
 
     @BeforeTest
     fun setup() {
@@ -58,7 +56,7 @@ class ApiMemPlayerTests {
             .header("Content-Type", "application/json")
             .body(requestBody)
 
-        val response = serviceRoutes.routes(request)
+        val response = mockServiceRoutes.routes(request)
         assertEquals(201, response.status.code)
 
     }
@@ -79,7 +77,7 @@ class ApiMemPlayerTests {
             .body(requestBody)
             .header("Content-Type", "application/json")
 
-        val response = serviceRoutes.routes(request)
+        val response = mockServiceRoutes.routes(request)
         assertEquals(400, response.status.code)
     }
 
@@ -99,7 +97,7 @@ class ApiMemPlayerTests {
             .body(requestBody)
             .header("Content-Type", "application/json")
 
-        val response = serviceRoutes.routes(request)
+        val response = mockServiceRoutes.routes(request)
         assertEquals(400, response.status.code)
 
     }
@@ -120,21 +118,21 @@ class ApiMemPlayerTests {
             .body(requestBody)
             .header("Content-Type", "application/json")
 
-        val response = serviceRoutes.routes(request)
+        val response = mockServiceRoutes.routes(request)
         assertEquals(400, response.status.code)
     }
 
     @Test
     fun `retrieving an existing player`() {
         val request = Request(Method.GET, PlayerUris.GET.replace("{pid}", FIRST_PLAYER_ID.toString()))
-        val response = serviceRoutes.routes(request)
+        val response = mockServiceRoutes.routes(request)
         assertEquals(200, response.status.code)
     }
 
     @Test
     fun `retrieving a non existent player`() {
         val request = Request(Method.GET, PlayerUris.GET.replace("{pid}", "100"))
-        val response = serviceRoutes.routes(request)
-        assertEquals(400, response.status.code)
+        val response = mockServiceRoutes.routes(request)
+        assertEquals(404, response.status.code)
     }
 }

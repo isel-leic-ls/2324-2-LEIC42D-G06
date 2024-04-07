@@ -43,7 +43,7 @@ fun main() {
         sessionRoutes.routes,
         gamesRoutes.routes,
         playersRoutes.routes,
-        singlePageApp(ResourceLoader.Directory("static-content"))
+        singlePageApp(ResourceLoader.Directory("SessionsManager/static-content"))
     )
 
     // start the server with the routes

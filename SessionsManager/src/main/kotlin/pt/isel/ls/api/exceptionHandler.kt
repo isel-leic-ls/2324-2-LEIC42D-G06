@@ -8,7 +8,7 @@ import org.http4k.core.Status
 @Serializable
 data class Problem(val description: String)
 
-fun exceptionAwareScope(block: () -> Response): Response {
+fun exceptionAwareScope(block: () -> Response): Response{
     return try {
         block()
     } catch (e: Exception) {

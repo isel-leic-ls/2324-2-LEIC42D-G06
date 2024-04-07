@@ -25,7 +25,6 @@ import kotlin.test.*
 
 
 class ApiMemGamesTests {
-
     //repositories
     private val playersRepo = MemPlayersRepo()
     private val gamesRepo = MemGamesRepo()
@@ -278,7 +277,8 @@ class ApiMemGamesTests {
 
         createMoreGames(foundPlayer.token)
 
-        val request = Request(Method.GET, GameUrisObj.GET_GAMES + "?genres=Action&developer=Rockstar Games&skip=2&limit=4")
+        val request =
+            Request(Method.GET, GameUrisObj.GET_GAMES + "?genres=Action&developer=Rockstar Games&skip=2&limit=4")
 
         val response = serviceRoutes.routes(request)
         assertEquals(200, response.status.code)
