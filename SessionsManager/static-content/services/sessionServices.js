@@ -1,7 +1,8 @@
 import { handleSessionsRetrievalRequest, handleSessionDetailsRequest } from "../data/sessionsRequests.js";
 import { CONSTS } from "../utils.js";
-import { pattern, states } from "../pages/sessionsPages.js";
+import { pattern} from "../pages/sessionsPages.js";
 
+const states = ["OPEN", "CLOSED"];
 
 export async function sessionDetailsRetrieval(sId) {
     const parsedSessionId = parseInt(sId);

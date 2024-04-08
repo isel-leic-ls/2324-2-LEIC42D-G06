@@ -46,28 +46,23 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
 
     override fun getSession(sid: Int): Session {
         dataSource.connection.use {
-            val query = "SELECT * FROM Session WHERE sid = ?"
+            val query = """
+                SELECT s.sid, s.capacity, s.session_date, s.game_id, s.closed, sp.player_id 
+                FROM Session s 
+                LEFT JOIN SessionPlayer sp ON s.sid = sp.session_id 
+                WHERE s.sid = ?
+            """.trimIndent()
             val result = it.prepareStatement(query)
                 .bindParameters(sid)
                 .executeQuery()
 
             if (!result.next()) throw AppException.SessionNotFound("Session $sid does not exist")
-
-            val query2 = "SELECT player_id FROM SessionPlayer WHERE session_id = ?"
-
-            val result2 = it.prepareStatement(query2)
-                .bindParameters(sid)
-                .executeQuery()
-
-            val players = result2.toPlayersList()
-            return Session(
-                id = sid,
-                capacity = result.getInt("capacity"),
-                date = result.getString("session_date"),
-                game = result.getInt("game_id"),
-                closed = result.getBoolean("closed"),
-                players = players
-            )
+            val capacity = result.getInt("capacity")
+            val date = result.getString("session_date")
+            val game = result.getInt("game_id")
+            val closed = result.getBoolean("closed")
+            val players = result.toPlayersList(sid)
+            return Session(id = sid, capacity = capacity, date = date, game = game, closed = closed, players = players)
         }
     }
 
@@ -113,30 +108,37 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
     ): Pair<List<Session>, Int> {
         dataSource.connection.use {
 
-            val result1 = it.setupListSessionsStatement(gid, date, state, pid)
+            val query = buildString {
+                append("SELECT DISTINCT s.sid, s.capacity, s.session_date, s.game_id, s.closed, sp.player_id ")
+                append("FROM Session s ")
+                append("LEFT JOIN SessionPlayer sp ON s.sid = sp.session_id ")
+                append("WHERE 1=1")
+                if (gid != null) append(" AND s.game_id = ?")
+                if (date != null) append(" AND DATE(s.session_date) = CAST(? AS DATE)")
+                if (state != null) append(" AND s.closed = ?")
+                if (pid != null) append(" AND sp.player_id = ?")
+                append(" ORDER BY s.sid")
+            }
+
+
+            val result = it.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
                 .bindParameters(gid, date, state, pid)
                 .executeQuery()
 
             val sessions = mutableListOf<Session>()
 
-            while (result1.next()) {
-                val sid = result1.getInt("sid")
+            while (result.next()) {
+                val capacity = result.getInt("capacity")
+                val sDate = result.getString("session_date")
+                val game = result.getInt("game_id")
+                val closed = result.getBoolean("closed")
+                val sid = result.getInt("sid")
+                val players = result.toPlayersList(sid)
+                // go back one row to align with the players list
+                result.previous()
 
-                val query1 = "SELECT player_id FROM SessionPlayer WHERE session_id = ?"
-                val result2 = it.prepareStatement(query1)
-                    .bindParameters(sid)
-                    .executeQuery()
-
-                val players = result2.toPlayersList()
                 sessions.add(
-                    Session(
-                        id = sid,
-                        capacity = result1.getInt("capacity"),
-                        date = result1.getString("session_date"),
-                        game = result1.getInt("game_id"),
-                        closed = result1.getBoolean("closed"),
-                        players = players
-                    )
+                    Session(id = sid, capacity = capacity, date = sDate, game = game, closed = closed, players = players)
                 )
             }
 
@@ -144,42 +146,9 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
         }
     }
 
-    private fun ResultSet.toPlayersList(): List<Int> = buildList {
-        while (next()) {
-            add(getInt("player_id"))
-        }
+    private fun ResultSet.toPlayersList(sid : Int): List<Int> = buildList {
+        do { add(getInt("player_id")) } while(next() && getInt("sid") == sid)
     }
-
-    private fun Connection.setupListSessionsStatement(
-        gid: Int?,
-        date: String?,
-        state: Boolean?,
-        pid: Int?,
-    ): PreparedStatement = prepareStatement(
-        buildString {
-            var firstNonNull = true
-            append("SELECT * FROM Session")
-            if (gid != null) {
-                append(" WHERE")
-                append(" game_id = ?")
-                firstNonNull = false
-            }
-            if (date != null) {
-                append(if (firstNonNull) " WHERE" else " AND")
-                append(" DATE(session_date) = CAST(? AS DATE)")
-                firstNonNull = false
-            }
-            if (state != null) {
-                append(if (firstNonNull) " WHERE" else " AND")
-                append(" closed = ?")
-                firstNonNull = false
-            }
-            if (pid != null) {
-                append(if (firstNonNull) " WHERE" else " AND")
-                append(" sid IN (SELECT session_id FROM SessionPlayer WHERE player_id = ?)")
-            }
-            //append(" OFFSET ? LIMIT ?")
-        })
 
     override fun checkSessionExists(sid: Int): Boolean {
         dataSource.connection.use {

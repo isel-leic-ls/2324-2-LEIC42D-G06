@@ -29,12 +29,6 @@ class SessionServices(
         return sRepo.addPlayerToSession(sid, pid)
     }
 
-    private fun validatePlayerAddition(session : Session, pid : Int) {
-        if(session.checkIfSessionOngoing()) throw AppException.SessionClosed("Session ${session.id} is closed")
-        if(session.closed) throw AppException.SessionClosed("Session ${session.id} is closed")
-        if(session.checkPlayerInSession(pid)) throw AppException.PlayerAlreadyInSession("Player $pid is already in session ${session.id}")
-    }
-
     fun getSession(sid : Int) : Session =
         sRepo.getSession(sid)
 
@@ -45,14 +39,6 @@ class SessionServices(
         validateSessionUpdate(session, date, capacity, pid)
         sRepo.updateSession(sid, date, capacity)
     }
-
-    private fun validateSessionUpdate(session : Session, date: String, capacity: Int, pid: Int) {
-        if(!date.checkIfDateIsAfterNow()) throw IllegalArgumentException("Date must be after now")
-        if(!session.checkIfCapacityCanBeUpdated(capacity)) throw IllegalArgumentException("Capacity can't be updated")
-        if(session.checkIfSessionOngoing()) throw AppException.SessionClosed("Session ${session.id} is closed")
-        if(!session.checkIfPlayerIsOwner(pid)) throw AppException.PlayerCantDeleteSession("Player $pid can't delete session ${session.id}")
-    }
-
     fun deleteSession(token : String, sid : Int) {
         val pid = pRepo.getPlayerIdByToken(token)
         val session = sRepo.getSession(sid)
@@ -68,10 +54,6 @@ class SessionServices(
         sRepo.deletePlayerFromSession(sid, pid)
     }
 
-    private fun validatePlayerRemoval(session: Session, pid: Int) {
-        if(!session.checkPlayerInSession(pid)) throw AppException.PlayerNotFoundInSession("Player $pid is not in session ${session.id}")
-        if(session.checkIfSessionOngoing()) throw AppException.SessionClosed("Session ${session.id} is closed")
-    }
 
     fun getListOfSessions(
         gid: Int?, startDate: String?, state: String?, pid: Int?, skip: Int, limit: Int
