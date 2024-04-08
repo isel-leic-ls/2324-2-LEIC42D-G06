@@ -2,3 +2,4 @@
 *.bkp
 *.dtmp
 *.tmp
+/SessionsManager/bin
