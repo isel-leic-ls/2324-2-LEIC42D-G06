@@ -3,15 +3,14 @@ import { returnHomeButton } from "../components/returnHomeButton.js"
 import { errorToast } from "../components/errorToast.js"
 
 
-function gamesSearchPageClick(genres , developer) {
-    if(genres === "" && developer === "") errorToast("Please enter at least one genre or developer");
-    else window.location.hash = "games/list?genres=" + genres +
-    "&developer=" + developer + "&skip=0&limit=5"; // The limit value is set to 1 for testing purposes
+function gamesSearchPageClick(genres, developer) {
+    if (genres === "" && developer === "") errorToast("Please enter at least one genre or developer");
+    else window.location.hash = "games/list?genres=" + genres + "&developer=" + developer + "&skip=0&limit=5";
 }
 
 export function gamesSearchPage() { //this is the search page for games by genre(s) and developer
-    const genresInput = input({ type: "text", placeHolder: "Action, Adventure" });
-    const developerInput = input({ type: "text", placeHolder: "Ubisoft, EA" });
+    const genresInput = input({ type: "text", id: "genresInput", placeHolder: "Action, Adventure" });
+    const developerInput = input({ type: "text", id: "developerInput", placeHolder: "Ubisoft, EA" });
 
     const homeButton = returnHomeButton();
 
@@ -40,6 +39,8 @@ export function gamesSearchPage() { //this is the search page for games by genre
 }
 
 export function gamesListPage(games, buttons) { //this is the list of games that match the search criteria
+    const homeButton = returnHomeButton();
+
     const elements = games.map(game =>
         div({},
             a({ href: "#games/" + game.id }, game.name)
@@ -50,7 +51,8 @@ export function gamesListPage(games, buttons) { //this is the list of games that
         {},
         "Games",
         div({}, buttons),
-        ...elements
+        ...elements,
+        homeButton
     )
 
     return element
