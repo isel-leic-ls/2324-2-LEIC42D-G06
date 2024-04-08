@@ -1,4 +1,5 @@
-import { handleGameDetailsRequest , handleGamesRetrievalRequest } from "../data/gamesRequests.js";
+import { handleGameDetailsRequest, handleGamesRetrievalRequest } from "../data/gamesRequests.js";
+
 
 export async function gameDetailsRetrieval(gid) {
     return await handleGameDetailsRequest(gid);

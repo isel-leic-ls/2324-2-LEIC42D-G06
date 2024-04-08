@@ -1,12 +1,13 @@
 import { CONSTS } from "../utils.js";
 
+
 export async function handleSessionsRetrievalRequest(query) {
     const response = await fetch(CONSTS.BASE_API_URL + "/sessions?" + query, {
         headers: {
             "Accept": "application/json",
         }
     })
-    if(response.status === 200) {
+    if (response.status === 200) {
         const sessions = await response.json();
         return sessions;
     }
@@ -20,7 +21,7 @@ export async function handleSessionDetailsRequest(sid) {
         }
     })
 
-    if(response.status === 200) {
+    if (response.status === 200) {
         const session = await response.json();
         return session;
     }

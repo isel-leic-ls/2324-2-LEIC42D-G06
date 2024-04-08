@@ -1,9 +1,10 @@
-import { div, a, ul, li, label, input, button } from "../tags.js"
+import { div, ul, li, button } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
 
 
-export function playerDetailsPage(player) {
+export function playerDetailsPage(player) { //this is the details page for a specific player
     const homeButton = returnHomeButton();
+
     const element =
         div(
             {},
@@ -17,25 +18,28 @@ export function playerDetailsPage(player) {
                     li({}, "E-mail: " + player.email),
                 )
             ),
-             button(
-                 {
-                     onClick: () => {
-                         window.location.hash = "sessions/list?pid=" + player.id + "&skip=0&limit=5"
-                     }
-                 }, "Search sessions with this player"
-             ),
+            button(
+                {
+                    onClick: () => {
+                        window.location.hash = "sessions/list?pid=" + player.id + "&skip=0&limit=5"
+                    }
+                }, "Search sessions with this player"
+            ),
             homeButton
         );
-     return element;
+
+    return element;
 }
 
-export function playerDetailsId(id) {
+export function playerDetailsId(id) { //TODO: what is this?
     const homeButton = returnHomeButton();
+
     const element =
         div(
             {},
             id,
             homeButton
         );
+
     return element;
 }

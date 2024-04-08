@@ -60,9 +60,9 @@ function getSessionsSearch(mainContent) {
 }
 
 async function getSessionsList(mainContent, path) {
-   try {
+    try {
         const { gid, date, state, pid, skip, limit } = filterQueryParameters(path);
-        const {sessions,total} = await sessionsRetrieval(gid, date, state, pid, skip, limit);
+        const { sessions, total } = await sessionsRetrieval(gid, date, state, pid, skip, limit);
         const buttons = pagingButtons(parseInt(skip), parseInt(limit), total, path)
         const pageContent = sessionsListPage(sessions, buttons);
         mainContent.replaceChildren(pageContent);

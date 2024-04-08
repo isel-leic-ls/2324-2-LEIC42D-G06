@@ -1,7 +1,7 @@
 import { div, a, ul } from "../tags.js"
 
 
-export function homePage(player) {
+export function homePage(player) { //this is the home page (the first page the user sees when opening the app)
     const element =
         div(
             {}, "Session Finder Home Page",

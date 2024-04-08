@@ -1,5 +1,6 @@
 import { CONSTS } from "../utils.js";
 
+
 const token = "Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7";
 
 export async function handlePlayerDetailsRequest(pid) {
@@ -8,22 +9,22 @@ export async function handlePlayerDetailsRequest(pid) {
             "Accept": "application/json",
         }
     });
-    if(response.status === 200) {
+    if (response.status === 200) {
         const player = await response.json();
         return player;
     }
     throw new Error("Failed to retrieve player details");
 }
 
-export async function handlePlayerId(){
-    const result = await fetch("http://localhost:9000/api/players/token/info",{
+export async function handlePlayerId() {
+    const result = await fetch("http://localhost:9000/api/players/token/info", {
         headers: {
             "Accept": "application/json",
             "Authorization": token
         },
 
     })
-    if(result.status === 200){
+    if (result.status === 200) {
         const player = await result.json();
         return player;
     }

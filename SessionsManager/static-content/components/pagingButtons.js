@@ -1,6 +1,7 @@
 import { div, button } from "../tags.js";
 
-export function pagingButtons(skip, limit , total, path) {
+
+export function pagingButtons(skip, limit, total, path) { //previous and next buttons
     const previousButton = button(
         {
             onClick: () => {
@@ -16,7 +17,7 @@ export function pagingButtons(skip, limit , total, path) {
             onClick: () => {
                 window.location.hash = path.replace(/(skip=)\d+/, "$1" + (skip + limit))
             },
-            disabled : total <= skip + limit
+            disabled: total <= skip + limit
         },
         "Next"
     );

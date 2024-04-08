@@ -1,12 +1,13 @@
 import { CONSTS } from "../utils.js";
 
+
 export async function handleGamesRetrievalRequest(query) {
     const response = await fetch(CONSTS.BASE_API_URL + "/games?" + query, {
         headers: {
             "Accept": "application/json",
         }
     })
-    if(response.status === 200) {
+    if (response.status === 200) {
         const games = await response.json();
         return games;
     }
@@ -19,11 +20,9 @@ export async function handleGameDetailsRequest(gid) {
             "Accept": "application/json",
         }
     });
-    if(response.status === 200) {
+    if (response.status === 200) {
         const game = await response.json();
         return game;
     }
     throw new Error("Failed to retrieve game details");
 }
-
-

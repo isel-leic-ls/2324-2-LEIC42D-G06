@@ -1,4 +1,5 @@
-import { handlePlayerDetailsRequest, handlePlayerId} from '../data/playerRequests.js';
+import { handlePlayerDetailsRequest, handlePlayerId } from '../data/playerRequests.js';
+
 
 export async function playerDetailsRetrieval(pid) {
     return await handlePlayerDetailsRequest(pid);
