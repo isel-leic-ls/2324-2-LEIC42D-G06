@@ -9,7 +9,6 @@ import org.http4k.routing.bind
 import org.http4k.routing.routes
 import pt.isel.ls.api.model.GameInputModel
 import pt.isel.ls.api.model.GameOutputModel
-import pt.isel.ls.api.model.GamesListInputModel
 import pt.isel.ls.api.model.GamesListOutputModel
 import pt.isel.ls.services.GamesServices
 import java.net.URLDecoder
