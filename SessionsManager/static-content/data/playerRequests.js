@@ -16,7 +16,7 @@ export async function handlePlayerDetailsRequest(pid) {
     throw new Error("Failed to retrieve player details");
 }
 
-export async function handlePlayerId() {
+export async function handlePlayerId() { //TODO: hardcoded token, change this
     const result = await fetch("http://localhost:9000/api/players/token/info", {
         headers: {
             "Accept": "application/json",

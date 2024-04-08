@@ -6,15 +6,21 @@ import { pagingButtons } from "./components/pagingButtons.js"
 import { basicError } from "./components/basicError.js"
 import { filterQueryParameters, filterUriId } from "./uriparsers.js"
 import { sessionsRetrieval, sessionDetailsRetrieval } from "./services/sessionServices.js"
-import { gamesRetrieval, gameDetailsRetrieval } from "./services/gameServices.js"
+import { gamesRetrieval, gameDetailsRetrieval } from "./services/gamesServices.js"
 import { playerDetailsRetrieval, playerIdRetrieval } from "./services/playerServices.js"
 
 
 /** Home */
 async function getHome(mainContent) {
-    const player = await playerIdRetrieval()
-    const pageContent = homePage(player);
-    mainContent.replaceChildren(pageContent);
+    try {
+        const player = await playerIdRetrieval()
+        const pageContent = homePage(player);
+        mainContent.replaceChildren(pageContent);
+    } catch (error) {
+        console.error(error);
+        const errorContent = basicError(error.message);
+        mainContent.replaceChildren(errorContent);
+    }
 }
 
 /** Games */

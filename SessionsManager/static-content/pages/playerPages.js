@@ -1,5 +1,6 @@
 import { div, ul, li, button } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
+import { CONSTS } from "../utils.js"
 
 
 export function playerDetailsPage(player) { //this is the details page for a specific player
@@ -21,23 +22,11 @@ export function playerDetailsPage(player) { //this is the details page for a spe
             button(
                 {
                     onClick: () => {
-                        window.location.hash = "sessions/list?pid=" + player.id + "&skip=0&limit=5"
+                        window.location.hash = "sessions/list?pid=" + player.id +
+                            "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT
                     }
                 }, "Search sessions with this player"
             ),
-            homeButton
-        );
-
-    return element;
-}
-
-export function playerDetailsId(id) { //TODO: what is this?
-    const homeButton = returnHomeButton();
-
-    const element =
-        div(
-            {},
-            id,
             homeButton
         );
 

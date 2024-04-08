@@ -1,11 +1,14 @@
 import { div, a, ul, li, label, input, button } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
 import { errorToast } from "../components/errorToast.js"
+import { CONSTS } from "../utils.js"
 
 
 function gamesSearchPageClick(genres, developer) {
-    if (genres === "" && developer === "") errorToast("Please enter at least one genre or developer");
-    else window.location.hash = "games/list?genres=" + genres + "&developer=" + developer + "&skip=0&limit=5";
+    if (genres === "" || developer === "")
+        errorToast("Please enter at least one genre or developer");
+    else window.location.hash = "games/list?genres=" + genres + "&developer=" + developer
+        + "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT;
 }
 
 export function gamesSearchPage() { //this is the search page for games by genre(s) and developer
@@ -78,7 +81,8 @@ export function gameDetailsPage(game) { //this is the details page for a specifi
             button(
                 {
                     onClick: () => {
-                        window.location.hash = "sessions/list?gid=" + game.id + "&skip=0&limit=5"
+                        window.location.hash = "sessions/list?gid=" + game.id +
+                            "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT
                     }
                 }, "Search sessions with this game"
             ),

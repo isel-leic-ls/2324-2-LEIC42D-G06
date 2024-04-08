@@ -2,10 +2,11 @@ import { div, button, label, p, ul, li, a, radioButton } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
 import { errorToast } from "../components/errorToast.js"
 import { controlledInput } from "../components/controlledInput.js"
+import { CONSTS } from "../utils.js"
 
 
-const pattern = /^\d{4}-\d{2}-\d{2}$/;
-const states = ["ALL", "OPEN", "CLOSED"]
+export const pattern = /^\d{4}-\d{2}-\d{2}$/;
+export const states = ["ALL", "OPEN", "CLOSED"]
 
 function sessionsSearchPageClick(dateInput, stateInput) {
     const input_date = (dateInput.disabled) ? null : dateInput.value;
@@ -17,7 +18,8 @@ function sessionsSearchPageClick(dateInput, stateInput) {
         errorToast("Please enter a valid state");
     else {
         const state = (input_state === "ALL" ? null : input_state);
-        const url = "sessions/list?date=" + input_date + "&state=" + state + "&skip=0&limit=5";
+        const url = "sessions/list?date=" + input_date + "&state=" + state +
+            "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT;
         window.location.hash = url;
     }
 }
@@ -66,7 +68,7 @@ export function sessionsSearchPage() {
     return element;
 }
 
-export function sessionsListPage(sessions, buttons, skip, limit) { //list of sessions
+export function sessionsListPage(sessions, buttons) { //list of sessions
     const homeButton = returnHomeButton();
 
     const elements = sessions.map(session =>
