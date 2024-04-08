@@ -56,10 +56,9 @@ export function sessionsSearchPage() {
         "Search sessions by date and state:",
         div(
             {},
-            label({}, "Date:", dateCheckBox, dateInput),
+            label({ id: "dateLabel" }, "Date:", dateCheckBox, dateInput),
             p({}),
-            label({}, "State:"),
-            div({}, ...stateRadioButtons)
+            label({ id: "stateLabel" }, "State:", ...stateRadioButtons),
         ),
         searchButton,
         homeButton
