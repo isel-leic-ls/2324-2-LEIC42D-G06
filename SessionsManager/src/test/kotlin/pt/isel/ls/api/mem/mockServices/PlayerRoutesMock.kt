@@ -13,6 +13,9 @@ import pt.isel.ls.api.model.PlayerInputModel
 import pt.isel.ls.api.model.PlayerOutputModel
 import pt.isel.ls.api.model.PlayerRetrievalOutputModel
 import pt.isel.ls.domain.Player
+import pt.isel.ls.utils.FIRST_PLAYER_ID
+
+private const val TOKEN = "3ad7db4b-c5a9-42ee-9094-852f94c57cb7"
 
 class PlayerRoutesMock() {
 
@@ -24,14 +27,14 @@ class PlayerRoutesMock() {
     private fun createPlayer(request: Request) =
         exceptionAwareScope {
             request.fromJson<PlayerInputModel>()
-            val (token, pid) = "3ad7db4b-c5a9-42ee-9094-852f94c57cb7" to 1000
+            val (token, pid) = TOKEN to FIRST_PLAYER_ID
             Response(Status.CREATED).toJson(PlayerOutputModel(pid, token))
         }
 
 
     private fun getPlayerDetails(request: Request) = exceptionAwareScope {
         val pid = request.getPlayerDetails()
-        val player = if(pid == 1000) Player(1000,"teste","teste@gmail.com","3ad7db4b-c5a9-42ee-9094-852f94c57cb7","teste")
+        val player = if(pid == FIRST_PLAYER_ID) Player(FIRST_PLAYER_ID,"teste","teste@gmail.com",TOKEN,"teste")
         else throw AppException.PlayerNotFound("No player found with the given Id")
         Response(Status.OK).toJson(PlayerRetrievalOutputModel(player.id, player.name, player.email))
     }
