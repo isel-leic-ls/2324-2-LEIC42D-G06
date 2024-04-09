@@ -4,8 +4,7 @@ import SessionRepo
 import pt.isel.ls.AppException
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
-import java.sql.Connection
-import java.sql.PreparedStatement
+
 import java.sql.ResultSet
 import java.sql.Statement
 import javax.sql.DataSource
@@ -138,7 +137,14 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
                 result.previous()
 
                 sessions.add(
-                    Session(id = sid, capacity = capacity, date = sDate, game = game, closed = closed, players = players)
+                    Session(
+                        id = sid,
+                        capacity = capacity,
+                        date = sDate,
+                        game = game,
+                        closed = closed,
+                        players = players
+                    )
                 )
             }
 
@@ -146,8 +152,10 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
         }
     }
 
-    private fun ResultSet.toPlayersList(sid : Int): List<Int> = buildList {
-        do { add(getInt("player_id")) } while(next() && getInt("sid") == sid)
+    private fun ResultSet.toPlayersList(sid: Int): List<Int> = buildList {
+        do {
+            add(getInt("player_id"))
+        } while (next() && getInt("sid") == sid)
     }
 
     override fun checkSessionExists(sid: Int): Boolean {
