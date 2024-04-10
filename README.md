@@ -6,5 +6,4 @@ Vasco António Alves Branco - 48259
 
 - Testes ao frontend
 - Fazer update ao relatorio com a informacao do frontend
-- Mudar o ficheiro requests.http 
-- Juntar ficheiros sql num so ficheiro
+- Mudar o ficheiro requests.http
