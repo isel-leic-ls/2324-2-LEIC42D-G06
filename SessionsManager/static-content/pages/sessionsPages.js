@@ -1,12 +1,13 @@
-import { div, button, label, p, ul, li, a, radioButton } from "../tags.js"
-import { returnHomeButton } from "../components/returnHomeButton.js"
-import { errorToast } from "../components/errorToast.js"
-import { controlledInput } from "../components/controlledInput.js"
-import { CONSTS } from "../utils.js"
+import {div, button, label, p, ul, li, a, radioButton} from "../tags.js"
+import {returnHomeButton} from "../components/returnHomeButton.js"
+import {errorToast} from "../components/errorToast.js"
+import {controlledInput} from "../components/controlledInput.js"
+import {CONSTS} from "../utils.js"
 
 
 export const pattern = /^\d{4}-\d{2}-\d{2}$/;
 export const states = ["ALL", "OPEN", "CLOSED"]
+
 
 function sessionsSearchPageClick(dateInput, stateInput) {
     const input_date = (dateInput.disabled) ? null : dateInput.value;
@@ -29,7 +30,7 @@ export function sessionsSearchPage() {
     const [dateCheckBox, dateInput] = controlledInput("2025-03-04");
 
     const stateRadioButtons = states.map(state => {
-        const radio = radioButton({ name: "state", value: state });
+        const radio = radioButton({name: "state", value: state});
         if (state === "ALL") radio.checked = true;
 
         radio.addEventListener("click", () => {
@@ -56,9 +57,9 @@ export function sessionsSearchPage() {
         "Search sessions by date and state:",
         div(
             {},
-            label({ id: "dateLabel" }, "Date:", dateCheckBox, dateInput),
+            label({id: "dateLabel"}, "Date:", dateCheckBox, dateInput),
             p({}),
-            label({ id: "stateLabel" }, "State:", ...stateRadioButtons),
+            label({id: "stateLabel"}, "State:", ...stateRadioButtons),
         ),
         searchButton,
         homeButton
@@ -68,14 +69,14 @@ export function sessionsSearchPage() {
 }
 
 export function sessionsListPage(sessions, buttons) { //list of sessions
-    const homeButton = returnHomeButton();
 
-    const elements = sessions.map(session =>
+    const homeButton = returnHomeButton();
+    const elements = sessions.map((session, index) =>
         ul({},
-            li({}, "ID: ", a({ href: "#sessions/" + session.id }, "" + session.id)),
+            li({}, a({ href: "#sessions/" + session.id }, "Session: " + (index + 1)),
             li({}, "Date: " + session.date)
         )
-    );
+    ));
 
     const element = div(
         {},
@@ -92,15 +93,14 @@ export function sessionDetailsPage(session) {
 
     const homeButton = returnHomeButton();
 
-    const pAnchors = session.players.map(p => div({}, a({ href: "#players/" + p }, "  " + p)));
+    const pAnchors = session.players.map(p => div({}, a({href: "#players/" + p}, "  " + p)));
     const element = div(
         {},
         "Session details",
         ul({},
-            li({}, "ID: " + session.id),
+            li({}, a({href: "#games/" + session.game}, "Game")),
             li({}, "Capacity: " + session.capacity),
             li({}, "Date: " + session.date),
-            li({}, "Game ID: ", a({ href: "#games/" + session.game }, "" + session.game)),
             li({}, "Closed: " + session.closed),
             li({}, "Players: ", ...pAnchors)
         ),

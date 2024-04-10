@@ -1,3 +1,5 @@
+import {basicError} from "./components/basicError.js";
+
 export const CONSTS = {
     BASE_API_URL: "http://localhost:9000/api",
     FIRST_GAME_ID: 100,

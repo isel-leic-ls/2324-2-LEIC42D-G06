@@ -3,21 +3,14 @@ import {gamesSearchPage, gamesListPage, gameDetailsPage} from "./pages/gamesPage
 import {sessionsSearchPage, sessionsListPage, sessionDetailsPage} from "./pages/sessionsPages.js"
 import {playerDetailsPage} from "./pages/playerPages.js"
 import {pagingButtons} from "./components/pagingButtons.js"
-import {basicError} from "./components/basicError.js"
+import {safeCall} from "./utils.js";
 import {filterQueryParameters, filterUriId} from "./uriparsers.js"
 import {sessionsRetrieval, sessionDetailsRetrieval} from "./services/sessionServices.js"
 import {gamesRetrieval, gameDetailsRetrieval} from "./services/gamesServices.js"
 import {playerDetailsRetrieval, playerIdRetrieval} from "./services/playerServices.js"
 
 
-async function safeCall(mainContent, block){
-    try{
-        await block()
-    }catch(error){
-        const errorContent = basicError(error.message)
-        mainContent.replaceChildren(errorContent)
-    }
-}
+
 
 
 /** Home */

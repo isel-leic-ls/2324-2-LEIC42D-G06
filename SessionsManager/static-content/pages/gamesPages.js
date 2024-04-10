@@ -72,7 +72,6 @@ export function gameDetailsPage(game) { //this is the details page for a specifi
                 {},
                 ul(
                     {},
-                    li({}, "ID: " + game.id),
                     li({}, "Name: " + game.name),
                     li({}, "Developer: " + game.dev),
                     li({}, "Genres: " + game.genres.join(", ")),
