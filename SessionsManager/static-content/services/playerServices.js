@@ -4,7 +4,7 @@ import { CONSTS } from '../utils.js';
 
 export async function playerDetailsRetrieval(pId) {
     const parsedPlayerId = parseInt(pId);
-    if (parsedPlayerId == NaN || parsedPlayerId < CONSTS.FIRST_PLAYER_ID)
+    if (isNaN(parsedPlayerId) || parsedPlayerId < CONSTS.FIRST_PLAYER_ID)
         throw new Error("Invalid player ID");
     return await handlePlayerDetailsRequest(pId);
 }

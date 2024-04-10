@@ -18,7 +18,7 @@ function loadHandler() { //called when the page is loaded
     hashChangeHandler()
 }
 
-function hashChangeHandler() { //called when the hash changes
+export function hashChangeHandler() { //called when the hash changes
     const mainContent = document.getElementById("mainContent")
     const path = window.location.hash.replace("#", "")
 
