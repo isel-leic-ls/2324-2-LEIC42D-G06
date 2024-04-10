@@ -9,4 +9,13 @@ export const CONSTS = {
     LIMIT_DEFAULT: 5
 }
 
+export async function safeCall(mainContent, block){
+    try{
+        await block()
+    }catch(error){
+        const errorContent = basicError(error.message)
+        mainContent.replaceChildren(errorContent)
+    }
+}
+
 export default CONSTS;
