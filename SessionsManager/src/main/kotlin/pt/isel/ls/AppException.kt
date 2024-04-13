@@ -25,6 +25,8 @@ sealed class AppException : Exception() {
 
     class PlayerCantDeleteSession(message: String) : Exception(message)
 
+    class PlayerCantUpdateSession(message: String) : Exception(message)
+
     class InvalidAuthorization(message : String) : Exception(message)
 
     class SQLException(message: String) : Exception(message)

@@ -27,16 +27,15 @@ fun validatePlayerRemoval(session: Session, pid: Int) {
 }
 
 fun validateSessionUpdate(session : Session, date: String, capacity: Int, pid: Int) {
+    if(!session.checkIfPlayerIsOwner(pid)) throw AppException.PlayerCantUpdateSession("Player $pid can't update session ${session.id}")
+    if(session.checkIfSessionOngoing()) throw AppException.SessionClosed("Session ${session.id} is closed")
     if(!date.checkIfDateIsAfterNow()) throw IllegalArgumentException("Date must be after now")
     if(!session.checkIfCapacityCanBeUpdated(capacity)) throw IllegalArgumentException("Capacity can't be updated")
-    if(session.checkIfSessionOngoing()) throw AppException.SessionClosed("Session ${session.id} is closed")
-    if(!session.checkIfPlayerIsOwner(pid)) throw AppException.PlayerCantDeleteSession("Player $pid can't delete session ${session.id}")
 }
 
 fun validatePlayerAddition(session : Session, pid : Int) {
-    if(session.checkIfSessionOngoing()) throw AppException.SessionClosed("Session ${session.id} is closed")
-    if(session.closed) throw AppException.SessionClosed("Session ${session.id} is closed")
     if(session.checkPlayerInSession(pid)) throw AppException.PlayerAlreadyInSession("Player $pid is already in session ${session.id}")
+    if(session.checkIfSessionOngoing() || session.closed) throw AppException.SessionClosed("Session ${session.id} is closed")
 }
 
 
