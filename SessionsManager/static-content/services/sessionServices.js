@@ -6,21 +6,21 @@ const states = ["OPEN", "CLOSED"];
 
 export async function sessionDetailsRetrieval(sId) {
     const parsedSessionId = parseInt(sId);
-    if (parsedSessionId == NaN || parsedSessionId < CONSTS.FIRST_SESSION_ID)
+    if (isNaN(parsedSessionId) || parsedSessionId < CONSTS.FIRST_SESSION_ID)
         throw new Error("Invalid session ID");
     return await handleSessionDetailsRequest(sId);
 }
 
 export async function sessionsRetrieval(gid, date, state, pid, skip, limit) {
     const parsedGameId = parseInt(gid);
-    if (parsedGameId == NaN || parsedGameId < CONSTS.FIRST_GAME_ID)
+    if (gid !== undefined && (isNaN(parsedGameId) || parsedGameId < CONSTS.FIRST_GAME_ID))
         throw new Error("Invalid game ID");
-    if (date != "null" && date != undefined && !pattern.test(date))
+    if (date !== "null" && date !== undefined && !pattern.test(date))
         throw new Error("Invalid date");
-    if (state != "null" && state != undefined && !states.includes(state))
+    if (state !== "null" && state !== undefined && !states.includes(state))
         throw new Error("Invalid state");
     const parsedPlayerId = parseInt(pid);
-    if (parsedPlayerId == NaN || parsedPlayerId < CONSTS.FIRST_PLAYER_ID)
+    if (pid !== undefined && (isNaN(parsedPlayerId) || parsedPlayerId < CONSTS.FIRST_PLAYER_ID))
         throw new Error("Invalid player ID");
     if (isNaN(skip) || skip < 0)
         throw new Error("Invalid skip");

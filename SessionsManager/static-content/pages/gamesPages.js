@@ -66,7 +66,7 @@ export function gameDetailsPage(game) { //this is the details page for a specifi
 
     const element =
         div(
-            {},
+            {id: "gameDetails"},
             "Game Details",
             div(
                 {},

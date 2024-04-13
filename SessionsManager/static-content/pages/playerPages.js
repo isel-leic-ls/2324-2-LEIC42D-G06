@@ -8,7 +8,7 @@ export function playerDetailsPage(player) { //this is the details page for a spe
 
     const element =
         div(
-            {},
+            {id: "playerDetails"},
             "Player Details",
             div(
                 {},
