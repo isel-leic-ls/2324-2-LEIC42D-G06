@@ -4,6 +4,5 @@ Vasco António Alves Branco - 48259
 
 ## TODO:
 
-- Testes ao frontend
-- Fazer update ao relatorio com a informacao do frontend
 - Mudar o ficheiro requests.http
+- O tempo da sessao pode estar a ocorrer mas o atribute closed continua a true na base de dados ( pensar em solucao )
