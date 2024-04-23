@@ -7,7 +7,7 @@ import {safeCall} from "./utils.js";
 import {filterQueryParameters, filterUriId} from "./uriparsers.js"
 import {sessionsRetrieval, sessionDetailsRetrieval} from "./services/sessionServices.js"
 import {gamesRetrieval, gameDetailsRetrieval} from "./services/gamesServices.js"
-import {playerDetailsRetrieval, playerIdRetrieval} from "./services/playerServices.js"
+import {playerDetailsRetrieval, playerSearchByEmail, playerIdRetrieval} from "./services/playerServices.js"
 
 
 
@@ -83,6 +83,15 @@ async function getPlayer(mainContent, path) {
     })
 }
 
+async function getPlayerByEmail(mainContent, path) {
+    safeCall(mainContent,async ()=> {
+        const email = filterUriId(path);
+        const player = await playerSearchByEmail(email);
+        const pageContent = playerDetailsPage(player);
+        mainContent.replaceChildren(pageContent);
+    })
+}
+
 export const handlers = {
     getHome,
     getGamesSearch,
@@ -91,7 +100,8 @@ export const handlers = {
     getSessionsSearch,
     getSessionsList,
     getSessionDetails,
-    getPlayer
+    getPlayer,
+    getPlayerByEmail
 }
 
 export default handlers

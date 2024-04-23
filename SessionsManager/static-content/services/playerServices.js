@@ -1,4 +1,4 @@
-import { handlePlayerDetailsRequest, handlePlayerId } from '../data/playerRequests.js';
+import { handlePlayerDetailsRequest, handlePlayerSearchByEmail, handlePlayerId } from '../data/playerRequests.js';
 import { CONSTS } from '../utils.js';
 
 
@@ -7,6 +7,12 @@ export async function playerDetailsRetrieval(pId) {
     if (isNaN(parsedPlayerId) || parsedPlayerId < CONSTS.FIRST_PLAYER_ID)
         throw new Error("Invalid player ID");
     return await handlePlayerDetailsRequest(pId);
+}
+
+export async function playerSearchByEmail(email) {
+    if (email === "" || email === undefined)
+        throw new Error("Please enter an email");
+    return await handlePlayerSearchByEmail(email);
 }
 
 export async function playerIdRetrieval(token) { //TODO: implement token validation

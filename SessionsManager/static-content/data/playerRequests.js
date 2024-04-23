@@ -16,6 +16,19 @@ export async function handlePlayerDetailsRequest(pid) {
     throw new Error("Failed to retrieve player details");
 }
 
+export async function handlePlayerSearchByEmail(email) {
+    const response = await fetch(CONSTS.BASE_API_URL + "/players/email/" + email, {
+        headers: {
+            "Accept": "application/json",
+        }
+    });
+    if (response.status === 200) {
+        const player = await response.json();
+        return player;
+    }
+    throw new Error("Failed to retrieve player details");
+}
+
 export async function handlePlayerId() { //TODO: hardcoded token, change this
     const result = await fetch("http://localhost:9000/api/players/token/info", {
         headers: {

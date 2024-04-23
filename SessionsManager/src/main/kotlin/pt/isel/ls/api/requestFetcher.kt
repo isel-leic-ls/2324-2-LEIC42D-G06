@@ -17,6 +17,7 @@ const val gameName = "gname"
 const val SESSION_ID = "sid"
 const val SKIP = "skip"
 const val LIMIT = "limit"
+const val EMAIL = "email"
 
 fun Request.getGameId(): Int {
     return path(gameId)?.toIntOrNull() ?: throw IllegalArgumentException("Invalid game ID")
@@ -69,6 +70,10 @@ fun Request.getAuthorizationToken(): String {
         throw AppException.InvalidAuthorization("Invalid token format")
     }
     return tokenValue
+}
+
+fun Request.getPlayerEmail(): String {
+    return path(EMAIL) ?: throw IllegalArgumentException("Invalid email")
 }
 
 fun Request.getPlayerDetails(): Int{

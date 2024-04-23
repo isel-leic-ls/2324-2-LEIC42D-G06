@@ -17,10 +17,16 @@ class MemPlayersRepo : PlayersRepo {
         return id
     }
 
-    override fun getPlayer(pid: Int) = players.find { player -> player.id == pid } ?: throw AppException.PlayerNotFound("Player not found with id $pid")
+    override fun getPlayer(pid: Int) = players.find { player -> player.id == pid } ?: throw AppException.PlayerNotFound(
+        "Player not found with id $pid"
+    )
+
     override fun checkPlayerExistsByEmail(email: String): Boolean = players.any { it.email == email }
     override fun checkPlayerExistsByName(name: String): Boolean = players.any { it.name == name }
 
     override fun getPlayerIdByToken(token: String) = players.find { it.token == token }?.id
         ?: throw AppException.PlayerNotFound("Player not found with token $token")
+
+    override fun getPlayerByEmail(email: String) = players.find { it.email == email }
+        ?: throw AppException.PlayerNotFound("Player not found with email $email")
 }

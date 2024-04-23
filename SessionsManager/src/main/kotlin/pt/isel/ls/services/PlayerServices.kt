@@ -34,4 +34,6 @@ class PlayerServices(private val pRepo: PlayersRepo) {
     }
 
     fun getPlayerIdByToken(token: String) = pRepo.getPlayerIdByToken(token)
+
+    fun getPlayerByEmail(email: String) = pRepo.getPlayerByEmail(email)
 }

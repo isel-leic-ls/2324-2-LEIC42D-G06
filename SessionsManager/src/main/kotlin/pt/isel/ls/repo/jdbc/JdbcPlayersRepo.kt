@@ -71,4 +71,21 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
             return result.getInt("pid")
         }
     }
+
+    override fun getPlayerByEmail(email:String): Player {
+        dataSource.connection.use {
+            val stmt = it.prepareStatement("SELECT * FROM player WHERE email = ?")
+            stmt.setString(1, email)
+            val rs = stmt.executeQuery()
+            if (!rs.next()) throw AppException.PlayerNotFound("Player $email does not exist")
+
+            return Player(
+                rs.getInt("pid"),
+                rs.getString("name"),
+                rs.getString("email"),
+                rs.getString("token"),
+                rs.getString("password")
+            )
+        }
+    }
 }
