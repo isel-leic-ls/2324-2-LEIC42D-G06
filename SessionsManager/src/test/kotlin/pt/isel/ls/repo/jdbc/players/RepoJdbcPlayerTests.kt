@@ -44,6 +44,7 @@ class RepoJdbcPlayerTests {
             stmt.executeUpdate()
         }
 
+    // We cant create sessions with past dates...
     @Test
     fun `retrieving the games of a player that doesnt exist`() {
         val (games, total) = repo.getListOfPlayedGames(1301410401, 0, 10)

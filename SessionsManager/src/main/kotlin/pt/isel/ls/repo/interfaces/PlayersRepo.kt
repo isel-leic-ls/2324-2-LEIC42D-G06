@@ -10,6 +10,6 @@ interface PlayersRepo {
     fun checkPlayerExistsByName(name: String): Boolean
     fun getPlayerIdByToken(token: String): Int
 
-    fun getListOfPlayedGames(pid: Int, limit: Int, skip: Int): Pair<List<Game>, Int>
+    fun getListOfPlayedGames(pid: Int, skip : Int, limit : Int): Pair<List<Game>, Int>
 
 }

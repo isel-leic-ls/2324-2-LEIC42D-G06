@@ -39,7 +39,7 @@ class PlayerServices(private val pRepo: PlayersRepo) {
     fun getPlayerPlayedGames(pid : Int, skip : Int, limit : Int) : Pair<List<Game>, Int> {
         require(skip >= 0) { "Skip value must be positive" }
         require(limit > 0) { "Limit value must be positive non-zero" }
-        return pRepo.getListOfPlayedGames(pid, limit, skip)
+        return pRepo.getListOfPlayedGames(pid, skip, limit)
     }
 
 }

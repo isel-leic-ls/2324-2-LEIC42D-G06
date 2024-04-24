@@ -73,7 +73,7 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
         }
     }
 
-    override fun getListOfPlayedGames(pid: Int, limit: Int, skip: Int): Pair<List<Game>, Int> {
+    override fun getListOfPlayedGames(pid: Int, skip : Int, limit : Int): Pair<List<Game>, Int> {
         dataSource.connection.use {
             val query = buildString {
                 append("SELECT DISTINCT g.* ")
