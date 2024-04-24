@@ -1,6 +1,7 @@
 package pt.isel.ls.repo.jdbc
 
 import pt.isel.ls.AppException
+import pt.isel.ls.domain.Game
 import pt.isel.ls.domain.Player
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import java.sql.Statement
@@ -69,6 +70,35 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
                 .executeQuery()
             if (!result.next()) throw AppException.PlayerNotFound("Player $token does not exist")
             return result.getInt("pid")
+        }
+    }
+
+    override fun getListOfPlayedGames(pid: Int, limit: Int, skip: Int): Pair<List<Game>, Int> {
+        dataSource.connection.use {
+            val query = buildString {
+                append("SELECT DISTINCT g.* ")
+                append("FROM game g ")
+                append("INNER JOIN session s ON g.gid = s.game_id ")
+                append("INNER JOIN sessionplayer sp ON s.sid = sp.session_id ")
+                append("WHERE sp.player_id = ? ")
+            }
+
+            val result = it.prepareStatement(query)
+                .bindParameters(pid)
+                .executeQuery()
+
+            val games = mutableListOf<Game>()
+            while (result.next()) {
+                games.add(
+                    Game(
+                        result.getInt("gid"),
+                        result.getString("name"),
+                        result.getString("developer"),
+                        result.getString("genres").drop(1).dropLast(1).split(",")
+                    )
+                )
+            }
+            return games.drop(skip).take(limit) to games.size
         }
     }
 }

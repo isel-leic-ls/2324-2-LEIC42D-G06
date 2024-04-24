@@ -1,6 +1,7 @@
 package pt.isel.ls.services
 
 import pt.isel.ls.AppException
+import pt.isel.ls.domain.Game
 import pt.isel.ls.domain.Player
 import pt.isel.ls.domain.validatePlayerCredentials
 import pt.isel.ls.repo.interfaces.PlayersRepo
@@ -34,4 +35,11 @@ class PlayerServices(private val pRepo: PlayersRepo) {
     }
 
     fun getPlayerIdByToken(token: String) = pRepo.getPlayerIdByToken(token)
+
+    fun getPlayerPlayedGames(pid : Int, skip : Int, limit : Int) : Pair<List<Game>, Int> {
+        require(skip >= 0) { "Skip value must be positive" }
+        require(limit > 0) { "Limit value must be positive non-zero" }
+        return pRepo.getListOfPlayedGames(pid, limit, skip)
+    }
+
 }

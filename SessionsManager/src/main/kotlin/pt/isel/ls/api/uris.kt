@@ -21,7 +21,8 @@ object Session {
 }
 
 object PlayerUris {
-    const val CREATE = "$API/players"
+    const val CREATE = "$API/players"   
     const val GET = "$API/players/{pid}"
     const val GET_BY_TOKEN = "$API/players/token/info"
+    const val GET_PLAYER_GAMES = "$API/players/{pid}/games"
 }
