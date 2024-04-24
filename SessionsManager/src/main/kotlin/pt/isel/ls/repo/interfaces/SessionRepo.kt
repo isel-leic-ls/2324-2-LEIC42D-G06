@@ -1,26 +1,29 @@
+import pt.isel.ls.domain.Game
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
 import java.time.LocalDateTime
 
 interface SessionRepo {
-    fun createSession(dto: SessionDTO) : Int
+    fun createSession(dto: SessionDTO): Int
     fun addPlayerToSession(sid: Int, pid: Int)
-    fun getSession(sid : Int) : Session
+    fun getSession(sid: Int): Session
 
-    fun updateSession(sid : Int, date : String, capacity : Int)
+    fun updateSession(sid: Int, date: String, capacity: Int)
 
-    fun deleteSession(sid : Int)
+    fun deleteSession(sid: Int)
 
-    fun deletePlayerFromSession(sid : Int, pid : Int)
+    fun deletePlayerFromSession(sid: Int, pid: Int)
 
     fun getListOfSessions(
-        gid : Int?,
-        date : String?,
-        state : Boolean?,
-        pid : Int?,
-        skip : Int,
-        limit : Int
-    ) : Pair<List<Session>, Int>
+        gid: Int?,
+        date: String?,
+        state: Boolean?,
+        pid: Int?,
+        skip: Int,
+        limit: Int
+    ): Pair<List<Session>, Int>
 
-    fun checkSessionExists(sid : Int) : Boolean
+    fun checkSessionExists(sid: Int): Boolean
+
+    fun getListOfGamesThatPlayerWillParticipate(pid: Int, skip: Int, limit: Int): Pair<List<Game>, Int>
 }

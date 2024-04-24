@@ -2,12 +2,13 @@ package pt.isel.ls.repo.jdbc
 
 import SessionRepo
 import pt.isel.ls.AppException
+import pt.isel.ls.domain.Game
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
-
 import java.sql.ResultSet
 import java.sql.Statement
 import javax.sql.DataSource
+
 
 class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
     override fun createSession(dto: SessionDTO): Int {
@@ -165,6 +166,32 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
                 .bindParameters(sid)
                 .executeQuery()
             return result.next()
+        }
+    }
+
+    override fun getListOfGamesThatPlayerWillParticipate(pid: Int, skip: Int, limit: Int): Pair<List<Game>, Int> {
+        dataSource.connection.use {
+            val stmt = it.prepareStatement(
+                "SELECT * FROM Game WHERE gid IN " +
+                        "(SELECT game_id FROM Session " +
+                        "WHERE not closed AND sid IN (SELECT session_id FROM SessionPlayer WHERE player_id = ?))"
+            )
+            stmt.setInt(1, pid)
+            val rs = stmt.executeQuery()
+
+            val games = mutableListOf<Game>()
+            while (rs.next()) {
+                games.add(
+                    Game(
+                        rs.getInt("gid"),
+                        rs.getString("name"),
+                        rs.getString("developer"),
+                        rs.getString("genres").drop(1).dropLast(1).split(",")
+                    )
+                )
+            }
+
+            return games.drop(skip).take(limit) to games.size
         }
     }
 }

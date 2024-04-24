@@ -82,5 +82,9 @@ class SessionServices(
             throw IllegalArgumentException("Invalid state $state")
     }
 
-
+    fun getListOfGamesThatPlayerWillParticipate(pid: Int, skip: Int, limit: Int): Pair<List<Game>, Int> {
+        require(skip >= 0) { "Skip value must be positive" }
+        require(limit > 0) { "Limit value must be positive non-zero" }
+        return sRepo.getListOfGamesThatPlayerWillParticipate(pid, skip, limit)
+    }
 }

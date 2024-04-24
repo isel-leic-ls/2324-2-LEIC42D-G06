@@ -18,6 +18,7 @@ object Session {
     const val DELETE_PLAYER = "$API/sessions/{sid}/players"
     const val UPDATE_SESSION = "$API/sessions/{sid}"
     const val GET_SESSIONS = "$API/sessions"
+    const val   GET_GAMES_PLAYER_WILL_PARTICIPATE = "$API/sessions/player/{pid}"
 }
 
 object PlayerUris {

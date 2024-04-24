@@ -21,7 +21,8 @@ class SessionRoutes(private val services : SessionServices) {
             Session.GET_SESSIONS bind Method.GET to ::getListOfSessions,
             Session.DELETE_SESSION bind Method.DELETE to ::deleteSession,
             Session.DELETE_PLAYER bind Method.DELETE to ::deletePlayerFromSession,
-            Session.UPDATE_SESSION bind Method.PUT to ::updateSession
+            Session.UPDATE_SESSION bind Method.PUT to ::updateSession,
+            Session.GET_GAMES_PLAYER_WILL_PARTICIPATE bind Method.GET to ::getGamesPlayerWillParticipate
         )
 
 
@@ -80,5 +81,13 @@ class SessionRoutes(private val services : SessionServices) {
             val (skip, limit) = request.getSkipAndLimit()
             val (sessions, total) = services.getListOfSessions(gid, date, state, pid, skip, limit)
             Response(Status.OK).toJson(SessionListRetrievalOutputModel(sessions, total))
+        }
+
+    private fun getGamesPlayerWillParticipate(request: Request): Response =
+        exceptionAwareScope {
+            val pid = request.getPlayerDetails()
+            val (skip, limit) = request.getSkipAndLimit()
+            val (games, total) = services.getListOfGamesThatPlayerWillParticipate(pid, skip, limit)
+            Response(Status.OK).toJson(GamesListOutputModel(games, total))
         }
 }

@@ -3,6 +3,8 @@ package pt.isel.ls.repo.jdbc.session
 import org.junit.After
 import org.junit.Test
 import org.postgresql.ds.PGSimpleDataSource
+import pt.isel.ls.domain.Session
+import pt.isel.ls.domain.SessionDTO
 import pt.isel.ls.domain.createSessionDTO
 import pt.isel.ls.repo.jdbc.JdbcSessionsRepo
 import pt.isel.ls.utils.*
@@ -218,4 +220,61 @@ class RepoJdbcSessionTests {
         assertTrue(session.capacity == 3 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)) && !session.closed)
     }
 
+    @Test
+    fun `get games player will participate`() {
+        val s1 = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
+            game = FIRST_GAME_ID,
+            players = listOf(FIRST_PLAYER_ID, FIRST_PLAYER_ID + 1)
+        )
+
+        val s2 = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
+            game = FIRST_GAME_ID + 1,
+            players = listOf(FIRST_PLAYER_ID, FIRST_PLAYER_ID + 2)
+        )
+
+        val sid = repo.createSession(s1)
+        assert(sid > 0)
+
+        val sid2 = repo.createSession(s2)
+        assert(sid2 > 0)
+
+        val result = repo.getListOfGamesThatPlayerWillParticipate(FIRST_PLAYER_ID, 0, 10)
+        assertTrue(result.first.size == 2)
+    }
+
+    @Test
+    fun `get games player will participate with skip and limit`() {
+        val s1 = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
+            game = FIRST_GAME_ID,
+            players = listOf(FIRST_PLAYER_ID, FIRST_PLAYER_ID + 1)
+        )
+
+        val s2 = createSessionDTO(
+            capacity = 2,
+            date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER),
+            game = FIRST_GAME_ID + 1,
+            players = listOf(FIRST_PLAYER_ID, FIRST_PLAYER_ID + 2)
+        )
+
+        val sid1 = repo.createSession(s1)
+        assert(sid1 > 0)
+
+        val sid2 = repo.createSession(s2)
+        assert(sid2 > 0)
+
+        val result = repo.getListOfGamesThatPlayerWillParticipate(FIRST_PLAYER_ID, 1, 1)
+        assertTrue(result.first.size == 1)
+    }
+
+    @Test
+    fun `get empty list of games that player will participate`() {
+        val result = repo.getListOfGamesThatPlayerWillParticipate(FIRST_PLAYER_ID, 0, 10)
+        assertTrue(result.first.isEmpty())
+    }
 }
