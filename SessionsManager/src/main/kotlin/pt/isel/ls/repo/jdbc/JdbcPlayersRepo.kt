@@ -80,7 +80,7 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
                 append("FROM game g ")
                 append("INNER JOIN session s ON g.gid = s.game_id ")
                 append("INNER JOIN sessionplayer sp ON s.sid = sp.session_id ")
-                append("WHERE sp.player_id = ? ")
+                append("WHERE sp.player_id = ? AND TO_DATE(s.session_date , 'YYYY-MM-DD HH24:MI:SS') < CURRENT_DATE;")
             }
 
             val result = it.prepareStatement(query)
