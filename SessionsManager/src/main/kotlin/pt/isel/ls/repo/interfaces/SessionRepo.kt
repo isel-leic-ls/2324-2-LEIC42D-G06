@@ -1,4 +1,5 @@
 import pt.isel.ls.domain.Session
+import pt.isel.ls.domain.Session1
 import pt.isel.ls.domain.SessionDTO
 import java.time.LocalDateTime
 
@@ -23,4 +24,8 @@ interface SessionRepo {
     ) : Pair<List<Session>, Int>
 
     fun checkSessionExists(sid : Int) : Boolean
+
+    fun getOpenSessions(
+        skip: Int, limit: Int
+    ): List<Session1>
 }

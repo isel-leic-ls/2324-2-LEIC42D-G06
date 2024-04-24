@@ -1,0 +1,2 @@
+1. No context do sistema de controlo de versões git, a diferença entre pull e push é:
+pull serve para trazer as alterações do repositório remoto para o repositório local, enquanto push serve para enviar as alterações do repositório local para o repositório remoto.

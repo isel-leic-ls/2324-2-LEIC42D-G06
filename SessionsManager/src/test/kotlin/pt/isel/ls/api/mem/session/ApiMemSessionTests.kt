@@ -59,6 +59,11 @@ class ApiMemSessionTests {
     }
 
     @Test
+    fun `getting open sessions with invalid limit should return 400`(){
+
+    }
+
+    @Test
     fun `creating a session`() {
         // arrange
         val gid = gamesRepo.getGameByName("FIFA").id
@@ -89,6 +94,7 @@ class ApiMemSessionTests {
 
         assertTrue(outputModel.sid.toInt() > 0)
     }
+
 
     @Test
     fun `creating a session with past date should return status code 400`() {

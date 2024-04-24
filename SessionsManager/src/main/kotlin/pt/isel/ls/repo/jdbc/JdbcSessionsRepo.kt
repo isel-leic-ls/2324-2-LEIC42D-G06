@@ -3,6 +3,7 @@ package pt.isel.ls.repo.jdbc
 import SessionRepo
 import pt.isel.ls.AppException
 import pt.isel.ls.domain.Session
+import pt.isel.ls.domain.Session1
 import pt.isel.ls.domain.SessionDTO
 
 import java.sql.ResultSet
@@ -149,6 +150,41 @@ class JdbcSessionsRepo(private val dataSource: DataSource) : SessionRepo {
             }
 
             return sessions.drop(skip).take(limit) to sessions.size
+        }
+    }
+
+    override fun getOpenSessions(
+        skip: Int, limit: Int
+    ): List<Session1> {
+        val query = "SELECT * FROM session WHERE closed = ?"
+        dataSource.connection.use { connection ->
+            val preparedStatement = connection.prepareStatement(query)
+            preparedStatement.setBoolean(1, false)
+            val result = preparedStatement.executeQuery()
+
+            val sessions = mutableListOf<Session1>()
+
+            while (result.next()) {
+                val capacity = result.getInt("capacity")
+                val sid = result.getInt("sid")
+                val sDate = result.getString("session_date")
+                val game = result.getInt("game_id")
+                val closed = result.getBoolean("closed")
+
+
+                sessions.add(
+                    Session1(
+                        id = sid,
+                        capacity = capacity,
+                        date = sDate,
+                        game = game,
+                        closed = closed,
+                    )
+
+                )
+            }
+            return sessions.drop(skip).take(limit
+            )
         }
     }
 

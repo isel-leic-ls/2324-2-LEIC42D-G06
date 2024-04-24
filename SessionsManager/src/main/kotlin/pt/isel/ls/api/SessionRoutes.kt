@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 import pt.isel.ls.api.model.*
 import pt.isel.ls.services.SessionServices
 
-class SessionRoutes(private val services : SessionServices) {
+class SessionRoutes(private val services: SessionServices) {
 
     val routes: RoutingHttpHandler =
         routes(
@@ -21,7 +21,8 @@ class SessionRoutes(private val services : SessionServices) {
             Session.GET_SESSIONS bind Method.GET to ::getListOfSessions,
             Session.DELETE_SESSION bind Method.DELETE to ::deleteSession,
             Session.DELETE_PLAYER bind Method.DELETE to ::deletePlayerFromSession,
-            Session.UPDATE_SESSION bind Method.PUT to ::updateSession
+            Session.UPDATE_SESSION bind Method.PUT to ::updateSession,
+            Session.GET_OPEN_SESSIONS bind Method.GET to ::getSessionsListOpen
         )
 
 
@@ -41,7 +42,7 @@ class SessionRoutes(private val services : SessionServices) {
             Response(Status.OK).toJson(SessionRetrievalOutputModel(session))
         }
 
-    private fun addPlayerToSession(request: Request) : Response =
+    private fun addPlayerToSession(request: Request): Response =
         exceptionAwareScope {
             val token = request.getAuthorizationToken()
             val sid = request.getSessionID()
@@ -49,7 +50,7 @@ class SessionRoutes(private val services : SessionServices) {
             Response(Status.NO_CONTENT)
         }
 
-    private fun deleteSession(request: Request) : Response =
+    private fun deleteSession(request: Request): Response =
         exceptionAwareScope {
             val token = request.getAuthorizationToken()
             val sid = request.getSessionID()
@@ -57,7 +58,7 @@ class SessionRoutes(private val services : SessionServices) {
             Response(Status.NO_CONTENT)
         }
 
-    private fun updateSession(request: Request) : Response =
+    private fun updateSession(request: Request): Response =
         exceptionAwareScope {
             val token = request.getAuthorizationToken()
             val sid = request.getSessionID()
@@ -66,7 +67,7 @@ class SessionRoutes(private val services : SessionServices) {
             Response(Status.NO_CONTENT)
         }
 
-    private fun deletePlayerFromSession(request: Request) : Response =
+    private fun deletePlayerFromSession(request: Request): Response =
         exceptionAwareScope {
             val token = request.getAuthorizationToken()
             val sid = request.getSessionID()
@@ -80,5 +81,12 @@ class SessionRoutes(private val services : SessionServices) {
             val (skip, limit) = request.getSkipAndLimit()
             val (sessions, total) = services.getListOfSessions(gid, date, state, pid, skip, limit)
             Response(Status.OK).toJson(SessionListRetrievalOutputModel(sessions, total))
+        }
+
+    private fun getSessionsListOpen(request : Request): Response =
+        exceptionAwareScope {
+            val (skip, limit) = request.getSkipAndLimit()
+            val sessions = services.getOpenSessions(skip, limit)
+            Response(Status.OK).toJson(SessionsListRetrievalOutputModelWithoutTotal(sessions))
         }
 }

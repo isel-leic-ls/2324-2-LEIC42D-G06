@@ -10,7 +10,7 @@ import java.util.UUID.randomUUID
 
 class PlayerServices(private val pRepo: PlayersRepo) {
 
-    fun createPlayer(name: String, email: String, password: String): Pair<String, Int> {
+    fun createPlayer(name : String, email: String, password: String): Pair<String, Int> {
         //Verifying if the name and email are not empty and if the email length is between the bounds
         validatePlayerCredentials(name, email, password)
 
@@ -33,5 +33,5 @@ class PlayerServices(private val pRepo: PlayersRepo) {
         return pRepo.getPlayer(pid)
     }
 
-    fun getPlayerIdByToken(token: String) = pRepo.getPlayerIdByToken(token)
+    fun getPlayerIdByToken(token : String) = pRepo.getPlayerIdByToken(token)
 }

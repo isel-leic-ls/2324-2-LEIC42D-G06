@@ -1,0 +1,1 @@
+2. Foi utilizado o status code 500 para indicar,ao cliente que fez um pedido, que ocorreu um erro interno do servidor que necessita de ser resolvido pelos admins ou devs.

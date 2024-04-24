@@ -45,7 +45,8 @@ INSERT INTO Game(name, developer, genres) VALUES
 INSERT INTO Session(capacity, session_date, closed, game_id) VALUES
                                                                  (3, '2025-02-25 18:00:00', true, 100),
                                                                  (3, '2025-02-26 18:00:00', true, 101),
-                                                                 (2, '2025-02-27 20:00:00', true, 102);
+                                                                 (2, '2025-02-27 20:00:00', false, 102);
+
 
 
 -- Insert into SessionPlayer table

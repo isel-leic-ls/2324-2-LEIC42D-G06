@@ -5,6 +5,7 @@ import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
 import pt.isel.ls.domain.toSession
 import pt.isel.ls.AppException
+import pt.isel.ls.domain.Session1
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.concurrent.locks.ReentrantLock
@@ -87,5 +88,10 @@ class MemSessionRepo : SessionRepo {
 
     override fun checkSessionExists(sid: Int): Boolean =
         sessions.any { it.id == sid }
+
+    override fun getOpenSessions(skip: Int, limit: Int): List<Session1> {
+        TODO("Not yet implemented")
+    }
+
 
 }

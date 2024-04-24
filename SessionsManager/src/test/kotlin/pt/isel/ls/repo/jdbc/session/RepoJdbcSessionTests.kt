@@ -8,6 +8,7 @@ import pt.isel.ls.repo.jdbc.JdbcSessionsRepo
 import pt.isel.ls.utils.*
 import java.time.LocalDateTime
 import kotlin.test.BeforeTest
+import kotlin.test.assertFails
 import kotlin.test.assertTrue
 
 class RepoJdbcSessionTests {
@@ -19,7 +20,7 @@ class RepoJdbcSessionTests {
     private val repo = JdbcSessionsRepo(dataSource)
 
     @BeforeTest
-    fun setup() : Unit =
+    fun setup(): Unit =
         dataSource.connection.use {
             it.prepareCall("Call removeTables()").execute()
             it.prepareCall("Call createTables()").execute()
@@ -34,6 +35,14 @@ class RepoJdbcSessionTests {
             stmt.executeUpdate()
             stmt2.executeUpdate()
         }
+
+
+    @Test
+    fun `get all open sessions`() {
+        val result = repo.getOpenSessions(0,2)
+        assertTrue(result.size == 2)
+    }
+
 
 
     @Test
@@ -196,7 +205,9 @@ class RepoJdbcSessionTests {
 
         repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_TIME_FORMATTER), 2)
         val session = repo.getSession(sid)
-        assertTrue(session.capacity == 2 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)) && session.closed)
+        assertTrue(
+            session.capacity == 2 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)) && session.closed
+        )
     }
 
     @Test
@@ -215,7 +226,9 @@ class RepoJdbcSessionTests {
 
         repo.updateSession(sid, LocalDateTime.now().plusDays(2).format(DATE_TIME_FORMATTER), 3)
         val session = repo.getSession(sid)
-        assertTrue(session.capacity == 3 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)) && !session.closed)
+        assertTrue(
+            session.capacity == 3 && session.date.toDate().isAfter(LocalDateTime.now().plusDays(1)) && !session.closed
+        )
     }
 
 }
