@@ -137,7 +137,12 @@ export function sessionDetailsPage(session, isInSession, isOwner, leaveSession, 
     const joinButton = isInSession(session, 1000) ? // hardcoded with player 1000 for now
         div({}) : button({onClick: () => { joinSession(session.id) } }, "Join session");
 
-    const pAnchors = session.players.map(p => div({}, a({href: "#players/" + p}, "  " + p)));
+    const pAnchors = session.players.map((p, index) =>
+        div({},
+            a({ href: "#players/" + p }, "Player " + (index + 1))
+        )
+    );
+
     const element = div(
         {},
         "Session details",
