@@ -1,4 +1,4 @@
-import { handleGameDetailsRequest, handleGamesRetrievalRequest } from "../data/gamesRequests.js";
+import { handleGameDetailsRequest, handleGamesRetrievalRequest, handleGamesRetrievalByNameRequest } from "../data/gamesRequests.js";
 import { CONSTS } from "../utils.js";
 
 
@@ -17,4 +17,9 @@ export async function gamesRetrieval(skip, limit, genres, developer) {
 
     const query = `genres=${genres}&developer=${developer}&skip=${checkedSkip}&limit=${checkedLimit}`;
     return await handleGamesRetrievalRequest(query);
+}
+
+export async function gamesByNameRetrieval(name) {
+    if (name === undefined || name === "") throw new Error("Invalid name");
+    return await handleGamesRetrievalByNameRequest(name);
 }

@@ -3,6 +3,6 @@ export function filterQueryParameters(path) {
     return index == -1 ? {} : Object.fromEntries(new URLSearchParams(path.substring(index)))
 }
 
-export function filterUriId(path) {
+export function filterResource(path) {
     return path.substring(path.lastIndexOf('/') + 1);
 }

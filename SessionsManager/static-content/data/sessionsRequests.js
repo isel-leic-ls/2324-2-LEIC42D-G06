@@ -27,3 +27,20 @@ export async function handleSessionDetailsRequest(sid) {
     }
     throw new Error("Failed to retrieve session details");
 }
+
+export async function handleSessionCreationRequest(body) {
+    const response = await fetch(CONSTS.BASE_API_URL + "/sessions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        body: JSON.stringify(body)
+    })
+
+    if (response.status === 201) {
+        const id = await response.json();
+        return id;
+    }
+    throw new Error("Failed to create session");
+}

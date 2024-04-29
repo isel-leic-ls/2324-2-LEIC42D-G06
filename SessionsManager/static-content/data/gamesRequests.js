@@ -26,3 +26,16 @@ export async function handleGameDetailsRequest(gid) {
     }
     throw new Error("Failed to retrieve game details");
 }
+
+export async function handleGamesRetrievalByNameRequest(name) {
+    const response = await fetch(CONSTS.BASE_API_URL + "/games/name/" + name, {
+        headers: {
+            "Accept": "application/json",
+        }
+    })
+    if (response.status === 200) {
+        const game = await response.json();
+        return game;
+    }
+    throw new Error("Failed to retrieve games");
+}

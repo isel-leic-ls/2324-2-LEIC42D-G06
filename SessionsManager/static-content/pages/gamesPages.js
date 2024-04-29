@@ -11,9 +11,16 @@ function gamesSearchPageClick(genres, developer) {
         + "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT;
 }
 
+function gamesSearchByNameClick(name) {
+    if (name === "")
+        errorToast("Please enter a name");
+    else window.location.hash = "games/name/" + name
+}
+
 export function gamesSearchPage() { //this is the search page for games by genre(s) and developer
     const genresInput = input({ type: "text", id: "genresInput", placeHolder: "Action, Adventure" });
     const developerInput = input({ type: "text", id: "developerInput", placeHolder: "Ubisoft, EA" });
+    const nameInput = input ({type: "text", id: "nameInput", placeHolder: "FIFA 22"});
 
     const homeButton = returnHomeButton();
 
@@ -21,6 +28,15 @@ export function gamesSearchPage() { //this is the search page for games by genre
         {
             onClick: () => {
                 gamesSearchPageClick(genresInput.value, developerInput.value);
+            }
+        },
+        "Search"
+    );
+
+    const secondSearchButton = button(
+        {
+            onClick: () => {
+                gamesSearchByNameClick(nameInput.value);
             }
         },
         "Search"
@@ -35,10 +51,20 @@ export function gamesSearchPage() { //this is the search page for games by genre
             label({}, "Developer:", developerInput),
         ),
         searchButton,
+    );
+
+    const secondElement = div(
+        {},
+        "Search games by name",
+        div(
+            {},
+            label({}, "Name:", nameInput),
+        ),
+        secondSearchButton,
         homeButton
     );
 
-    return element;
+    return div({}, div( {}, element, secondElement));
 }
 
 export function gamesListPage(games, buttons) { //this is the list of games that match the search criteria
@@ -75,7 +101,8 @@ export function gameDetailsPage(game) { //this is the details page for a specifi
                     li({}, "Name: " + game.name),
                     li({}, "Developer: " + game.dev),
                     li({}, "Genres: " + game.genres.join(", ")),
-                )
+                ),
+                button( {onClick : () => {} }, "Create a session with this game")
             ),
             button(
                 {
