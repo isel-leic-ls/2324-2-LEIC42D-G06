@@ -1,6 +1,7 @@
-import { div, a, ul, li, label, input, button } from "../tags.js"
+import { div, a, ul, li, label, input, button, form } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
-import { errorToast } from "../components/errorToast.js"
+import { errorToast} from "../components/errorToast.js"
+import { openModal } from "../components/modal.js"
 import { CONSTS } from "../utils.js"
 
 
@@ -87,8 +88,27 @@ export function gamesListPage(games, buttons) { //this is the list of games that
     return element
 }
 
-export function gameDetailsPage(game) { //this is the details page for a specific game
+export function gameDetailsPage(game, createSession) { //this is the details page for a specific game
     const homeButton = returnHomeButton();
+
+    const form = document.createElement('form');
+
+    form.appendChild(label({}, "Session capacity:"));
+    form.appendChild(input({ type: "number", id: "sessionCapacity", min: 1, max: 100, required: true }));
+    form.appendChild(label({}, "Session date:"));
+    form.appendChild(input({ type: "text", id: "sessionDate", required: true }));
+    form.appendChild(
+        button({
+            type: "submit",
+            onClick: (event) => {
+                console.log(" did i get called ?")
+                createGameClick(event, createSession, game.id,
+                    document.getElementById('sessionCapacity').value,
+                    document.getElementById('sessionDate').value
+                );
+            }
+        }, "Create session")
+    );
 
     const element =
         div(
@@ -102,7 +122,7 @@ export function gameDetailsPage(game) { //this is the details page for a specifi
                     li({}, "Developer: " + game.dev),
                     li({}, "Genres: " + game.genres.join(", ")),
                 ),
-                button( {onClick : () => {} }, "Create a session with this game")
+                button( {onClick : () => { openModal(form) } }, "Create a session with this game")
             ),
             button(
                 {
@@ -116,4 +136,9 @@ export function gameDetailsPage(game) { //this is the details page for a specifi
         );
 
     return element;
+}
+
+function createGameClick(event, createSessionFunction, gid, capacity, date) {
+    event.preventDefault();
+    createSessionFunction(gid, capacity, date);
 }
