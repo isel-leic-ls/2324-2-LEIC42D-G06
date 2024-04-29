@@ -57,7 +57,8 @@ class GamesRoutes(private val services: GamesServices) {
         exceptionAwareScope {
             val encodedName = request.getPartialGameName()
             val decodedName = URLDecoder.decode(encodedName, StandardCharsets.UTF_8.toString())
-            val (games, total) = services.getListOfGamesByName(decodedName)
+            val (skip, limit) = request.getSkipAndLimit()
+            val (games, total) = services.getListOfGamesByName(decodedName, limit, skip)
             Response(Status.OK).toJson(GamesListOutputModel(games, total))
         }
 

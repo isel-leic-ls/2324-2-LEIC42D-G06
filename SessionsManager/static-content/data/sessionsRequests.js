@@ -35,7 +35,6 @@ export async function handleSessionCreationRequest(gid, capacity, date) {
         gid: gid,
         capacity: capacity,
         date: date,
-        // Assuming pid needs to be inserted into a list
     };
 
     const response = await fetch(CONSTS.BASE_API_URL + "/sessions", {
@@ -53,4 +52,43 @@ export async function handleSessionCreationRequest(gid, capacity, date) {
         return model.sid;
     }
     throw new Error("Failed to create session");
+}
+
+export async function handleSessionLeaveRequest(sid) {
+    const response = await fetch(CONSTS.BASE_API_URL + "/sessions/" + sid + "/players", {
+        method: "DELETE",
+        headers: {
+            "Accept": "application/json",
+            "Authorization" : token
+        }
+    });
+
+    if (response.status === 204) {
+        return;
+    }
+    throw new Error("Failed to leave session " + sid);
+
+}
+
+export async function handleSessionUpdateRequest(sid, capacity, date) {
+
+    const body = {
+        capacity: capacity,
+        date: date,
+    };
+
+    const response = await fetch(CONSTS.BASE_API_URL + "/sessions/" + sid, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization" : token
+        },
+        body: JSON.stringify(body)
+    })
+
+    if (response.status === 204) {
+        return;
+    }
+    throw new Error("Failed to update session");
 }

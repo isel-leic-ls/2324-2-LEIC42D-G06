@@ -1,4 +1,7 @@
-import { handleSessionsRetrievalRequest, handleSessionDetailsRequest, handleSessionCreationRequest } from "../data/sessionsRequests.js";
+import {
+    handleSessionsRetrievalRequest,
+    handleSessionDetailsRequest,
+    handleSessionCreationRequest, handleSessionLeaveRequest, handleSessionUpdateRequest } from "../data/sessionsRequests.js";
 import { CONSTS } from "../utils.js";
 import { pattern} from "../pages/sessionsPages.js";
 
@@ -54,5 +57,17 @@ export async function sessionCreation(gid, capacity, date) {
     if (!dateTimePattern.test(date))
         throw new Error("Invalid date");
     return await handleSessionCreationRequest(gid, capacity, date);
+}
+
+export async function sessionLeave(sid) {
+    return await handleSessionLeaveRequest(sid);
+}
+
+export async function sessionUpdate(sid, capacity, date) {
+    if (isNaN(capacity) || capacity < 2)
+        throw new Error("Invalid capacity");
+    if (!dateTimePattern.test(date))
+        throw new Error("Invalid date");
+    return await handleSessionUpdateRequest(sid, capacity, date);
 }
 

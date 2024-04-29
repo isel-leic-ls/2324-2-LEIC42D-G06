@@ -5,7 +5,7 @@ import {playerDetailsPage} from "./pages/playerPages.js"
 import {pagingButtons} from "./components/pagingButtons.js"
 import {safeCall} from "./utils.js";
 import {filterQueryParameters, filterResource} from "./uriparsers.js"
-import {sessionsRetrieval, sessionDetailsRetrieval, sessionCreation} from "./services/sessionServices.js"
+import {sessionsRetrieval, sessionDetailsRetrieval, sessionCreation, sessionLeave, sessionUpdate } from "./services/sessionServices.js"
 import {gamesRetrieval, gameDetailsRetrieval, gamesByNameRetrieval } from "./services/gamesServices.js"
 import {playerDetailsRetrieval, playerIdRetrieval} from "./services/playerServices.js"
 import {div, button} from "./tags.js";
@@ -42,8 +42,6 @@ async function getGameDetails(mainContent, path) {
         const game = await gameDetailsRetrieval(gid);
         const createSessionFunction = (async (gid, capacity, date) => {
             const sid = await sessionCreation(gid, capacity, date);
-            console.log("Session created with id: " + sid);
-            closeModal();
             window.location.hash = "sessions/" + sid;
         });
         const pageContent = gameDetailsPage(game, createSessionFunction);
@@ -67,11 +65,29 @@ async function getSessionsList(mainContent, path) {
     })
 }
 
+function isInSession(session, pid) {
+    return session.players.includes(pid);
+}
+
+function isOwner(session, pid) {
+    return session.players[0] == pid;
+}
+
 async function getSessionDetails(mainContent, path) {
     safeCall(mainContent,async ()=>{
         const sid = filterResource(path);
         const result = await sessionDetailsRetrieval(sid);
-        const pageContent = sessionDetailsPage(result.session);
+        const leaveSessionFunction = (async (id) => {
+            await sessionLeave(id);
+            window.location.reload();
+        });
+
+        const updateSessionFunction = (async (id, capacity, date) => {
+            await sessionUpdate(id, capacity, date);
+            window.location.reload();
+        });
+
+        const pageContent = sessionDetailsPage(result.session, isInSession, isOwner, leaveSessionFunction, updateSessionFunction);
         mainContent.replaceChildren(pageContent);
     })
 }
@@ -88,17 +104,11 @@ async function getPlayer(mainContent, path) {
 
 async function getGamesSearchByName(mainContent, path) {
     safeCall(mainContent,async ()=> {
-        const name = filterResource(path);
-        const game = await gamesByNameRetrieval(name); // This is only one game.. backend needs to retrieve a list of games
-        const element = div(                           // This should also support pagination
-            {},
-            "Games",
-            div({}, game.name),
-            div({}, "Developer: " + game.dev),
-            div({}, "Genres: " + game.genres.join(", ")),
-            button( {onClick : () => {} }, "Create a session with this game")
-        )
-        mainContent.replaceChildren(element);
+        const {gname, skip, limit} = filterQueryParameters(path);
+        const {games, total} = await gamesByNameRetrieval(gname, skip, limit);
+        const buttons = pagingButtons(parseInt(skip), parseInt(limit), total, path)
+        const pageContent = gamesListPage(games, buttons);
+        mainContent.replaceChildren(pageContent);
     })
 }
 

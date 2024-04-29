@@ -1,8 +1,9 @@
-import {div, button, label, p, ul, li, a, radioButton} from "../tags.js"
+import {div, button, label, p, ul, li, a, radioButton, input} from "../tags.js"
 import {returnHomeButton} from "../components/returnHomeButton.js"
 import {errorToast} from "../components/errorToast.js"
 import {controlledInput} from "../components/controlledInput.js"
 import {CONSTS} from "../utils.js"
+import {openModal, closeModal} from "../components/modal.js"
 
 
 export const pattern = /^\d{4}-\d{2}-\d{2}$/;
@@ -89,9 +90,39 @@ export function sessionsListPage(sessions, buttons) { //list of sessions
     return element;
 }
 
-export function sessionDetailsPage(session) {
+export function sessionDetailsPage(session, isInSession, isOwner, leaveSession, updateSession) {
 
     const homeButton = returnHomeButton();
+
+    const leaveContent = div(
+        {},
+        "Are you sure you want to leave this session?",
+        button({onClick : () => { leaveSession(session.id); closeModal() } }, "Yes"),
+    );
+
+    const updateContent = div(
+        {},
+        label({}, "Capacity:"),
+        input({type: "number", id: "capacityInput", min: 2, max: 100, required: true}),
+        label({}, "Date:"),
+        input({type: "text", id: "dateInput", required: true}),
+        button({
+            onClick: () => {
+                updateSession(
+                    session.id,
+                    document.getElementById('capacityInput').value,
+                    document.getElementById('dateInput').value
+                );
+                closeModal();
+            }
+        }, "Update")
+     );
+
+    const leaveButton = isInSession(session, 1000) ? // hardcoded with player 1000 for now
+        button({onClick: () => { openModal(leaveContent)} }, "Leave session") : div({});
+
+    const updateButton = isOwner(session, 1000) ? // hardcoded with player 1000 for now
+        button({onClick: () => { openModal(updateContent)} }, "Update session") : div({});
 
     const pAnchors = session.players.map(p => div({}, a({href: "#players/" + p}, "  " + p)));
     const element = div(
@@ -104,6 +135,8 @@ export function sessionDetailsPage(session) {
             li({}, "Closed: " + session.closed),
             li({}, "Players: ", ...pAnchors)
         ),
+        leaveButton,
+        updateButton,
         homeButton
     );
 

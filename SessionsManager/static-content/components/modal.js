@@ -1,7 +1,7 @@
 export function closeModal() {
     var modal = document.querySelector('.modal');
     modal.remove();
-  }
+}
 
 export function openModal(content) {
   var modal = document.createElement('div');

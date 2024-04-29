@@ -1,7 +1,7 @@
 import { div, a, ul, li, label, input, button, form } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
 import { errorToast} from "../components/errorToast.js"
-import { openModal } from "../components/modal.js"
+import { openModal, closeModal } from "../components/modal.js"
 import { CONSTS } from "../utils.js"
 
 
@@ -15,7 +15,8 @@ function gamesSearchPageClick(genres, developer) {
 function gamesSearchByNameClick(name) {
     if (name === "")
         errorToast("Please enter a name");
-    else window.location.hash = "games/name/" + name
+    else window.location.hash = "games/byName?gname=" + name
+        + "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT;
 }
 
 export function gamesSearchPage() { //this is the search page for games by genre(s) and developer
@@ -101,11 +102,11 @@ export function gameDetailsPage(game, createSession) { //this is the details pag
         button({
             type: "submit",
             onClick: (event) => {
-                console.log(" did i get called ?")
                 createGameClick(event, createSession, game.id,
                     document.getElementById('sessionCapacity').value,
                     document.getElementById('sessionDate').value
                 );
+                closeModal();
             }
         }, "Create session")
     );
