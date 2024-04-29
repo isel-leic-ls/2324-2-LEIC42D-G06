@@ -5,7 +5,7 @@ import {playerDetailsPage} from "./pages/playerPages.js"
 import {pagingButtons} from "./components/pagingButtons.js"
 import {safeCall} from "./utils.js";
 import {filterQueryParameters, filterResource} from "./uriparsers.js"
-import {sessionsRetrieval, sessionDetailsRetrieval, sessionCreation, sessionLeave, sessionUpdate } from "./services/sessionServices.js"
+import {sessionsRetrieval, sessionDetailsRetrieval, sessionCreation, sessionLeave, sessionUpdate, sessionJoin } from "./services/sessionServices.js"
 import {gamesRetrieval, gameDetailsRetrieval, gamesByNameRetrieval } from "./services/gamesServices.js"
 import {playerDetailsRetrieval, playerIdRetrieval} from "./services/playerServices.js"
 import {div, button} from "./tags.js";
@@ -87,7 +87,18 @@ async function getSessionDetails(mainContent, path) {
             window.location.reload();
         });
 
-        const pageContent = sessionDetailsPage(result.session, isInSession, isOwner, leaveSessionFunction, updateSessionFunction);
+        const deleteSessionFunction = (async (id) => {
+            await sessionLeave(id);
+            window.location.reload();
+        });
+
+        const joinSessionFunction = (async (id) => {
+            await sessionJoin(id);
+            window.location.reload();
+        });
+
+        const pageContent = sessionDetailsPage(result.session, isInSession, isOwner,
+            leaveSessionFunction, updateSessionFunction, deleteSessionFunction, joinSessionFunction);
         mainContent.replaceChildren(pageContent);
     })
 }

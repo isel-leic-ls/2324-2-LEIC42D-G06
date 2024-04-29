@@ -92,3 +92,33 @@ export async function handleSessionUpdateRequest(sid, capacity, date) {
     }
     throw new Error("Failed to update session");
 }
+
+export async function handleSessionDeleteRequest(sid) {
+    const response = await fetch(CONSTS.BASE_API_URL + "/sessions/" + sid, {
+        method: "DELETE",
+        headers: {
+            "Accept": "application/json",
+            "Authorization" : token
+        }
+    });
+
+    if (response.status === 204) {
+        return;
+    }
+    throw new Error("Failed to delete session " + sid);
+}
+
+export async function handleSessionJoinRequest(sid) {
+    const response = await fetch(CONSTS.BASE_API_URL + "/sessions/" + sid + "/players", {
+        method: "PUT",
+        headers: {
+            "Accept": "application/json",
+            "Authorization" : token
+        }
+    });
+
+    if (response.status === 204) {
+        return;
+    }
+    throw new Error("Failed to join session " + sid);
+}

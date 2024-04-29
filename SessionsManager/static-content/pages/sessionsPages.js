@@ -90,7 +90,7 @@ export function sessionsListPage(sessions, buttons) { //list of sessions
     return element;
 }
 
-export function sessionDetailsPage(session, isInSession, isOwner, leaveSession, updateSession) {
+export function sessionDetailsPage(session, isInSession, isOwner, leaveSession, updateSession, deleteSession, joinSession) {
 
     const homeButton = returnHomeButton();
 
@@ -118,11 +118,24 @@ export function sessionDetailsPage(session, isInSession, isOwner, leaveSession, 
         }, "Update")
      );
 
+     const deleteContent = div(
+        {},
+        "Are you sure you want to delete this session?",
+        button({onClick : () => { deleteSession(session.id); closeModal() } }, "Yes"),
+     );
+
+
     const leaveButton = isInSession(session, 1000) ? // hardcoded with player 1000 for now
         button({onClick: () => { openModal(leaveContent)} }, "Leave session") : div({});
 
     const updateButton = isOwner(session, 1000) ? // hardcoded with player 1000 for now
         button({onClick: () => { openModal(updateContent)} }, "Update session") : div({});
+
+    const deleteButton = isOwner(session, 1000) ? // hardcoded with player 1000 for now
+        button({onClick: () => { openModal(deleteContent) } }, "Delete session") : div({});
+
+    const joinButton = isInSession(session, 1000) ? // hardcoded with player 1000 for now
+        div({}) : button({onClick: () => { joinSession(session.id) } }, "Join session");
 
     const pAnchors = session.players.map(p => div({}, a({href: "#players/" + p}, "  " + p)));
     const element = div(
@@ -137,6 +150,8 @@ export function sessionDetailsPage(session, isInSession, isOwner, leaveSession, 
         ),
         leaveButton,
         updateButton,
+        deleteButton,
+        joinButton,
         homeButton
     );
 

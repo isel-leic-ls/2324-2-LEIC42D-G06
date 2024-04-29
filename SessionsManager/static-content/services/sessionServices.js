@@ -1,7 +1,9 @@
 import {
     handleSessionsRetrievalRequest,
     handleSessionDetailsRequest,
-    handleSessionCreationRequest, handleSessionLeaveRequest, handleSessionUpdateRequest } from "../data/sessionsRequests.js";
+    handleSessionCreationRequest,
+    handleSessionLeaveRequest,
+    handleSessionUpdateRequest, handleSessionDeleteRequest, handleSessionJoinRequest } from "../data/sessionsRequests.js";
 import { CONSTS } from "../utils.js";
 import { pattern} from "../pages/sessionsPages.js";
 
@@ -69,5 +71,13 @@ export async function sessionUpdate(sid, capacity, date) {
     if (!dateTimePattern.test(date))
         throw new Error("Invalid date");
     return await handleSessionUpdateRequest(sid, capacity, date);
+}
+
+export async function sessionDelete(sid) {
+    return await handleSessionDeleteRequest(sid);
+}
+
+export async function sessionJoin(sid) {
+    return await handleSessionJoinRequest(sid);
 }
 
