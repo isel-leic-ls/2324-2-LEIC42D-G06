@@ -124,9 +124,27 @@ class ApiMemGamesTests {
     }
 
     @Test
+    fun `get list of games by partial name`() {
+        val encodedName = URLEncoder.encode("gt", StandardCharsets.UTF_8.toString())
+        val requestBody =
+            """
+            {
+                "partialName": "gt"
+            }
+        """.trimIndent()
+        val request =
+            Request(Method.GET, GameUrisObj.GET_GAMES_BY_PARTIAL_NAME + "?gname=$encodedName?skip=0&limit=8")
+                .body(requestBody)
+                .header("Content-Type", "application/json")
+
+        val response = mockServiceRoutes.routes(request)
+        assertEquals(200, response.status.code)
+    }
+
+    @Test
     fun `get list of one game`() {
         val request = Request(
-            Method.GET, GameUrisObj.GET_GAMES + "?genres=Action&developer=Rockstar Games"
+            Method.GET, GameUrisObj.GET_GAMES_BY_DEV_GENRES + "?genres=Action&developer=Rockstar Games"
         )
 
         val response = mockServiceRoutes.routes(request)

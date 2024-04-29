@@ -21,7 +21,8 @@ class GamesRoutes(private val services: GamesServices) {
             GameUrisObj.CREATE bind Method.POST to ::createGame,
             GameUrisObj.GET_BY_ID bind Method.GET to ::getGameDetailsById,
             GameUrisObj.GET_BY_NAME bind Method.GET to ::getGameDetailsByName,
-            GameUrisObj.GET_GAMES bind Method.GET to ::getListOfGames
+            GameUrisObj.GET_GAMES_BY_PARTIAL_NAME bind Method.GET to ::getGameDetailsByPartialName,
+            GameUrisObj.GET_GAMES_BY_DEV_GENRES bind Method.GET to ::getListOfGamesByDevGenres
         )
 
     private fun createGame(request: Request): Response =
@@ -52,8 +53,16 @@ class GamesRoutes(private val services: GamesServices) {
             Response(Status.OK).toJson(game)
         }
 
+    private fun getGameDetailsByPartialName(request: Request): Response =
+        exceptionAwareScope {
+            val encodedName = request.getPartialGameName()
+            val decodedName = URLDecoder.decode(encodedName, StandardCharsets.UTF_8.toString())
+            val (games, total) = services.getListOfGamesByName(decodedName)
+            Response(Status.OK).toJson(GamesListOutputModel(games, total))
+        }
 
-    private fun getListOfGames(request: Request): Response =
+
+    private fun getListOfGamesByDevGenres(request: Request): Response =
         exceptionAwareScope {
             val (genres, developer) = request.getGamesListInputModel()
             val (skip, limit) = request.getSkipAndLimit()

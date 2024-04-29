@@ -108,6 +108,54 @@ class ServiceJdbcGamesTests {
     }
 
     @Test
+    fun `test getGamesByName`() {
+        val service = GamesServices(JdbcGamesRepo(dataSource), pRepo)
+        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
+        val token = foundPlayer.token
+
+        val g1 =
+            service.createGame(token, "FIFA 20", "eaSportsDev", listOf("sports"))
+        val g2 =
+            service.createGame(token, "FIFA 21", "eaSportsDev", listOf("sports"))
+        val g3 =
+            service.createGame(token, "Football Manager 2021", "sportsInteractiveDev", listOf("sports"))
+
+        val (games1, _) = service.getListOfGamesByName("FIFA", 5, 0)
+        assertEquals(2, games1.size)
+        assertEquals(g1, games1[0].id)
+        assertEquals(g2, games1[1].id)
+
+        val (games2, _) = service.getListOfGamesByName("FIFA", 1, 1)
+        assertEquals(1, games2.size)
+        assertEquals(g2, games2[0].id)
+
+        val (games3, _) = service.getListOfGamesByName("FIFA", 1, 2)
+        assertEquals(0, games3.size)
+
+        val (games4, _) = service.getListOfGamesByName("Football Manager", 5, 0)
+        assertEquals(1, games4.size)
+        assertEquals(g3, games4[0].id)
+
+        val (games5, _) = service.getListOfGamesByName("Football Manager", 1, 0)
+        assertEquals(1, games5.size)
+        assertEquals(g3, games5[0].id)
+
+        val (games6, _) = service.getListOfGamesByName("Football Manager", 1, 1)
+        assertEquals(0, games6.size)
+
+        val listOfParamsPair = listOf(Pair(-1, 5), Pair(0, 5), Pair(3, -1))
+        listOfParamsPair.forEach {
+            assertFailsWith<IllegalArgumentException> {
+                service.getListOfGamesByName("FIFA", it.first, it.second)
+            }
+        }
+
+        assertFailsWith<IllegalArgumentException> {
+            service.getListOfGamesByName("", 5, 0)
+        }
+    }
+
+    @Test
     fun `test getListOfGames with and without limit and skip`() {
         val service = GamesServices(JdbcGamesRepo(dataSource), pRepo)
         val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)

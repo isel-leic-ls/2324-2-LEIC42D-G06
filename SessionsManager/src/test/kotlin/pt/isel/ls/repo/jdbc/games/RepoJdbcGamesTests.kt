@@ -100,7 +100,37 @@ class RepoJdbcGamesTests {
     }
 
     @Test
-    fun `get list of games`() {
+    fun `get list of games searched by name`() {
+        val name1 = "FIFA 19"
+        val name2 = "FIFA 20"
+        val name3 = "FIFA 21"
+        val name4 = "Football Manager 2021"
+
+        val gameId1 = repo.insert(name1, "developer", listOf("genre"))
+        val game1 = repo.getGameById(gameId1)
+        val gameId2 = repo.insert(name2, "developer", listOf("genre"))
+        val game2 = repo.getGameById(gameId2)
+        val gameId3 = repo.insert(name3, "developer", listOf("genre"))
+        val game3 = repo.getGameById(gameId3)
+        val gameId4 = repo.insert(name4, "developer", listOf("genre"))
+        val game4 = repo.getGameById(gameId4)
+
+        val (list1, _) = repo.getGamesByName("F", 5, 0)
+        assertTrue { list1.containsAll(listOf(game1, game2, game3, game4)) && list1.size == 4 }
+        val (list2, _) = repo.getGamesByName("FIFA", 5, 0)
+        assertTrue { list2.containsAll(listOf(game1, game2, game3)) && list2.size == 3 }
+        val (list3, _) = repo.getGamesByName("fifa 2", 5, 0)
+        assertTrue { list3.containsAll(listOf(game2, game3)) && list3.size == 2 }
+        val (list4, _) = repo.getGamesByName("Football Manager", 5, 0)
+        assertTrue { list4.containsAll(listOf(game4)) && list4.size == 1 }
+        val (list5, _) = repo.getGamesByName("21", 5, 0)
+        assertTrue { list5.containsAll(listOf(game3, game4)) && list5.size == 2 }
+        val (list6, _) = repo.getGamesByName("F", 2, 1)
+        assertTrue { list6.containsAll(listOf(game2, game3)) && list6.size == 2 }
+    }
+
+    @Test
+    fun `get list of games by dev and genre(s)`() {
         val dev1 = "developer1"
         val dev2 = "developer2"
         val genres12 = listOf("genre1", "genre2")
@@ -135,7 +165,7 @@ class RepoJdbcGamesTests {
     }
 
     @Test
-    fun `get list of games with paging`() {
+    fun `get list of games by dev and genre(s) with pagination`() {
         val dev1 = "developer1"
         val dev2 = "developer2"
         val genres12 = listOf("genre1", "genre2")

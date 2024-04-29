@@ -27,6 +27,10 @@ fun Request.getGameName(): String {
     return path(gameName) ?: throw IllegalArgumentException("Invalid game name")
 }
 
+fun Request.getPartialGameName(): String {
+    return query(gameName) ?: throw IllegalArgumentException("Invalid game name")
+}
+
 fun Request.getSessionID(): Int {
     return path(SESSION_ID)?.toIntOrNull() ?: throw IllegalArgumentException("Invalid session ID")
 }

@@ -19,6 +19,10 @@ interface GamesRepo {
     /** get details of a game by its name */
     fun getGameByName(name: String): Game
 
+    /** get a list of games search by the given name (can be partial)
+     *  this list is case-insensitive and limited by the limit parameter and skips the first skip games */
+    fun getGamesByName(name: String, limit: Int, skip: Int): Pair<List<Game>, Int>
+
     /** get a list made by the list of games of given genre(s) plus the list of games of the given developer;
      *  this list is limited by the limit parameter and skips the first skip games (case-insensitive) */
     fun getListOfGames(genres: List<String>, developer: String, limit: Int, skip: Int): Pair<List<Game>, Int>

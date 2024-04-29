@@ -34,6 +34,18 @@ class GamesServices(private val gRepo: GamesRepo, private val pRepo: PlayersRepo
 
     fun getDetailsOfGameByName(name: String) = gRepo.getGameByName(name)
 
+    fun getListOfGamesByName(
+        name: String, limit: Int = LIMIT_DEFAULT, skip: Int = SKIP_DEFAULT
+    ): Pair<List<Game>, Int> {
+        if (name.isBlank())
+            throw IllegalArgumentException("Invalid name input")
+
+        require(limit > 0) { "Limit must be a positive number" }
+        require(skip >= 0) { "Skip must be a non-negative number" }
+
+        return gRepo.getGamesByName(name, limit, skip)
+    }
+
     fun getListOfGames(
         genres: List<String>, developer: String, limit: Int = LIMIT_DEFAULT, skip: Int = SKIP_DEFAULT
     ): Pair<List<Game>, Int> {

@@ -76,9 +76,30 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
         }
     }
 
+    override fun getGamesByName(name: String, limit: Int, skip: Int): Pair<List<Game>, Int> {
+        dataSource.connection.use {
+            val stmt = it.prepareStatement("SELECT * FROM game WHERE name ILIKE ? ORDER BY gid")
+            stmt.setString(1, "%$name%")
+            val rs = stmt.executeQuery()
+
+            val games = mutableListOf<Game>()
+            while (rs.next()) {
+                games.add(
+                    Game(
+                        rs.getInt("gid"),
+                        rs.getString("name"),
+                        rs.getString("developer"),
+                        rs.getString("genres").drop(1).dropLast(1).split(",")
+                    )
+                )
+            }
+            return games.drop(skip).take(limit) to games.size
+        }
+    }
+
     override fun getListOfGames(
         genres: List<String>, developer: String, limit: Int, skip: Int
-    ): Pair<List<Game>,Int> {
+    ): Pair<List<Game>, Int> {
         dataSource.connection.use {
             val stmt = it.prepareStatement(
                 "SELECT * FROM game WHERE developer ILIKE ? OR " +
