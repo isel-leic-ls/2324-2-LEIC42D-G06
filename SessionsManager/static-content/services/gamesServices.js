@@ -1,4 +1,5 @@
-import { handleGameDetailsRequest, handleGamesRetrievalRequest, handleGamesRetrievalByNameRequest } from "../data/gamesRequests.js";
+import { handleGameDetailsRequest, handleGamesRetrievalRequest,
+handleGamesRetrievalByNameRequest, handleGameCreationRequest } from "../data/gamesRequests.js";
 import { CONSTS } from "../utils.js";
 
 
@@ -25,4 +26,13 @@ export async function gamesByNameRetrieval(gname, skip, limit) {
     const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
     const query = `gname=${gname}&skip=${checkedSkip}&limit=${checkedLimit}`;
     return await handleGamesRetrievalByNameRequest(query);
+}
+
+export async function gameCreation(name, dev, genres) {
+    if (name === undefined || name === "") throw new Error("Invalid name");
+    if (dev === undefined || dev === "") throw new Error("Invalid developer");
+    if (genres === undefined || genres === "") throw new Error("Invalid genres");
+
+    const genreArray = genres.split(',');
+    return await handleGameCreationRequest(name, dev, genreArray);
 }

@@ -1,5 +1,6 @@
 import { CONSTS } from "../utils.js";
 
+const token = "Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7";
 
 export async function handleGamesRetrievalRequest(query) {
     const response = await fetch(CONSTS.BASE_API_URL + "/games?" + query, {
@@ -38,4 +39,29 @@ export async function handleGamesRetrievalByNameRequest(query) {
         return games;
     }
     throw new Error("Failed to retrieve games");
+}
+
+export async function handleGameCreationRequest(name, dev, genres) {
+
+    const body = {
+        name: name,
+        developer: dev,
+        genres: genres
+    };
+
+    const response = await fetch(CONSTS.BASE_API_URL + "/games", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "Authorization" : token
+        },
+        body: JSON.stringify(body)
+    })
+
+    if (response.status === 201) {
+        const model = await response.json();
+        return model.gId;
+    }
+    throw new Error("Failed to create game");
 }

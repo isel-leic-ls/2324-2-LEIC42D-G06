@@ -19,28 +19,43 @@ function gamesSearchByNameClick(name) {
         + "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT;
 }
 
-export function gamesSearchPage() { //this is the search page for games by genre(s) and developer
+export function gamesSearchPage(createGame) { //this is the search page for games by genre(s) and developer
     const genresInput = input({ type: "text", id: "genresInput", placeHolder: "Action, Adventure" });
     const developerInput = input({ type: "text", id: "developerInput", placeHolder: "Ubisoft, EA" });
     const nameInput = input ({type: "text", id: "nameInput", placeHolder: "FIFA 22"});
 
+    const form = document.createElement('form');
+    form.appendChild(label({}, "Game name:"));
+    form.appendChild(input({ type: "text", id: "gameName", required: true }));
+    form.appendChild(label({}, "Game developer:"));
+    form.appendChild(input({ type: "text", id: "gameDeveloper", required: true }));
+    form.appendChild(label({}, "Game genres:"));
+    form.appendChild(input({ type: "text", id: "gameGenres", required: true }));
+    form.appendChild(
+        button({
+            type: "submit",
+            onClick: (event) => {
+                createGameClick(event, createGame,
+                    document.getElementById('gameName').value,
+                    document.getElementById('gameDeveloper').value,
+                    document.getElementById('gameGenres').value
+                );
+                closeModal();
+            }
+        }, "Create game")
+    );
+
+    const createButton = button( {onClick: () => { openModal(form) }}, "Create game");
+
     const homeButton = returnHomeButton();
 
     const searchButton = button(
-        {
-            onClick: () => {
-                gamesSearchPageClick(genresInput.value, developerInput.value);
-            }
-        },
+        { onClick: () => { gamesSearchPageClick(genresInput.value, developerInput.value); } },
         "Search"
     );
 
     const secondSearchButton = button(
-        {
-            onClick: () => {
-                gamesSearchByNameClick(nameInput.value);
-            }
-        },
+        { onClick: () => { gamesSearchByNameClick(nameInput.value); } },
         "Search"
     );
 
@@ -66,7 +81,12 @@ export function gamesSearchPage() { //this is the search page for games by genre
         homeButton
     );
 
-    return div({}, div( {}, element, secondElement));
+    return div({}, createButton, div( {}, element, secondElement));
+}
+
+function createGameClick(event, createGameFunction, name, dev, genres) {
+    event.preventDefault();
+    createGameFunction(name, dev, genres);
 }
 
 export function gamesListPage(games, buttons) { //this is the list of games that match the search criteria
@@ -102,7 +122,7 @@ export function gameDetailsPage(game, createSession) { //this is the details pag
         button({
             type: "submit",
             onClick: (event) => {
-                createGameClick(event, createSession, game.id,
+                createSessionClick(event, createSession, game.id,
                     document.getElementById('sessionCapacity').value,
                     document.getElementById('sessionDate').value
                 );
@@ -139,7 +159,7 @@ export function gameDetailsPage(game, createSession) { //this is the details pag
     return element;
 }
 
-function createGameClick(event, createSessionFunction, gid, capacity, date) {
+function createSessionClick(event, createSessionFunction, gid, capacity, date) {
     event.preventDefault();
     createSessionFunction(gid, capacity, date);
 }

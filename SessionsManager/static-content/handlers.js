@@ -6,7 +6,7 @@ import {pagingButtons} from "./components/pagingButtons.js"
 import {safeCall} from "./utils.js";
 import {filterQueryParameters, filterResource} from "./uriparsers.js"
 import {sessionsRetrieval, sessionDetailsRetrieval, sessionCreation, sessionLeave, sessionUpdate, sessionJoin } from "./services/sessionServices.js"
-import {gamesRetrieval, gameDetailsRetrieval, gamesByNameRetrieval } from "./services/gamesServices.js"
+import {gamesRetrieval, gameDetailsRetrieval, gamesByNameRetrieval, gameCreation } from "./services/gamesServices.js"
 import {playerDetailsRetrieval, playerIdRetrieval} from "./services/playerServices.js"
 import {div, button} from "./tags.js";
 import {closeModal} from "./components/modal.js";
@@ -22,7 +22,11 @@ async function getHome(mainContent) {
 
 /** Games */
 function getGamesSearch(mainContent) {
-    const pageContent = gamesSearchPage();
+    const createGameFunction = (async (name, dev, genres) => {
+        const gid = await gameCreation(name, dev, genres);
+        window.location.hash = "games/" + gid;
+    });
+    const pageContent = gamesSearchPage(createGameFunction);
     mainContent.replaceChildren(pageContent);
 }
 
