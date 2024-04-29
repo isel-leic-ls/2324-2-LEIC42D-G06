@@ -71,4 +71,34 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
             return result.getInt("pid")
         }
     }
+
+    override fun getPlayersByUsername(username: String, skip: Int, limit: Int): List<Player> {
+        dataSource.connection.use {
+            val result = it.prepareStatement("SELECT * FROM player WHERE name LIKE ?")
+                .bindParameters("$username%")
+                .executeQuery()
+
+            val players = mutableListOf<Player>()
+
+            while (result.next()) {
+                val pid = result.getInt("pid")
+                val name = result.getString("name")
+                val email = result.getString("email")
+                val token = result.getString("token")
+                val password = result.getString("password")
+
+                players.add(
+                    Player(
+                        id = pid,
+                        name = name,
+                        email = email,
+                        token = token,
+                        password = password
+                    )
+                )
+            }
+            return players.drop(skip).take(limit)
+        }
+
+    }
 }

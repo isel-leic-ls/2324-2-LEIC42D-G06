@@ -31,7 +31,8 @@ CREATE TABLE SessionPlayer (
 INSERT INTO Player(name, email, token, password) VALUES
                                                      ('Pedro', 'pedro@hotmail.com', '3ad7db4b-c5a9-42ee-9094-852f94c57cb7', 'p3dr0'),
                                                      ('Vasco', 'vasco@gmail.com', '3ad7db4b-c5a9-42ee-9094-852f94c57cb8', 'v4sc0'),
-                                                     ('Jonny', 'jonny@live.com.pt', '3ad7db4b-c5a9-42ee-9094-852f94c57cb9', 'j0nny');
+                                                     ('Jonny', 'jonny@live.com.pt', '3ad7db4b-c5a9-42ee-9094-852f94c57cb9', 'j0nny'),
+                                                     ('Vasteste','vascoabcd@gmail.com','3ad7db4b-c5a9-42ee-9094-852f94c57cc9','v4sd0');
 
 
 -- Insert into Game table

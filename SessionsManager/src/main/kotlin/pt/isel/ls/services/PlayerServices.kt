@@ -34,4 +34,10 @@ class PlayerServices(private val pRepo: PlayersRepo) {
     }
 
     fun getPlayerIdByToken(token: String) = pRepo.getPlayerIdByToken(token)
+
+    fun getPlayersByUsername(username : String,skip:Int, limit:Int):List<Player> {
+        require(skip >= 0) { "Skip value must be positive" }
+        require(limit > 0) { "Limit value must be positive non-zero" }
+        return pRepo.getPlayersByUsername(username,skip,limit)
+    }
 }

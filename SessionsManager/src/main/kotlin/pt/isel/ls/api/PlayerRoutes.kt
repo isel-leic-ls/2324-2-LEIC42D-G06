@@ -11,16 +11,18 @@ import pt.isel.ls.api.model.PlayerInputModel
 import org.http4k.core.Status
 import pt.isel.ls.api.model.PlayerOutputModel
 import pt.isel.ls.api.model.PlayerRetrievalOutputModel
+import pt.isel.ls.api.model.PlayersListRetrievalOutputModel
 
 class PlayerRoutes(private val services: PlayerServices) {
 
     val routes: RoutingHttpHandler = routes(
         PlayerUris.CREATE bind Method.POST to ::createPlayer,
         PlayerUris.GET bind Method.GET to ::getPlayerDetails,
-        PlayerUris.GET_BY_TOKEN bind Method.GET to ::getPlayerIdByToken
+        PlayerUris.GET_BY_TOKEN bind Method.GET to ::getPlayerIdByToken,
+        PlayerUris.GET_BY_USERNAME bind Method.GET to ::getPlayersByUsername
     )
 
-    private fun createPlayer(request : Request) =
+    private fun createPlayer(request: Request) =
         exceptionAwareScope {
             val inputModel = request.fromJson<PlayerInputModel>()
             val (token, pid) = services.createPlayer(inputModel.name, inputModel.email, inputModel.password)
@@ -38,6 +40,13 @@ class PlayerRoutes(private val services: PlayerServices) {
         val token = request.getAuthorizationToken()
         val pid = services.getPlayerIdByToken(token)
         Response(Status.OK).toJson(PlayerOutputModel(pid, token))//TODO() so enviar o id provavelmente
+    }
+
+    private fun getPlayersByUsername(request: Request) = exceptionAwareScope {
+        val username = request.getUsername()
+        val (skip, limit) = request.getSkipAndLimit()
+        val playersList = services.getPlayersByUsername(username, skip, limit)
+        Response(Status.OK).toJson(PlayersListRetrievalOutputModel(playersList))
     }
 
 }

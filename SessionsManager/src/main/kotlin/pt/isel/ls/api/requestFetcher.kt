@@ -17,6 +17,7 @@ const val gameName = "gname"
 const val SESSION_ID = "sid"
 const val SKIP = "skip"
 const val LIMIT = "limit"
+const val USERNAME = "name"
 
 fun Request.getGameId(): Int {
     return path(gameId)?.toIntOrNull() ?: throw IllegalArgumentException("Invalid game ID")
@@ -73,4 +74,8 @@ fun Request.getAuthorizationToken(): String {
 
 fun Request.getPlayerDetails(): Int{
     return path("pid")?.toIntOrNull() ?: throw IllegalArgumentException("Invalid player ID")
+}
+
+fun Request.getUsername(): String {
+    return query(USERNAME) ?: throw IllegalArgumentException("Invalid username")
 }

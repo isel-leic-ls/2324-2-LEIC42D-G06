@@ -24,4 +24,5 @@ object PlayerUris {
     const val CREATE = "$API/players"
     const val GET = "$API/players/{pid}"
     const val GET_BY_TOKEN = "$API/players/token/info"
+    const val GET_BY_USERNAME = "$API/players"
 }

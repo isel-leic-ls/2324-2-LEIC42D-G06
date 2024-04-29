@@ -7,7 +7,6 @@ import org.http4k.core.Status
 import org.http4k.routing.RoutingHttpHandler
 import org.http4k.routing.bind
 import org.http4k.routing.routes
-import org.slf4j.LoggerFactory
 import pt.isel.ls.api.model.*
 import pt.isel.ls.services.SessionServices
 
