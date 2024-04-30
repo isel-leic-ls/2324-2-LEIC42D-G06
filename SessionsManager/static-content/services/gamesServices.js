@@ -1,5 +1,6 @@
-import { handleGameDetailsRequest, handleGamesRetrievalRequest,
-handleGamesRetrievalByNameRequest, handleGameCreationRequest } from "../data/gamesRequests.js";
+import {
+    handleGameDetailsRequest, handleGamesRetrievalRequest, handleGamesRetrievalByNameRequest, handleGameCreationRequest
+} from "../data/gamesRequests.js";
 import { CONSTS } from "../utils.js";
 
 
@@ -11,8 +12,8 @@ export async function gameDetailsRetrieval(gId) {
 }
 
 export async function gamesRetrieval(skip, limit, genres, developer) {
-    if (genres === undefined || genres === "") throw new Error("Invalid genres");
-    if (developer === undefined || developer === "") throw new Error("Invalid developer");
+    if (genres === undefined) throw new Error("Invalid genres");
+    if (developer === undefined) throw new Error("Invalid developer");
     const checkedSkip = isNaN(skip) || skip < 0 ? CONSTS.SKIP_DEFAULT : skip;
     const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
 

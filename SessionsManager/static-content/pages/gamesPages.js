@@ -1,14 +1,12 @@
 import { div, a, ul, li, label, input, button, form } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
-import { errorToast} from "../components/errorToast.js"
+import { errorToast } from "../components/errorToast.js"
 import { openModal, closeModal } from "../components/modal.js"
 import { CONSTS } from "../utils.js"
 
 
 function gamesSearchPageClick(genres, developer) {
-    if (genres === "" || developer === "")
-        errorToast("Please enter at least one genre or developer");
-    else window.location.hash = "games/list?genres=" + genres + "&developer=" + developer
+    window.location.hash = "games/list?genres=" + genres + "&developer=" + developer
         + "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT;
 }
 
@@ -22,7 +20,7 @@ function gamesSearchByNameClick(name) {
 export function gamesSearchPage(createGame) { //this is the search page for games by genre(s) and developer
     const genresInput = input({ type: "text", id: "genresInput", placeHolder: "Action, Adventure" });
     const developerInput = input({ type: "text", id: "developerInput", placeHolder: "Ubisoft, EA" });
-    const nameInput = input ({type: "text", id: "nameInput", placeHolder: "FIFA 22"});
+    const nameInput = input({ type: "text", id: "nameInput", placeHolder: "FIFA 22" });
 
     const form = document.createElement('form');
     form.appendChild(label({}, "Game name:"));
@@ -45,7 +43,7 @@ export function gamesSearchPage(createGame) { //this is the search page for game
         }, "Create game")
     );
 
-    const createButton = button( {onClick: () => { openModal(form) }}, "Create game");
+    const createButton = button({ onClick: () => { openModal(form) } }, "Create game");
 
     const homeButton = returnHomeButton();
 
@@ -81,7 +79,7 @@ export function gamesSearchPage(createGame) { //this is the search page for game
         homeButton
     );
 
-    return div({}, createButton, div( {}, element, secondElement));
+    return div({}, createButton, div({}, element, secondElement));
 }
 
 function createGameClick(event, createGameFunction, name, dev, genres) {
@@ -133,7 +131,7 @@ export function gameDetailsPage(game, createSession) { //this is the details pag
 
     const element =
         div(
-            {id: "gameDetails"},
+            { id: "gameDetails" },
             "Game Details",
             div(
                 {},
@@ -143,7 +141,7 @@ export function gameDetailsPage(game, createSession) { //this is the details pag
                     li({}, "Developer: " + game.dev),
                     li({}, "Genres: " + game.genres.join(", ")),
                 ),
-                button( {onClick : () => { openModal(form) } }, "Create a session with this game")
+                button({ onClick: () => { openModal(form) } }, "Create a session with this game")
             ),
             button(
                 {
