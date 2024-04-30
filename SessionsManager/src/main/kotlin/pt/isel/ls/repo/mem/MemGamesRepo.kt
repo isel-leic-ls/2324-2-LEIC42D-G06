@@ -44,17 +44,14 @@ class MemGamesRepo : GamesRepo {
     override fun getListOfGames(
         genres: List<String>, developer: String, limit: Int, skip: Int
     ): Pair<List<Game>, Int> {
-        val genresUpperCased = genres.map { it.uppercase() } //to make the search case-insensitive
-        val devUpperCased = developer.uppercase() //to make the search case-insensitive
-        val fullList = games.filter {
-            it.dev.uppercase() == devUpperCased
-                    || it.genres.any { g -> g.uppercase() in genresUpperCased }
-        }
+        val isGenresAndDevEmptyOrBlank = (genres.isEmpty() || genres.all { it.isBlank() }) && developer.isBlank()
+        val searchedList =
+            if (isGenresAndDevEmptyOrBlank) games.toList()
+            else games.filter { game ->
+                game.dev.uppercase() == developer.uppercase() ||
+                        game.genres.any { g -> g.uppercase() in genres.map { it.uppercase() } }
+            }
 
-        val fullListSize = fullList.size
-        val lastIdx = if (skip + limit > fullListSize) fullListSize else skip + limit
-        val firstIdx = if (skip > fullListSize) fullListSize else skip
-
-        return fullList.subList(firstIdx, lastIdx) to fullList.size
+        return searchedList.drop(skip).take(limit) to searchedList.size
     }
 }

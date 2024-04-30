@@ -100,14 +100,20 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
     override fun getListOfGames(
         genres: List<String>, developer: String, limit: Int, skip: Int
     ): Pair<List<Game>, Int> {
-        dataSource.connection.use {
-            val stmt = it.prepareStatement(
-                "SELECT * FROM game WHERE developer ILIKE ? OR " +
-                        "EXISTS (SELECT 1 FROM UNNEST(genres) AS genre WHERE genre ILIKE ANY(?)) " +
-                        "ORDER BY gid"
-            )
+        dataSource.connection.use { connection ->
+            val isGenresAndDevEmptyOrBlank = (genres.isEmpty() || genres.all { it.isBlank() }) && developer.isBlank()
+            val stmt =
+                if (isGenresAndDevEmptyOrBlank)
+                    connection.prepareStatement("SELECT * FROM game ORDER BY gid")
+                else connection.prepareStatement(
+                    "SELECT * FROM game WHERE developer ILIKE ? OR " +
+                            "EXISTS (SELECT 1 FROM UNNEST(genres) AS genre WHERE genre ILIKE ANY(?)) " +
+                            "ORDER BY gid"
+                )
+            if (!isGenresAndDevEmptyOrBlank){
             stmt.setString(1, developer)
-            stmt.setArray(2, it.createArrayOf("VARCHAR", genres.toTypedArray()))
+            stmt.setArray(2, connection.createArrayOf("VARCHAR", genres.toTypedArray()))
+            }
             val rs = stmt.executeQuery()
 
             val games = mutableListOf<Game>()

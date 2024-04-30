@@ -162,6 +162,24 @@ class RepoJdbcGamesTests {
 
         val (list6, _) = repo.getListOfGames(listOf("genre99"), "developer99", 5, 0)
         assertTrue { list6.isEmpty() }
+
+        val (list7, _) = repo.getListOfGames(listOf(genres23[1]), "", 5, 0)
+        assertTrue { list7.containsAll(listOf(game2, game4)) && list7.size == 2 }
+
+        val (list8, _) = repo.getListOfGames(listOf(), dev2, 5, 0)
+        assertTrue { list8.containsAll(listOf(game4)) && list8.size == 1 }
+
+        val (list9, _) = repo.getListOfGames(listOf(), "", 5, 0)
+        assertTrue { list9.containsAll(listOf(game1, game2, game3, game4)) && list9.size == 4 }
+
+        val (list10, _) = repo.getListOfGames(listOf(""), "", 5, 0)
+        assertTrue { list10.containsAll(listOf(game1, game2, game3, game4)) && list10.size == 4 }
+
+        val (list11, _) = repo.getListOfGames(listOf(""), dev2, 5, 0)
+        assertTrue { list11.containsAll(listOf(game4)) && list11.size == 1 }
+
+        val (list12, _) = repo.getListOfGames(listOf(), "", 2, 1)
+        assertTrue { list12.containsAll(listOf(game2, game3)) && list12.size == 2 }
     }
 
     @Test

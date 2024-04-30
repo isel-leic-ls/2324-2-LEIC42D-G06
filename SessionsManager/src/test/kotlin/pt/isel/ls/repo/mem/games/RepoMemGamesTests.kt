@@ -148,6 +148,24 @@ class RepoMemGamesTests {
 
         val (list9, _) = repo.getListOfGames(listOf("H"), dev2, 5, 0)
         assertTrue { list9.containsAll(listOf(game4)) && list9.size == 1 }
+
+        val (list10, _) = repo.getListOfGames(listOf(genresXYZ[0]), "", 5, 0)
+        assertTrue { list10.containsAll(listOf(game3, game4)) && list10.size == 2 }
+
+        val (list11, _) = repo.getListOfGames(listOf(), dev1, 5, 0)
+        assertTrue { list11.containsAll(listOf(game1, game2, game3)) && list11.size == 3 }
+
+        val (list12, _) = repo.getListOfGames(listOf(), "", 5, 0)
+        assertTrue { list12.containsAll(listOf(game1, game2, game3, game4)) && list12.size == 4 }
+
+        val (list13, _) = repo.getListOfGames(listOf(""), "", 5, 0)
+        assertTrue { list13.containsAll(listOf(game1, game2, game3, game4)) && list13.size == 4 }
+
+        val (list14, _) = repo.getListOfGames(listOf(""), dev2, 5, 0)
+        assertTrue { list14.containsAll(listOf(game4)) && list14.size == 1 }
+
+        val (list15, _) = repo.getListOfGames(listOf(), "", 2, 1)
+        assertTrue { list15.containsAll(listOf(game2, game3)) && list15.size == 2 }
     }
 
     @Test
