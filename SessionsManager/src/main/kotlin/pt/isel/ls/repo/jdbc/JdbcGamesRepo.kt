@@ -78,10 +78,13 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
 
     override fun getGamesByName(name: String, limit: Int, skip: Int): Pair<List<Game>, Int> {
         dataSource.connection.use {
-            val stmt = it.prepareStatement("SELECT * FROM game WHERE name ILIKE ? ORDER BY gid")
-            stmt.setString(1, "%$name%")
-            val rs = stmt.executeQuery()
+            val isNameEmptyOrBlank = name.isBlank()
+            val stmt =
+                if (isNameEmptyOrBlank) it.prepareStatement("SELECT * FROM game ORDER BY gid")
+                else it.prepareStatement("SELECT * FROM game WHERE name ILIKE ? ORDER BY gid")
+            if (!isNameEmptyOrBlank) stmt.setString(1, "%$name%")
 
+            val rs = stmt.executeQuery()
             val games = mutableListOf<Game>()
             while (rs.next()) {
                 games.add(
@@ -97,7 +100,7 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
         }
     }
 
-    override fun getListOfGames(
+    override fun getGamesByGenresDev(
         genres: List<String>, developer: String, limit: Int, skip: Int
     ): Pair<List<Game>, Int> {
         dataSource.connection.use { connection ->
@@ -110,12 +113,12 @@ class JdbcGamesRepo(private val dataSource: DataSource) : GamesRepo {
                             "EXISTS (SELECT 1 FROM UNNEST(genres) AS genre WHERE genre ILIKE ANY(?)) " +
                             "ORDER BY gid"
                 )
-            if (!isGenresAndDevEmptyOrBlank){
-            stmt.setString(1, developer)
-            stmt.setArray(2, connection.createArrayOf("VARCHAR", genres.toTypedArray()))
+            if (!isGenresAndDevEmptyOrBlank) {
+                stmt.setString(1, developer)
+                stmt.setArray(2, connection.createArrayOf("VARCHAR", genres.toTypedArray()))
             }
-            val rs = stmt.executeQuery()
 
+            val rs = stmt.executeQuery()
             val games = mutableListOf<Game>()
             while (rs.next()) {
                 games.add(

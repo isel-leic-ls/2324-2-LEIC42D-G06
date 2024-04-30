@@ -7,8 +7,8 @@ object GameUrisObj {
     const val CREATE = "$API/games"
     const val GET_BY_ID = "$API/games/id/{gid}"
     const val GET_BY_NAME = "$API/games/name/{gname}"
-    const val GET_GAMES_BY_PARTIAL_NAME = "$API/games/list"
-    const val GET_GAMES_BY_DEV_GENRES = "$API/games"
+    const val GET_GAMES_BY_NAME = "$API/games/list"
+    const val GET_GAMES_BY_GENRES_DEV = "$API/games"
 }
 
 object Session {

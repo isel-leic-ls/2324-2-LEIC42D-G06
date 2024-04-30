@@ -37,7 +37,6 @@ class RepoJdbcGamesTests {
     @Test
     fun `check game exists by id`() {
         val gId = repo.insert("name", "developer", listOf("genre"))
-
         assertTrue { repo.checkGameExistsById(gId) }
         assertFalse { repo.checkGameExistsById(gId - 1) }
     }
@@ -57,13 +56,10 @@ class RepoJdbcGamesTests {
         val gId1 = repo.insert(
             "gName1 - Insertion Test Jdbc", "Developer XPTO", listOf("genre1", "genre2")
         )
-
         assertTrue(gId1 >= FIRST_GAME_ID)
-
         val gId2 = repo.insert(
             "gName2 - Insertion Test Jdbc", "Developer ABC", listOf("genreA")
         )
-
         assertTrue(gId2 >= FIRST_GAME_ID + 1)
     }
 
@@ -127,6 +123,10 @@ class RepoJdbcGamesTests {
         assertTrue { list5.containsAll(listOf(game3, game4)) && list5.size == 2 }
         val (list6, _) = repo.getGamesByName("F", 2, 1)
         assertTrue { list6.containsAll(listOf(game2, game3)) && list6.size == 2 }
+        val (list7, _) = repo.getGamesByName("", 5, 0)
+        assertTrue { list7.containsAll(listOf(game1, game2, game3, game4)) && list7.size == 4 }
+        val (list8, _) = repo.getGamesByName(" ", 2, 1)
+        assertTrue { list8.containsAll(listOf(game2, game3)) && list8.size == 2 }
     }
 
     @Test
@@ -145,40 +145,29 @@ class RepoJdbcGamesTests {
         val gameId4 = repo.insert("name4", dev2, genres23)
         val game4 = repo.getGameById(gameId4)
 
-        val (list1, _) = repo.getListOfGames(genres12, dev1, 5, 0)
+        val (list1, _) = repo.getGamesByGenresDev(genres12, dev1, 5, 0)
         assertTrue { list1.containsAll(listOf(game1, game2, game3, game4)) && list1.size == 4 }
-
-        val (list2, _) = repo.getListOfGames(genres23, dev1, 5, 0)
+        val (list2, _) = repo.getGamesByGenresDev(genres23, dev1, 5, 0)
         assertTrue { list2.containsAll(listOf(game1, game2, game3, game4)) && list2.size == 4 }
-
-        val (list3, _) = repo.getListOfGames(listOf(genres12[0].uppercase()), dev2, 5, 0)
+        val (list3, _) = repo.getGamesByGenresDev(listOf(genres12[0].uppercase()), dev2, 5, 0)
         assertTrue { list3.containsAll(listOf(game1, game3, game4)) && list3.size == 3 }
-
-        val (list4, _) = repo.getListOfGames(listOf(genres23[1]), dev2, 5, 0)
+        val (list4, _) = repo.getGamesByGenresDev(listOf(genres23[1]), dev2, 5, 0)
         assertTrue { list4.containsAll(listOf(game2, game4)) && list4.size == 2 }
-
-        val (list5, _) = repo.getListOfGames(listOf(genres12[0]), dev1, 5, 0)
+        val (list5, _) = repo.getGamesByGenresDev(listOf(genres12[0]), dev1, 5, 0)
         assertTrue { list5.containsAll(listOf(game1, game2, game3)) && list5.size == 3 }
-
-        val (list6, _) = repo.getListOfGames(listOf("genre99"), "developer99", 5, 0)
+        val (list6, _) = repo.getGamesByGenresDev(listOf("genre99"), "developer99", 5, 0)
         assertTrue { list6.isEmpty() }
-
-        val (list7, _) = repo.getListOfGames(listOf(genres23[1]), "", 5, 0)
+        val (list7, _) = repo.getGamesByGenresDev(listOf(genres23[1]), "", 5, 0)
         assertTrue { list7.containsAll(listOf(game2, game4)) && list7.size == 2 }
-
-        val (list8, _) = repo.getListOfGames(listOf(), dev2, 5, 0)
+        val (list8, _) = repo.getGamesByGenresDev(listOf(), dev2, 5, 0)
         assertTrue { list8.containsAll(listOf(game4)) && list8.size == 1 }
-
-        val (list9, _) = repo.getListOfGames(listOf(), "", 5, 0)
+        val (list9, _) = repo.getGamesByGenresDev(listOf(), "", 5, 0)
         assertTrue { list9.containsAll(listOf(game1, game2, game3, game4)) && list9.size == 4 }
-
-        val (list10, _) = repo.getListOfGames(listOf(""), "", 5, 0)
+        val (list10, _) = repo.getGamesByGenresDev(listOf(""), "", 5, 0)
         assertTrue { list10.containsAll(listOf(game1, game2, game3, game4)) && list10.size == 4 }
-
-        val (list11, _) = repo.getListOfGames(listOf(""), dev2, 5, 0)
+        val (list11, _) = repo.getGamesByGenresDev(listOf(""), dev2, 5, 0)
         assertTrue { list11.containsAll(listOf(game4)) && list11.size == 1 }
-
-        val (list12, _) = repo.getListOfGames(listOf(), "", 2, 1)
+        val (list12, _) = repo.getGamesByGenresDev(listOf(), "", 2, 1)
         assertTrue { list12.containsAll(listOf(game2, game3)) && list12.size == 2 }
     }
 
@@ -198,19 +187,15 @@ class RepoJdbcGamesTests {
         val gameId4 = repo.insert("name4", dev2, genres23)
         val game4 = repo.getGameById(gameId4)
 
-        val (list1, _) = repo.getListOfGames(genres12, dev1, 2, 0)
+        val (list1, _) = repo.getGamesByGenresDev(genres12, dev1, 2, 0)
         assertTrue { list1.containsAll(listOf(game1, game2)) && list1.size == 2 }
-
-        val (list2, _) = repo.getListOfGames(listOf(genres12[0]), dev1, 2, 2)
+        val (list2, _) = repo.getGamesByGenresDev(listOf(genres12[0]), dev1, 2, 2)
         assertTrue { list2.containsAll(listOf(game3)) && list2.size == 1 }
-
-        val (list3, _) = repo.getListOfGames(genres23, dev1, 2, 0)
+        val (list3, _) = repo.getGamesByGenresDev(genres23, dev1, 2, 0)
         assertTrue { list3.containsAll(listOf(game1, game2)) && list3.size == 2 }
-
-        val (list4, _) = repo.getListOfGames(genres23, dev1, 2, 2)
+        val (list4, _) = repo.getGamesByGenresDev(genres23, dev1, 2, 2)
         assertTrue { list4.containsAll(listOf(game3, game4)) && list4.size == 2 }
-
-        val (list5, _) = repo.getListOfGames(genres23, dev2, 5, 6)
+        val (list5, _) = repo.getGamesByGenresDev(genres23, dev2, 5, 6)
         assertTrue { list5.isEmpty() }
     }
 }

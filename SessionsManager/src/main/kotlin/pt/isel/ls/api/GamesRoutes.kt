@@ -21,8 +21,8 @@ class GamesRoutes(private val services: GamesServices) {
             GameUrisObj.CREATE bind Method.POST to ::createGame,
             GameUrisObj.GET_BY_ID bind Method.GET to ::getGameDetailsById,
             GameUrisObj.GET_BY_NAME bind Method.GET to ::getGameDetailsByName,
-            GameUrisObj.GET_GAMES_BY_PARTIAL_NAME bind Method.GET to ::getGameDetailsByPartialName,
-            GameUrisObj.GET_GAMES_BY_DEV_GENRES bind Method.GET to ::getListOfGamesByDevGenres
+            GameUrisObj.GET_GAMES_BY_NAME bind Method.GET to ::getGamesByName,
+            GameUrisObj.GET_GAMES_BY_GENRES_DEV bind Method.GET to ::getGamesByGenresDev
         )
 
     private fun createGame(request: Request): Response =
@@ -53,21 +53,21 @@ class GamesRoutes(private val services: GamesServices) {
             Response(Status.OK).toJson(game)
         }
 
-    private fun getGameDetailsByPartialName(request: Request): Response =
+    private fun getGamesByName(request: Request): Response =
         exceptionAwareScope {
             val encodedName = request.getPartialGameName()
             val decodedName = URLDecoder.decode(encodedName, StandardCharsets.UTF_8.toString())
             val (skip, limit) = request.getSkipAndLimit()
-            val (games, total) = services.getListOfGamesByName(decodedName, limit, skip)
+            val (games, total) = services.getGamesByName(decodedName, limit, skip)
             Response(Status.OK).toJson(GamesListOutputModel(games, total))
         }
 
 
-    private fun getListOfGamesByDevGenres(request: Request): Response =
+    private fun getGamesByGenresDev(request: Request): Response =
         exceptionAwareScope {
             val (genres, developer) = request.getGamesListInputModel()
             val (skip, limit) = request.getSkipAndLimit()
-            val (games, total)  = services.getListOfGames(genres, developer, limit, skip)
+            val (games, total)  = services.getGamesByGenresDev(genres, developer, limit, skip)
             Response(Status.OK).toJson(GamesListOutputModel(games, total))
         }
 }

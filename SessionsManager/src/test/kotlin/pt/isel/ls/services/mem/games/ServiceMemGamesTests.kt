@@ -94,7 +94,52 @@ class ServiceMemGamesTests {
     }
 
     @Test
-    fun `test getListOfGames with and without limit and skip`() {
+    fun `test getGamesByName with and without limit and skip`() {
+        val service = GamesServices(MemGamesRepo(), pRepo)
+        val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
+        val token = foundPlayer.token
+
+        val g1 = service.createGame(token, "CS", "valveDev", listOf("fps", "tactical"))
+        val g2 = service.createGame(token, "GTA V", "rockstar", listOf("action", "adventure"))
+        val g3 = service.createGame(token, "FIFA 20", "eaSportsDev", listOf("sports"))
+        val g4 = service.createGame(token, "FIFA 21", "eaSportsDev", listOf("sports"))
+        val g5 = service.createGame(token, "WWE 2K20", "eaSportsDev", listOf("sports"))
+
+        val (games1, _) = service.getGamesByName("CS")
+        assertEquals(1, games1.size)
+        assertEquals(g1, games1[0].id)
+        val (games2, _) = service.getGamesByName("GTA V")
+        assertEquals(1, games2.size)
+        assertEquals(g2, games2[0].id)
+        val (games3, _) = service.getGamesByName("gt    ")
+        assertEquals(1, games3.size)
+        assertEquals(g2, games3[0].id)
+        val (games4, _) = service.getGamesByName("fifa", 2, 1)
+        assertEquals(1, games4.size)
+        assertEquals(g4, games4[0].id)
+        val (games5, _) = service.getGamesByName("2", 5, 0)
+        assertEquals(3, games5.size)
+        assertEquals(g3, games5[0].id)
+        assertEquals(g4, games5[1].id)
+        assertEquals(g5, games5[2].id)
+        val (games6, _) = service.getGamesByName("  a   ", 5, 1)
+        assertEquals(2, games6.size)
+        assertEquals(g3, games6[0].id)
+        assertEquals(g4, games6[1].id)
+        val (games7, _) = service.getGamesByName("  ", 5, 0)
+        assertEquals(5, games7.size)
+        val (games8, _) = service.getGamesByName("", 5, 0)
+        assertEquals(5, games8.size)
+        val listOfParamsPair = listOf(Pair(-1, 5), Pair(0, 5), Pair(3, -1))
+        listOfParamsPair.forEach {
+            assertFailsWith<IllegalArgumentException> {
+                service.getGamesByName("sports", it.first, it.second)
+            }
+        }
+    }
+
+    @Test
+    fun `test getGamesByGenresDev with and without limit and skip`() {
         val service = GamesServices(MemGamesRepo(), pRepo)
         val foundPlayer = pRepo.getPlayer(FIRST_PLAYER_ID)
         val token = foundPlayer.token
@@ -108,46 +153,36 @@ class ServiceMemGamesTests {
         val g4 =
             service.createGame(token, "WWE 2K20", "eaSportsDev", listOf("sports"))
 
-        val (games1, _) = service.getListOfGames(listOf("fps", "tactical"), "valveDev")
+        val (games1, _) = service.getGamesByGenresDev(listOf("fps", "tactical"), "valveDev")
         assertEquals(1, games1.size)
         assertEquals(g1, games1[0].id)
-
-        val (games2, _) = service.getListOfGames(listOf("action     ", "adventure"), "rockstarGamesDev")
+        val (games2, _) = service.getGamesByGenresDev(listOf("action     ", "adventure"), "rockstarGamesDev")
         assertEquals(1, games2.size)
         assertEquals(g2, games2[0].id)
-
-        val (games3, _) = service.getListOfGames(listOf(" sports "), "eaSportsDev")
+        val (games3, _) = service.getGamesByGenresDev(listOf(" sports "), "eaSportsDev")
         assertEquals(2, games3.size)
         assertEquals(g3, games3[0].id)
         assertEquals(g4, games3[1].id)
-
-        val (games4, _) = service.getListOfGames(listOf("SPORTS"), "eaSportsDev", 5, 1)
+        val (games4, _) = service.getGamesByGenresDev(listOf("SPORTS"), "eaSportsDev", 5, 1)
         assertEquals(1, games4.size)
         assertEquals(g4, games4[0].id)
-
-        val (games5, _) = service.getListOfGames(listOf("sports"), "easportsdev     ", 1, 0)
+        val (games5, _) = service.getGamesByGenresDev(listOf("sports"), "easportsdev     ", 1, 0)
         assertEquals(1, games5.size)
         assertEquals(g3, games5[0].id)
-
-        val (games6, _) = service.getListOfGames(listOf("rts"), "   ROCKSTARGAMESDEV", 5, 1)
+        val (games6, _) = service.getGamesByGenresDev(listOf("rts"), "   ROCKSTARGAMESDEV", 5, 1)
         assertEquals(0, games6.size)
-
-        val (games7, _) = service.getListOfGames(listOf("fps"), "rocKstarGAMEsDeV", 5, 4)
+        val (games7, _) = service.getGamesByGenresDev(listOf("fps"), "rocKstarGAMEsDeV", 5, 4)
         assertEquals(0, games7.size)
-
-        val (games8, _) = service.getListOfGames(listOf("   fps    "), "   ", 5, 0)
+        val (games8, _) = service.getGamesByGenresDev(listOf("   fps    "), "   ", 5, 0)
         assertEquals(1, games8.size)
-
-        val (games9, _) = service.getListOfGames(listOf("   "), "eaSportsDEV", 1, 1)
+        val (games9, _) = service.getGamesByGenresDev(listOf("   "), "eaSportsDEV", 1, 1)
         assertEquals(1, games9.size)
-
-        val (games10, _) = service.getListOfGames(listOf(), "", 2, 1)
+        val (games10, _) = service.getGamesByGenresDev(listOf(), "", 2, 1)
         assertEquals(2, games10.size)
-
         val listOfParamsPair = listOf(Pair(-1, 5), Pair(0, 5), Pair(3, -1))
         listOfParamsPair.forEach {
             assertFailsWith<IllegalArgumentException> {
-                service.getListOfGames(listOf("sports"), "rockstarGamesDev", it.first, it.second)
+                service.getGamesByGenresDev(listOf("sports"), "rockstarGamesDev", it.first, it.second)
             }
         }
     }

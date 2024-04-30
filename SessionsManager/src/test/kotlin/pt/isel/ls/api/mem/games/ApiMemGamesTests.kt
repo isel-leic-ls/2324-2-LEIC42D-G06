@@ -133,7 +133,7 @@ class ApiMemGamesTests {
             }
         """.trimIndent()
         val request =
-            Request(Method.GET, GameUrisObj.GET_GAMES_BY_PARTIAL_NAME + "?gname=$encodedName?skip=0&limit=8")
+            Request(Method.GET, GameUrisObj.GET_GAMES_BY_NAME + "?gname=$encodedName?skip=0&limit=8")
                 .body(requestBody)
                 .header("Content-Type", "application/json")
 
@@ -144,7 +144,7 @@ class ApiMemGamesTests {
     @Test
     fun `get list of one game`() {
         val request = Request(
-            Method.GET, GameUrisObj.GET_GAMES_BY_DEV_GENRES + "?genres=Action&developer=Rockstar Games"
+            Method.GET, GameUrisObj.GET_GAMES_BY_GENRES_DEV + "?genres=Action&developer=Rockstar Games"
         )
 
         val response = mockServiceRoutes.routes(request)

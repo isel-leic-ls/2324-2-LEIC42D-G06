@@ -20,8 +20,8 @@ class GamesRoutesMock {
         GameUrisObj.CREATE bind Method.POST to ::createGame,
         GameUrisObj.GET_BY_ID bind Method.GET to ::getGameDetailsById,
         GameUrisObj.GET_BY_NAME bind Method.GET to ::getGameDetailsByName,
-        GameUrisObj.GET_GAMES_BY_PARTIAL_NAME bind Method.GET to ::getListOfGamesByPartialName,
-        GameUrisObj.GET_GAMES_BY_DEV_GENRES bind Method.GET to ::getListOfGamesByDevGenres,
+        GameUrisObj.GET_GAMES_BY_NAME bind Method.GET to ::getGamesByName,
+        GameUrisObj.GET_GAMES_BY_GENRES_DEV bind Method.GET to ::getGamesByGenresDev,
     )
 
     private fun createGame(request: Request): Response =
@@ -44,7 +44,7 @@ class GamesRoutesMock {
             Response(Status.OK).toJson(game)
         }
 
-    private fun getListOfGamesByPartialName(request: Request): Response =
+    private fun getGamesByName(request: Request): Response =
         exceptionAwareScope {
             val partialName = request.getPartialGameName()
             val (games, total) = Pair(
@@ -56,7 +56,7 @@ class GamesRoutesMock {
             Response(Status.OK).toJson(GamesListOutputModel(games, total))
         }
 
-    private fun getListOfGamesByDevGenres(request: Request): Response =
+    private fun getGamesByGenresDev(request: Request): Response =
         exceptionAwareScope {
             val (genres, dev) = request.getGamesListInputModel()
             val (games, total) = Pair(listOf(Game(FIRST_GAME_ID, "gName", dev, genres)), -1)
