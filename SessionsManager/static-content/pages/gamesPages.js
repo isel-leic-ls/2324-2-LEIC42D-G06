@@ -1,7 +1,7 @@
-import { div, a, ul, li, label, input, button, form } from "../tags.js"
-import { returnHomeButton } from "../components/returnHomeButton.js"
-import { openModal, closeModal } from "../components/modal.js"
-import { CONSTS } from "../utils.js"
+import {div, a, ul, li, label, input, button, form, p} from "../tags.js"
+import {returnHomeButton} from "../components/returnHomeButton.js"
+import {openModal, closeModal} from "../components/modal.js"
+import {CONSTS} from "../utils.js"
 
 
 function gamesSearchPageClick(genres, developer) {
@@ -15,17 +15,17 @@ function gamesSearchByNameClick(name) {
 }
 
 export function gamesSearchPage(createGame) { //this is the search page for games by genre(s) and developer
-    const genresInput = input({ type: "text", id: "genresInput", placeHolder: "Action, Adventure" });
-    const developerInput = input({ type: "text", id: "developerInput", placeHolder: "Ubisoft, EA" });
-    const nameInput = input({ type: "text", id: "nameInput", placeHolder: "FIFA 22" });
+    const genresInput = input({type: "text", id: "genresInput", placeHolder: "Action, Adventure"});
+    const developerInput = input({type: "text", id: "developerInput", placeHolder: "Ubisoft, EA"});
+    const nameInput = input({type: "text", id: "nameInput", placeHolder: "FIFA 22"});
 
     const form = document.createElement('form');
     form.appendChild(label({}, "Game name:"));
-    form.appendChild(input({ type: "text", id: "gameName", required: true }));
+    form.appendChild(input({type: "text", id: "gameName", required: true}));
     form.appendChild(label({}, "Game developer:"));
-    form.appendChild(input({ type: "text", id: "gameDeveloper", required: true }));
+    form.appendChild(input({type: "text", id: "gameDeveloper", required: true}));
     form.appendChild(label({}, "Game genres:"));
-    form.appendChild(input({ type: "text", id: "gameGenres", required: true }));
+    form.appendChild(input({type: "text", id: "gameGenres", required: true}));
     form.appendChild(
         button({
             type: "submit",
@@ -40,17 +40,29 @@ export function gamesSearchPage(createGame) { //this is the search page for game
         }, "Create game")
     );
 
-    const createButton = button({ onClick: () => { openModal(form) } }, "Create game");
+    const createButton = button({
+        onClick: () => {
+            openModal(form)
+        }
+    }, "Create game");
 
     const homeButton = returnHomeButton();
 
     const searchButton = button(
-        { onClick: () => { gamesSearchPageClick(genresInput.value, developerInput.value); } },
+        {
+            onClick: () => {
+                gamesSearchPageClick(genresInput.value, developerInput.value);
+            }
+        },
         "Search"
     );
 
     const secondSearchButton = button(
-        { onClick: () => { gamesSearchByNameClick(nameInput.value); } },
+        {
+            onClick: () => {
+                gamesSearchByNameClick(nameInput.value);
+            }
+        },
         "Search"
     );
 
@@ -76,7 +88,7 @@ export function gamesSearchPage(createGame) { //this is the search page for game
         homeButton
     );
 
-    return div({}, createButton, div({}, element, secondElement));
+    return div({},createButton, p({}),div({}, element, p({}),secondElement));
 }
 
 function createGameClick(event, createGameFunction, name, dev, genres) {
@@ -89,7 +101,7 @@ export function gamesListPage(games, buttons) { //this is the list of games that
 
     const elements = games.map(game =>
         div({},
-            a({ href: "#games/" + game.id }, game.name)
+            a({href: "#games/" + game.id}, game.name)
         )
     );
 
@@ -110,9 +122,9 @@ export function gameDetailsPage(game, createSession) { //this is the details pag
     const form = document.createElement('form');
 
     form.appendChild(label({}, "Session capacity:"));
-    form.appendChild(input({ type: "number", id: "sessionCapacity", min: 1, max: 100, required: true }));
+    form.appendChild(input({type: "number", id: "sessionCapacity", min: 1, max: 100, required: true}));
     form.appendChild(label({}, "Session date:"));
-    form.appendChild(input({ type: "text", id: "sessionDate", required: true }));
+    form.appendChild(input({type: "text", id: "sessionDate", required: true}));
     form.appendChild(
         button({
             type: "submit",
@@ -128,7 +140,7 @@ export function gameDetailsPage(game, createSession) { //this is the details pag
 
     const element =
         div(
-            { id: "gameDetails" },
+            {id: "gameDetails"},
             "Game Details",
             div(
                 {},
@@ -138,7 +150,11 @@ export function gameDetailsPage(game, createSession) { //this is the details pag
                     li({}, "Developer: " + game.dev),
                     li({}, "Genres: " + game.genres.join(", ")),
                 ),
-                button({ onClick: () => { openModal(form) } }, "Create a session with this game")
+                button({
+                    onClick: () => {
+                        openModal(form)
+                    }
+                }, "Create a session with this game")
             ),
             button(
                 {

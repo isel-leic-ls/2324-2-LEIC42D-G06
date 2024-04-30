@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue
 class MemPlayersRepo : PlayersRepo {
     private val players = ConcurrentLinkedQueue<Player>()
 
-    override fun createPlayer(name: String, email: String, token: String, password: String): Int {
+    override fun createPlayer(name: String, email: String, token: String, password: String): Int{
         val id = if (players.isNotEmpty()) players.last().id + 1
         else FIRST_PLAYER_ID
         players.add(Player(id, name, email, token, password))
