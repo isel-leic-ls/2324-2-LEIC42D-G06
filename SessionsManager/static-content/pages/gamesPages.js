@@ -1,6 +1,5 @@
 import { div, a, ul, li, label, input, button, form } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
-import { errorToast } from "../components/errorToast.js"
 import { openModal, closeModal } from "../components/modal.js"
 import { CONSTS } from "../utils.js"
 
@@ -11,9 +10,7 @@ function gamesSearchPageClick(genres, developer) {
 }
 
 function gamesSearchByNameClick(name) {
-    if (name === "")
-        errorToast("Please enter a name");
-    else window.location.hash = "games/byName?gname=" + name
+    window.location.hash = "games/byName?gname=" + name
         + "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT;
 }
 
