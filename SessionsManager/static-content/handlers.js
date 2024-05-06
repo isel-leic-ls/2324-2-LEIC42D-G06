@@ -5,22 +5,27 @@ import {playerDetailsPage} from "./pages/playerPages.js"
 import {pagingButtons} from "./components/pagingButtons.js"
 import {safeCall} from "./utils.js";
 import {filterQueryParameters, filterResource} from "./uriparsers.js"
-import {
-    sessionsRetrieval,
-    sessionDetailsRetrieval,
-    sessionCreation,
-    sessionLeave,
-    sessionUpdate,
-    sessionJoin
-} from "./services/sessionServices.js"
-import {gamesRetrieval, gameDetailsRetrieval, gamesByNameRetrieval, gameCreation} from "./services/gamesServices.js"
-import {playerDetailsRetrieval, playerIdRetrieval} from "./services/playerServices.js"
 import {basicError} from "./components/basicError.js";
+import { GameRepository } from "./data/gamesRequests.js";
+import { PlayerRepository } from "./data/playerRequests.js";
+import { SessionRepository } from "./data/sessionsRequests.js";
+import { GameService } from "./services/gamesServices.js";
+import { PlayerService } from "./services/playerServices.js";
+import { SessionService } from "./services/sessionServices.js";
+
+// initiate repositories and services
+const gameRepository = new GameRepository();
+const playerRepository = new PlayerRepository();
+const sessionRepository = new SessionRepository();
+
+const gameService = new GameService(gameRepository);
+const playerService = new PlayerService(playerRepository);
+const sessionService = new SessionService(sessionRepository);
 
 /** Home */
 async function getHome(mainContent) {
     safeCall(mainContent, async () => {
-        const player = await playerIdRetrieval()
+        const player = await playerService.playerIdRetrieval();
         const pageContent = homePage(player);
         mainContent.replaceChildren(pageContent);
     })
@@ -30,7 +35,7 @@ async function getHome(mainContent) {
 function getGamesSearch(mainContent) {
     const createGameFunction = (async (name, dev, genres) => {
         try{
-            const gid = await gameCreation(name, dev, genres);
+            const gid = await gameService.gameCreation(name, dev, genres);
             window.location.hash = "games/" + gid;
         }catch(error){
             const errorContent = basicError(error.message)
@@ -45,7 +50,7 @@ function getGamesSearch(mainContent) {
 async function getGamesList(mainContent, path) {
     safeCall(mainContent, async () => {
         const {skip, limit, genres, developer} = filterQueryParameters(path);
-        const {games, total} = await gamesRetrieval(skip, limit, genres, developer);
+        const {games, total} = await gameService.gamesRetrieval(skip, limit, genres, developer);
         const buttons = pagingButtons(parseInt(skip), parseInt(limit), total, path)
         const pageContent = gamesListPage(games, buttons);
         mainContent.replaceChildren(pageContent);
@@ -55,10 +60,10 @@ async function getGamesList(mainContent, path) {
 async function getGameDetails(mainContent, path) {
     safeCall(mainContent, async () => {
         const gid = filterResource(path);
-        const game = await gameDetailsRetrieval(gid);
+        const game = await gameService.gameDetailsRetrieval(gid);
         const createSessionFunction = (async (gid, capacity, date) => {
             try {
-                const sid = await sessionCreation(gid, capacity, date);
+                const sid = await sessionService.sessionCreation(gid, capacity, date);
                 window.location.hash = "sessions/" + sid;
             } catch(error) {
                 const errorContent = basicError(error.message)
@@ -79,47 +84,39 @@ function getSessionsSearch(mainContent) {
 async function getSessionsList(mainContent, path) {
     safeCall(mainContent, async () => {
         const {gid, date, state, pid, skip, limit} = filterQueryParameters(path);
-        const {sessions, total} = await sessionsRetrieval(gid, date, state, pid, skip, limit);
+        const {sessions, total} = await sessionService.sessionsRetrieval(gid, date, state, pid, skip, limit);
         const buttons = pagingButtons(parseInt(skip), parseInt(limit), total, path)
         const pageContent = sessionsListPage(sessions, buttons);
         mainContent.replaceChildren(pageContent);
     })
 }
 
-function isInSession(session, pid) {
-    return session.players.includes(pid);
-}
-
-function isOwner(session, pid) {
-    return session.players[0] == pid;
-}
-
 async function getSessionDetails(mainContent, path) {
     safeCall(mainContent, async () => {
         const sid = filterResource(path);
-        const result = await sessionDetailsRetrieval(sid);
+        const result = await sessionService.sessionDetailsRetrieval(sid);
         const leaveSessionFunction = (async (id) => {
-            await sessionLeave(id);
+            await sessionService.sessionLeave(id);
             window.location.reload();
         });
 
         const updateSessionFunction = (async (id, capacity, date) => {
-            await sessionUpdate(id, capacity, date);
+            await sessionService.sessionUpdate(id, capacity, date);
             window.location.reload();
         });
 
         const deleteSessionFunction = (async (id) => {
-            await sessionLeave(id);
+            await sessionService.sessionLeave(id);
             window.location.reload();
         });
 
         const joinSessionFunction = (async (id) => {
-            await sessionJoin(id);
+            await sessionService.sessionJoin(id);
             window.location.reload();
         });
 
-        const pageContent = sessionDetailsPage(result.session, isInSession, isOwner,
-            leaveSessionFunction, updateSessionFunction, deleteSessionFunction, joinSessionFunction);
+        const pageContent = sessionDetailsPage(result.session,leaveSessionFunction,updateSessionFunction,
+            deleteSessionFunction, joinSessionFunction);
         mainContent.replaceChildren(pageContent);
     })
 }
@@ -128,7 +125,7 @@ async function getSessionDetails(mainContent, path) {
 async function getPlayer(mainContent, path) {
     safeCall(mainContent, async () => {
         const pid = filterResource(path);
-        const player = await playerDetailsRetrieval(pid);
+        const player = await playerService.playerDetailsRetrieval(pid);
         const pageContent = playerDetailsPage(player);
         mainContent.replaceChildren(pageContent);
     })
@@ -137,7 +134,7 @@ async function getPlayer(mainContent, path) {
 async function getGamesSearchByName(mainContent, path) {
     safeCall(mainContent, async () => {
         const {gname, skip, limit} = filterQueryParameters(path);
-        const {games, total} = await gamesByNameRetrieval(gname, skip, limit);
+        const {games, total} = await gameService.gamesByNameRetrieval(gname, skip, limit);
         const buttons = pagingButtons(parseInt(skip), parseInt(limit), total, path)
         const pageContent = gamesListPage(games, buttons);
         mainContent.replaceChildren(pageContent);

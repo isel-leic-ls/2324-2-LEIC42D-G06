@@ -12,14 +12,10 @@ export const states = ["ALL", "OPEN", "CLOSED"]
 
 function sessionsSearchPageClick(dateInput, stateInput) {
     const input_date = (dateInput.disabled) ? null : dateInput.value;
-    const input_state = (stateInput.disabled) ? null : stateInput.value;
-
     if (input_date != null && pattern.test(input_date) === false)
         errorToast("Please enter a valid date");
-    else if (input_state !== null && !states.includes(input_state))
-        errorToast("Please enter a valid state");
     else {
-        const state = (input_state === "ALL" ? null : input_state);
+        const state = (stateInput.value === "ALL" ? null : stateInput.value);
         const url = "sessions/list?date=" + input_date + "&state=" + state +
             "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT;
         window.location.hash = url;
@@ -90,7 +86,7 @@ export function sessionsListPage(sessions, buttons) { //list of sessions
     return element;
 }
 
-export function sessionDetailsPage(session, isInSession, isOwner, leaveSession, updateSession, deleteSession, joinSession) {
+export function sessionDetailsPage(session, leaveSession, updateSession, deleteSession, joinSession) {
 
     const homeButton = returnHomeButton();
 
@@ -125,16 +121,16 @@ export function sessionDetailsPage(session, isInSession, isOwner, leaveSession, 
      );
 
 
-    const leaveButton = isInSession(session, 1000) ? // hardcoded with player 1000 for now
+    const leaveButton = isInSession(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
         button({onClick: () => { openModal(leaveContent)} }, "Leave session") : div({});
 
-    const updateButton = isOwner(session, 1000) ? // hardcoded with player 1000 for now
+    const updateButton = isOwner(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
         button({onClick: () => { openModal(updateContent)} }, "Update session") : div({});
 
-    const deleteButton = isOwner(session, 1000) ? // hardcoded with player 1000 for now
+    const deleteButton = isOwner(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
         button({onClick: () => { openModal(deleteContent) } }, "Delete session") : div({});
 
-    const joinButton = isInSession(session, 1000) ? // hardcoded with player 1000 for now
+    const joinButton = isInSession(session, CONSTS.HARDCODED_ID) || session.closed ? // hardcoded with player 1000 for now
         div({}) : button({onClick: () => { joinSession(session.id) } }, "Join session");
 
     const pAnchors = session.players.map((p, index) =>
@@ -161,4 +157,13 @@ export function sessionDetailsPage(session, isInSession, isOwner, leaveSession, 
     );
 
     return element;
+}
+
+
+function isInSession(session, pid) {
+    return session.players.includes(pid);
+}
+
+function isOwner(session, pid) {
+    return session.players[0] == pid;
 }
