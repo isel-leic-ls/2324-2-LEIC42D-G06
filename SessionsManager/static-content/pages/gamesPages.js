@@ -19,32 +19,7 @@ export function gamesSearchPage(createGame) { //this is the search page for game
     const developerInput = input({type: "text", id: "developerInput", placeHolder: "Ubisoft, EA"});
     const nameInput = input({type: "text", id: "nameInput", placeHolder: "FIFA 22"});
 
-    const form = document.createElement('form');
-    form.appendChild(label({}, "Game name:"));
-    form.appendChild(input({type: "text", id: "gameName", required: true}));
-    form.appendChild(label({}, "Game developer:"));
-    form.appendChild(input({type: "text", id: "gameDeveloper", required: true}));
-    form.appendChild(label({}, "Game genres:"));
-    form.appendChild(input({type: "text", id: "gameGenres", required: true}));
-    form.appendChild(
-        button({
-            type: "submit",
-            onClick: (event) => {
-                createGameClick(event, createGame,
-                    document.getElementById('gameName').value,
-                    document.getElementById('gameDeveloper').value,
-                    document.getElementById('gameGenres').value
-                );
-                closeModal();
-            }
-        }, "Create game")
-    );
-
-    const createButton = button({
-        onClick: () => {
-            openModal(form)
-        }
-    }, "Create game");
+    const form = gameForm(createGame);
 
     const homeButton = returnHomeButton();
 
@@ -66,111 +41,129 @@ export function gamesSearchPage(createGame) { //this is the search page for game
         "Search"
     );
 
-    const element = div(
+    return div(
         {},
-        "Search games by genre(s) and developer",
+        button({
+            onClick: () => {
+                openModal(form)
+            }
+        }, "Create game"),
+        p({}),
         div(
             {},
-            label({}, "Genres:", genresInput),
-            label({}, "Developer:", developerInput),
+            "Search games by genre(s) and developer",
+            div(
+                {},
+                label({}, "Genres:", genresInput),
+                label({}, "Developer:", developerInput),
+            ),
+            searchButton,
         ),
-        searchButton,
-    );
-
-    const secondElement = div(
-        {},
-        "Search games by name",
+        p({}),
         div(
             {},
-            label({}, "Name:", nameInput),
-        ),
-        secondSearchButton,
-        homeButton
-    );
-
-    return div({},createButton, p({}),div({}, element, p({}),secondElement));
-}
-
-function createGameClick(event, createGameFunction, name, dev, genres) {
-    event.preventDefault();
-    createGameFunction(name, dev, genres);
-}
-
-export function gamesListPage(games, buttons) { //this is the list of games that match the search criteria
-    const homeButton = returnHomeButton();
-
-    const elements = games.map(game =>
-        div({},
-            a({href: "#games/" + game.id}, game.name)
+            "Search games by name",
+            div(
+                {},
+                label({}, "Name:", nameInput),
+            ),
+            secondSearchButton,
+            homeButton
         )
     );
 
-    const element = div(
+}
+
+function gameForm(createGame) {
+    const form = document.createElement('form');
+        form.appendChild(label({}, "Game name:"));
+        form.appendChild(input({ type: "text", id: "gameName", required: true }));
+        form.appendChild(label({}, "Game developer:"));
+        form.appendChild(input({ type: "text", id: "gameDeveloper", required: true }));
+        form.appendChild(label({}, "Game genres:"));
+        form.appendChild(input({ type: "text", id: "gameGenres", required: true }));
+        form.appendChild(
+            button({
+                type: "submit",
+                onClick: (event) => {
+                    event.preventDefault();
+                    createGame(
+                        document.getElementById('gameName').value,
+                        document.getElementById('gameDeveloper').value,
+                        document.getElementById('gameGenres').value
+                    );
+                    closeModal();
+                }
+            }, "Create game")
+        );
+
+    return form;
+}
+
+export function gamesListPage(games, buttons) {
+    const homeButton = returnHomeButton();
+
+    return div(
         {},
         "Games",
         div({}, buttons),
-        ...elements,
+        ...games.map(game =>
+            div({}, a({href: "#games/" + game.id}, game.name))
+        ),
         homeButton
-    )
-
-    return element
+    );
 }
+
 
 export function gameDetailsPage(game, createSession) { //this is the details page for a specific game
     const homeButton = returnHomeButton();
+    const form = sessionForm(createSession, game.id);
 
-    const form = document.createElement('form');
-
-    form.appendChild(label({}, "Session capacity:"));
-    form.appendChild(input({type: "number", id: "sessionCapacity", min: 1, max: 100, required: true}));
-    form.appendChild(label({}, "Session date:"));
-    form.appendChild(input({type: "text", id: "sessionDate", required: true}));
-    form.appendChild(
-        button({
-            type: "submit",
-            onClick: (event) => {
-                createSessionClick(event, createSession, game.id,
-                    document.getElementById('sessionCapacity').value,
-                    document.getElementById('sessionDate').value
-                );
-                closeModal();
-            }
-        }, "Create session")
-    );
-
-    const element =
+    return div(
+        {id: "gameDetails"},
+        "Game Details",
         div(
-            {id: "gameDetails"},
-            "Game Details",
-            div(
+            {},
+            ul(
                 {},
-                ul(
-                    {},
-                    li({}, "Name: " + game.name),
-                    li({}, "Developer: " + game.dev),
-                    li({}, "Genres: " + game.genres.join(", ")),
-                ),
-                button({
-                    onClick: () => {
-                        openModal(form)
-                    }
-                }, "Create a session with this game")
+                li({}, "Name: " + game.name),
+                li({}, "Developer: " + game.dev),
+                li({}, "Genres: " + game.genres.join(", ")),
             ),
-            button(
-                {
-                    onClick: () => {
-                        window.location.hash = "sessions/list?gid=" + game.id +
-                            "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT
-                    }
-                }, "Search sessions with this game"
-            ),
-            homeButton
-        );
-
-    return element;
+            button({
+                onClick: () => {
+                    openModal(form)
+                }
+            }, "Create a session with this game")
+        ),
+        button(
+            {
+                onClick: () => {
+                    window.location.hash = "sessions/list?gid=" + game.id +
+                        "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT
+                }
+            }, "Search sessions with this game"
+        ),
+        homeButton
+    );
 }
 
-function createSessionClick(event, createSessionFunction, gid, capacity, date) {
-    event.preventDefault();
-    createSessionFunction(gid, capacity, date);
+
+function sessionForm(createSession, id) {
+    const form = document.createElement('form');
+        form.appendChild(label({}, "Session capacity:"));
+        form.appendChild(input({type: "number", id: "sessionCapacity", min: 1, max: 100, required: true}));
+        form.appendChild(label({}, "Session date:"));
+        form.appendChild(input({type: "text", id: "sessionDate", required: true}));
+        form.appendChild(
+            button({
+                type: "submit",
+                onClick: (event) => {
+                    event.preventDefault();
+                    createSession(id, document.getElementById('sessionCapacity').value, document.getElementById('sessionDate').value);
+                    closeModal();
+                }
+            }, "Create session")
+        );
+    return form;
 }

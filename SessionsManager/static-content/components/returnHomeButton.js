@@ -2,10 +2,13 @@ import { div, button } from "../tags.js"
 
 
 export function returnHomeButton() {
-    const element =
+    return (
         div(
             {},
-            button({ onClick: () => window.location.href = "/" }, "Return Home")
+            button(
+                { onClick: () => window.location.href = "/" },
+                "Return Home"
+            )
         )
-    return element;
+    );
 }

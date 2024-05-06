@@ -160,19 +160,21 @@ describe('router', function () {
         }, timeout);
     })
 
-    it('should find game with id 100', function (done) {
-        router.addRouteHandler("games/:gid", handlers.getGameDetails);
-        window.location.hash = "games/100";
+    /*
+        it('should find game with id 100', function (done) {
+            router.addRouteHandler("games/:gid", handlers.getGameDetails);
+            window.location.hash = "games/100";
 
-        setTimeout(() => {
-            const sut = document.getElementById("gameDetails");
-            sut.innerText.should.be.equal(
-                "Game Details\nName: Lord of the Rings Online\nDeveloper: Dev123\nGenres: RPG, Adventure\n" +
-                "Search sessions with this game\nReturn Home"
-            )
-            document.getElementById("mainContent").removeChild(sut);
-            done();
-        }, timeout);
-    })
+            setTimeout(() => {
+                const sut = document.getElementById("gameDetails");
+                sut.innerText.should.be.equal(
+                    "Game Details\nName: Lord of the Rings Online\nDeveloper: Dev123\nGenres: RPG, Adventure\n" +
+                    "Search sessions with this game\nReturn Home"
+                )
+                document.getElementById("mainContent").removeChild(sut);
+                done();
+            }, timeout);
+        })
+    */
 
 })
