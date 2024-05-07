@@ -1,0 +1,15 @@
+.paging-button {
+    margin: 0 5px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.paging-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

@@ -14,12 +14,14 @@ export function pagingButtons(skip, limit, total, path) {
     return (
         div({},
             button({
+                class: 'paging-button',
                 onClick: () => { previousSessions() },
                 disabled: skip <= 0
             },
                 "Previous"
             ),
             button({
+                class: 'paging-button',
                 onClick: () => { nextSessions() },
                 disabled: total <= skip + limit
             },

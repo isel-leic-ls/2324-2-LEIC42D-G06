@@ -30,14 +30,15 @@ export function sessionsSearchPage() {
         {
             onClick: () => {
                 sessionsSearchPageClick(dateInput, document.querySelector('input[name="state"]:checked'));
-            }
+            },
+            class: 'search-sessions-button'
         },
         "Search sessions"
     );
 
     return div(
-        {},
-        "Search sessions by date and state:",
+        { class: 'sessions-page' },
+        "Find sessions by date and state:",
         div(
             {},
             label({id: "dateLabel"}, "Date:", dateCheckBox, dateInput),
@@ -66,9 +67,10 @@ export function sessionsListPage(sessions, buttons) { //list of sessions
     const homeButton = returnHomeButton();
 
     return div(
-        {},
-        "Sessions",
-        div({}, buttons),
+        { class: 'sessions-page' }, // Add the 'sessions-page' class here
+         p({}, "This page displays the sessions that were queried."),
+         div({}, buttons),
+         p({}, "Here are the sessions that were queried:"),
         ...sessions.map((session, index) =>
             ul({},
                 li({}, a({ href: "#sessions/" + session.id }, "Session: " + (index + 1))),
@@ -88,7 +90,7 @@ export function sessionDetailsPage(session, leaveSession, updateSession, deleteS
     );
 
     return div(
-        {},
+        { class: 'session-details-page' }, // Add the 'session-details-page' class here
         "Session details",
         ul({},
             li({}, a({href: "#games/" + session.game}, "Game")),
@@ -97,47 +99,52 @@ export function sessionDetailsPage(session, leaveSession, updateSession, deleteS
             li({}, "Closed: " + session.closed),
             li({}, "Players: ", ...pAnchors)
         ),
-        isInSession(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
-            button({onClick: () => { openModal(
-                div(
-                    {},
-                    "Are you sure you want to leave this session?",
-                    button({onClick : () => { leaveSession(session.id); closeModal() } }, "Yes"),
-                )
-            )}}, "Leave session") : div({}),
-        isOwner(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
-            button({onClick: () => { openModal(
-                div(
-                    {},
-                    label({}, "Capacity:"),
-                    input({type: "number", id: "capacityInput", min: 2, max: 100, required: true}),
-                    label({}, "Date:"),
-                    input({type: "text", id: "dateInput", required: true}),
-                    button({
-                        onClick: () => {
-                            updateSession(
-                                session.id,
-                                document.getElementById('capacityInput').value,
-                                document.getElementById('dateInput').value
-                            );
-                            closeModal();
-                        }
-                    }, "Update")
-                )
-            )}}, "Update session") : div({}),
-        isOwner(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
-            button({onClick: () => { openModal(
-                div(
-                    {},
-                    "Are you sure you want to delete this session?",
-                    button({onClick : () => { deleteSession(session.id); closeModal() } }, "Yes")
-                )
-            ) }}, "Delete session") : div({}),
+         div(
+            { class: 'buttons-container' },
+            isInSession(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
+                button({ class: 'leave-button', onClick: () => { openModal(
+                    div(
+                        {class : 'form-container'},
+                        "Are you sure you want to leave this session?",
+                        button({ class : 'form-button', onClick : () => { leaveSession(session.id); closeModal() } }, "Yes"),
+                    )
+                )}}, "Leave session") : div({}),
+            isOwner(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
+                button({ class: 'update-button', onClick: () => { openModal(
+                    div(
+                        {class : 'form-container'},
+                        label({}, "Capacity:"),
+                        input({ class : 'form-input', type: "number", id: "capacityInput", min: 2, max: 100, required: true}),
+                        label({}, "Date:"),
+                        input({ class : 'form-input', type: "text", id: "dateInput", required: true}),
+                        button({
+                            class : 'form-button',
+                            onClick: () => {
+                                updateSession(
+                                    session.id,
+                                    document.getElementById('capacityInput').value,
+                                    document.getElementById('dateInput').value
+                                );
+                                closeModal();
+                            }
+                        }, "Update")
+                    )
+                )}}, "Update session") : div({}),
+            isOwner(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
+                button({ class: 'leave-button', onClick: () => { openModal(
+                    div(
+                        {class : 'form-container'},
+                        "Are you sure you want to delete this session?",
+                        button({ class : 'form-button', onClick : () => { deleteSession(session.id); closeModal() } }, "Yes")
+                    )
+                ) }}, "Delete session") : div({}),
+        ),
         isInSession(session, CONSTS.HARDCODED_ID) || session.closed ? // hardcoded with player 1000 for now
             div({}) : button({onClick: () => { joinSession(session.id) } }, "Join session"),
         homeButton
     );
 }
+
 
 
 

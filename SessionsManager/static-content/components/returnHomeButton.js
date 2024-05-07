@@ -6,7 +6,9 @@ export function returnHomeButton() {
         div(
             {},
             button(
-                { onClick: () => window.location.href = "/" },
+                {
+                class: 'return-home-button',
+                onClick: () => window.location.href = "/" },
                 "Return Home"
             )
         )

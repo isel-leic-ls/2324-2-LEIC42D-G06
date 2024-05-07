@@ -1,0 +1,113 @@
+.sessions-page {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.sessions-page label {
+  margin-bottom: 10px;
+}
+
+.sessions-page input[type="text"],
+.sessions-page input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.sessions-page .search-sessions-button,
+.sessions-page .return-home-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sessions-page .search-sessions-button:hover,
+.sessions-page .return-home-button:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+
+.sessions-page ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.sessions-page li {
+  margin-bottom: 10px;
+}
+
+.sessions-page a {
+  text-decoration: none;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.sessions-page a:hover {
+  color: #0056b3;
+}
+
+.session-details-page {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 50px;
+}
+
+.session-details-page ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.session-details-page li {
+  margin-bottom: 10px;
+}
+
+.session-details-page a {
+  text-decoration: none;
+  color: #007bff;
+  transition: color 0.3s ease;
+}
+
+.session-details-page a:hover {
+  color: #0056b3;
+}
+
+.session-details-page button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.session-details-page button.leave-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.session-details-page button.leave-button:hover {
+  background-color: #d32f2f;
+}
+
+.session-details-page button.update-button {
+  background-color: #007bff;
+  color: white;
+}
+
+.session-details-page button.update-button:hover {
+  background-color: #0056b3;
+}
+
+.session-details-page .buttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}

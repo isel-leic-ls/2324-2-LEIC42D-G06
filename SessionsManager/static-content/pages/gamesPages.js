@@ -1,4 +1,4 @@
-import {div, a, ul, li, label, input, button, form, p} from "../tags.js"
+import {div, a, ul, li, label, input, button, form, p, h2} from "../tags.js"
 import {returnHomeButton} from "../components/returnHomeButton.js"
 import {openModal, closeModal} from "../components/modal.js"
 import {CONSTS} from "../utils.js"
@@ -14,88 +14,96 @@ function gamesSearchByNameClick(name) {
         + "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT;
 }
 
-export function gamesSearchPage(createGame) { //this is the search page for games by genre(s) and developer
+export function gamesSearchPage(createGame) {
     const genresInput = input({type: "text", id: "genresInput", placeHolder: "Action, Adventure"});
     const developerInput = input({type: "text", id: "developerInput", placeHolder: "Ubisoft, EA"});
     const nameInput = input({type: "text", id: "nameInput", placeHolder: "FIFA 22"});
 
     const form = gameForm(createGame);
 
-    const homeButton = returnHomeButton();
+    const createGameButton = button(
+       {
+           class: 'create-game-button',
+           onClick: () => {
+               openModal(form);
+           }
+       }, "Create game"
+   );
 
-    const searchButton = button(
-        {
-            onClick: () => {
-                gamesSearchPageClick(genresInput.value, developerInput.value);
-            }
-        },
-        "Search"
-    );
+   const searchButton = button(
+       {
+           onClick: () => {
+               gamesSearchPageClick(genresInput.value, developerInput.value);
+           }
+       },
+       "Search"
+   );
 
-    const secondSearchButton = button(
-        {
-            onClick: () => {
-                gamesSearchByNameClick(nameInput.value);
-            }
-        },
-        "Search"
-    );
+   const secondSearchButton = button(
+       {
+           onClick: () => {
+               gamesSearchByNameClick(nameInput.value);
+           }
+       },
+       "Search"
+   );
 
-    return div(
-        {},
-        button({
-            onClick: () => {
-                openModal(form)
-            }
-        }, "Create game"),
-        p({}),
-        div(
-            {},
-            "Search games by genre(s) and developer",
-            div(
-                {},
-                label({}, "Genres:", genresInput),
-                label({}, "Developer:", developerInput),
-            ),
-            searchButton,
-        ),
-        p({}),
-        div(
-            {},
-            "Search games by name",
-            div(
-                {},
-                label({}, "Name:", nameInput),
-            ),
-            secondSearchButton,
-            homeButton
-        )
-    );
+   const homeButton = returnHomeButton();
 
+   return div(
+       { class: 'game-search-page' },
+       p({}, "Search for games by entering genre(s) and developer or search by game name."),
+       p({}, "You can also create a new game."),
+       createGameButton,
+       div(
+           { class: 'search-section' },
+           div(
+               {},
+               label({}, "Genres:"),
+               genresInput,
+               label({}, "Developer:"),
+               developerInput,
+               searchButton
+           )
+       ),
+       div(
+           { class: 'search-section' },
+           div(
+               {},
+               label({}, "Name:"),
+               nameInput,
+               secondSearchButton
+           )
+       ),
+       div({}, homeButton)
+   );
 }
+
 
 function gameForm(createGame) {
     const form = document.createElement('form');
-        form.appendChild(label({}, "Game name:"));
-        form.appendChild(input({ type: "text", id: "gameName", required: true }));
-        form.appendChild(label({}, "Game developer:"));
-        form.appendChild(input({ type: "text", id: "gameDeveloper", required: true }));
-        form.appendChild(label({}, "Game genres:"));
-        form.appendChild(input({ type: "text", id: "gameGenres", required: true }));
-        form.appendChild(
-            button({
-                type: "submit",
-                onClick: (event) => {
-                    event.preventDefault();
-                    createGame(
-                        document.getElementById('gameName').value,
-                        document.getElementById('gameDeveloper').value,
-                        document.getElementById('gameGenres').value
-                    );
-                    closeModal();
-                }
-            }, "Create game")
-        );
+    form.className = 'form-container';
+    form.appendChild(label({}, "Game name:"));
+    form.appendChild(input({ class : 'form-input', type: "text", id: "gameName", required: true }));
+    form.appendChild(label({}, "Game developer:"));
+    form.appendChild(input({ class : 'form-input', type: "text", id: "gameDeveloper", required: true }));
+    form.appendChild(label({}, "Game genres:"));
+    form.appendChild(input({ class : 'form-input', type: "text", id: "gameGenres", required: true }));
+    form.appendChild(
+        button({
+            class : 'form-button',
+            type: "submit",
+            onClick: (event) => {
+                event.preventDefault();
+                createGame(
+                    document.getElementById('gameName').value,
+                    document.getElementById('gameDeveloper').value,
+                    document.getElementById('gameGenres').value
+                );
+                closeModal();
+            }
+        }, "Create game")
+    );
 
     return form;
 }
@@ -104,24 +112,34 @@ export function gamesListPage(games, buttons) {
     const homeButton = returnHomeButton();
 
     return div(
+      { class: 'games-page' },
+      p({}, "This page displays the games that were queried."),
+      div({}, buttons),
+      p({}, "Here are the games that were queried:"),
+      ul(
         {},
-        "Games",
-        div({}, buttons),
         ...games.map(game =>
-            div({}, a({href: "#games/" + game.id}, game.name))
-        ),
-        homeButton
+          li(
+            {},
+            a(
+              {href: "#games/" + game.id },
+              game.name
+            )
+          )
+        )
+      ),
+      homeButton
     );
 }
 
 
-export function gameDetailsPage(game, createSession) { //this is the details page for a specific game
+export function gameDetailsPage(game, createSession) {
     const homeButton = returnHomeButton();
     const form = sessionForm(createSession, game.id);
 
     return div(
-        {id: "gameDetails"},
-        "Game Details",
+        { class: 'game-details-page' }, // Use the class for styling
+        h2({}, "Game Details"), // Use h2 for the heading
         div(
             {},
             ul(
@@ -130,11 +148,13 @@ export function gameDetailsPage(game, createSession) { //this is the details pag
                 li({}, "Developer: " + game.dev),
                 li({}, "Genres: " + game.genres.join(", ")),
             ),
-            button({
-                onClick: () => {
-                    openModal(form)
-                }
-            }, "Create a session with this game")
+            button(
+                {
+                    onClick: () => {
+                        openModal(form)
+                    }
+                }, "Create a session with this game"
+            )
         ),
         button(
             {
@@ -151,12 +171,15 @@ export function gameDetailsPage(game, createSession) { //this is the details pag
 
 function sessionForm(createSession, id) {
     const form = document.createElement('form');
+    form.className = 'form-container';
+
         form.appendChild(label({}, "Session capacity:"));
-        form.appendChild(input({type: "number", id: "sessionCapacity", min: 1, max: 100, required: true}));
+        form.appendChild(input({class : 'form-input', type: "number", id: "sessionCapacity", min: 1, max: 100, required: true}));
         form.appendChild(label({}, "Session date:"));
-        form.appendChild(input({type: "text", id: "sessionDate", required: true}));
+        form.appendChild(input({class : 'form-input', type: "text", id: "sessionDate", required: true}));
         form.appendChild(
             button({
+                class : 'form-button',
                 type: "submit",
                 onClick: (event) => {
                     event.preventDefault();
