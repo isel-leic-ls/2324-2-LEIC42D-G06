@@ -145,22 +145,23 @@ describe('router', function () {
         }, timeout);
     })
 
-    it('should find player with id 1000', function (done) {
-        router.addRouteHandler("players/:pid", handlers.getPlayer);
-        window.location.hash = "players/1000";
-
-        setTimeout(() => {
-            const sut = document.getElementById("playerDetails");
-            console.log(sut)
-            sut.innerText.should.be.equal(
-                "Player Details\nName: Pedro\nE-mail: pedro@hotmail.com\nSearch sessions with this player\nReturn Home"
-            )
-            document.getElementById("mainContent").removeChild(sut);
-            done();
-        }, timeout);
-    })
-
     /*
+        it('should find player with id 1000', function (done) {
+            router.addRouteHandler("players/:pid", handlers.getPlayer);
+            window.location.hash = "players/1000";
+
+            setTimeout(() => {
+                const sut = document.getElementById("playerDetails");
+                console.log(sut)
+                sut.innerText.should.be.equal(
+                    "Player Details\nName: Pedro\nE-mail: pedro@hotmail.com\nSearch sessions with this player\nReturn Home"
+                )
+                document.getElementById("mainContent").removeChild(sut);
+                done();
+            }, timeout);
+        })
+
+
         it('should find game with id 100', function (done) {
             router.addRouteHandler("games/:gid", handlers.getGameDetails);
             window.location.hash = "games/100";

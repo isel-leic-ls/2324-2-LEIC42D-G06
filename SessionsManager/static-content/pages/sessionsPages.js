@@ -67,7 +67,7 @@ export function sessionsListPage(sessions, buttons) { //list of sessions
     const homeButton = returnHomeButton();
 
     return div(
-        { class: 'sessions-page' }, // Add the 'sessions-page' class here
+        { class: 'sessions-page' },
          p({}, "This page displays the sessions that were queried."),
          div({}, buttons),
          p({}, "Here are the sessions that were queried:"),
@@ -90,7 +90,7 @@ export function sessionDetailsPage(session, leaveSession, updateSession, deleteS
     );
 
     return div(
-        { class: 'session-details-page' }, // Add the 'session-details-page' class here
+        { class: 'session-details-page' },
         "Session details",
         ul({},
             li({}, a({href: "#games/" + session.game}, "Game")),
@@ -112,7 +112,7 @@ export function sessionDetailsPage(session, leaveSession, updateSession, deleteS
             isOwner(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
                 button({ class: 'update-button', onClick: () => { openModal(
                     div(
-                        {class : 'form-container'},
+                        {class : 'form-container'}, // This is using the 'form-container' class even though it's not a form
                         label({}, "Capacity:"),
                         input({ class : 'form-input', type: "number", id: "capacityInput", min: 2, max: 100, required: true}),
                         label({}, "Date:"),

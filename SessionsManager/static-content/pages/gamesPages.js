@@ -138,8 +138,8 @@ export function gameDetailsPage(game, createSession) {
     const form = sessionForm(createSession, game.id);
 
     return div(
-        { class: 'game-details-page' }, // Use the class for styling
-        h2({}, "Game Details"), // Use h2 for the heading
+        { class: 'game-details-page' },
+        h2({}, "Game Details"),
         div(
             {},
             ul(
