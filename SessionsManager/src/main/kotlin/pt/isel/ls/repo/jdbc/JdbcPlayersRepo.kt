@@ -2,6 +2,7 @@ package pt.isel.ls.repo.jdbc
 
 import pt.isel.ls.AppException
 import pt.isel.ls.domain.Player
+import pt.isel.ls.domain.PlayerDetails
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import java.sql.Statement
 import javax.sql.DataSource
@@ -72,32 +73,20 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
         }
     }
 
-    override fun getPlayersByUsername(username: String, skip: Int, limit: Int): List<Player> {
+    override fun getPlayersByUsername(username: String, skip: Int, limit: Int): Pair<List<PlayerDetails>, Int> {
         dataSource.connection.use {
             val result = it.prepareStatement("SELECT * FROM player WHERE name LIKE ?")
                 .bindParameters("$username%")
                 .executeQuery()
 
-            val players = mutableListOf<Player>()
+            val playerInfoList = mutableListOf<PlayerDetails>()
 
             while (result.next()) {
-                val pid = result.getInt("pid")
                 val name = result.getString("name")
                 val email = result.getString("email")
-                val token = result.getString("token")
-                val password = result.getString("password")
-
-                players.add(
-                    Player(
-                        id = pid,
-                        name = name,
-                        email = email,
-                        token = token,
-                        password = password
-                    )
-                )
+                playerInfoList.add(PlayerDetails(name, email))
             }
-            return players.drop(skip).take(limit)
+            return playerInfoList.drop(skip).take(limit) to playerInfoList.size
         }
 
     }

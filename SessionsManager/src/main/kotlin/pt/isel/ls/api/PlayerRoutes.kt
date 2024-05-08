@@ -45,8 +45,8 @@ class PlayerRoutes(private val services: PlayerServices) {
     private fun getPlayersByUsername(request: Request) = exceptionAwareScope {
         val username = request.getUsername()
         val (skip, limit) = request.getSkipAndLimit()
-        val playersList = services.getPlayersByUsername(username, skip, limit)
-        Response(Status.OK).toJson(PlayersListRetrievalOutputModel(playersList))
+        val (list, total) = services.getPlayersByUsername(username, skip, limit)
+        Response(Status.OK).toJson(PlayersListRetrievalOutputModel(list, total))
     }
 
 }

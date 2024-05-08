@@ -10,8 +10,11 @@ val EMAIL_REGEX = Regex("^[A-Za-z0-9+_.-]+@(.+)\$")
 val PASSWORD_RANGE = MIN_PASSWORD_LENGTH..MAX_PASSWORD_LENGTH
 val NAME_RANGE = MIN_NAME_LENGTH..MAX_NAME_LENGTH
 
- @Serializable
+@Serializable
 data class Player(val id: Int, val name: String, val email: String, val token : String, val password: String)
+
+@Serializable
+data class PlayerDetails(val name: String, val email: String)
 
 fun validatePlayerCredentials(name: String, email: String, password: String) {
     require(name.isNotBlank()) { "Name cannot be blank" }
