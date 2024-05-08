@@ -21,41 +21,13 @@
 }
 
 .player-details-page .return-home-button,
-.player-details-page .search-sessions-button {
+.player-details-page .generic-search-button {
     display: block;
     width: 300px;
     margin: 0 auto;
     margin-bottom: 10px;
 }
 
-.player-details-page .return-home-button {
-    background-color: transparent;
-    color: #007bff;
-    border: 1px solid #007bff;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.player-details-page .return-home-button:hover {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.player-details-page .search-sessions-button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.player-details-page .search-sessions-button:hover {
-    background-color: #0056b3;
-}
 
 .player-details-page .buttons-container {
     display: flex;

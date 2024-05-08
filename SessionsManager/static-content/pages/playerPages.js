@@ -1,4 +1,4 @@
-import { div, ul, li, button, p } from "../tags.js"
+import { div, ul, li, button, p, h2} from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
 import { CONSTS } from "../utils.js"
 
@@ -8,7 +8,7 @@ export function playerDetailsPage(player) { //this is the details page for a spe
 
     const searchSessionsButton = button(
         {
-            class: 'search-sessions-button',
+            class: 'generic-search-button',
             onClick: () => {
                 window.location.hash = "sessions/list?pid=" + player.id +
                     "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT
@@ -19,10 +19,9 @@ export function playerDetailsPage(player) { //this is the details page for a spe
 
     return div(
         { class: 'player-details-page' },
-        p({}, "This page provides details about a specific player."),
         div(
             { id: "playerDetails" },
-            "Player Details",
+            h2({}, "Player Details"),
             div(
                 { class: 'details-section' },
                 ul(

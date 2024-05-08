@@ -23,7 +23,7 @@ export function gamesSearchPage(createGame) {
 
     const createGameButton = button(
        {
-           class: 'create-game-button',
+           class: 'generic-create-button',
            onClick: () => {
                openModal(form);
            }
@@ -32,6 +32,7 @@ export function gamesSearchPage(createGame) {
 
    const searchButton = button(
        {
+           class : 'generic-search-button',
            onClick: () => {
                gamesSearchPageClick(genresInput.value, developerInput.value);
            }
@@ -41,6 +42,7 @@ export function gamesSearchPage(createGame) {
 
    const secondSearchButton = button(
        {
+           class : 'generic-search-button',
            onClick: () => {
                gamesSearchByNameClick(nameInput.value);
            }
@@ -150,6 +152,7 @@ export function gameDetailsPage(game, createSession) {
             ),
             button(
                 {
+                    class : 'generic-create-button',
                     onClick: () => {
                         openModal(form)
                     }
@@ -158,6 +161,7 @@ export function gameDetailsPage(game, createSession) {
         ),
         button(
             {
+                class : 'generic-search-button',
                 onClick: () => {
                     window.location.hash = "sessions/list?gid=" + game.id +
                         "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT

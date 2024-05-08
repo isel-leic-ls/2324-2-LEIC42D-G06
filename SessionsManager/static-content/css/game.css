@@ -22,38 +22,6 @@
     border-radius: 5px;
 }
 
-.game-search-page .search-section button {
-    margin-top: 10px;
-    padding: 5px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-}
-
-.game-search-page .search-section button:hover {
-    background-color: #0056b3;
-}
-
-.game-search-page .return-home-button,
-.game-search-page .create-game-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #f0f0f0;
-    color: #333;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.game-search-page .return-home-button:hover,
-.game-search-page .create-game-button:hover {
-    background-color: #ccc;
-}
-
-
 .games-page {
   font-family: Arial, sans-serif;
   display: flex;
@@ -99,23 +67,6 @@
   color: #0056b3;
 }
 
-
-.games-page .return-home-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.games-page .return-home-button:hover {
-    background-color: #0056b3;
-}
-
-
 .game-details-page {
   font-family: Arial, sans-serif;
   display: flex;
@@ -137,18 +88,3 @@
 .game-details-page li {
   margin-bottom: 10px;
 }
-
-.game-details-page button {
-  margin-bottom: 10px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.game-details-page button:hover {
-  background-color: #007bff;
-  color: #fff;
-}
-

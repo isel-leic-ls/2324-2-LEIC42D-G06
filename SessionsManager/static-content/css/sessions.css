@@ -15,22 +15,6 @@
   margin-right: 10px;
 }
 
-.sessions-page .search-sessions-button,
-.sessions-page .return-home-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.sessions-page .search-sessions-button:hover,
-.sessions-page .return-home-button:hover {
-  background-color: #007bff;
-  color: #fff;
-}
-
 
 .sessions-page ul {
   list-style: none;
@@ -52,6 +36,30 @@
   color: #0056b3;
 }
 
+
+.sessions-page li a {
+  text-decoration: none;
+  color: #007bff;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.sessions-page li a::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #007bff;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sessions-page li a:hover::after {
+    opacity: 1;
+}
+
 .session-details-page {
   font-family: Arial, sans-serif;
   display: flex;
@@ -70,6 +78,7 @@
   margin-bottom: 10px;
 }
 
+
 .session-details-page a {
   text-decoration: none;
   color: #007bff;
@@ -82,6 +91,7 @@
 
 .session-details-page button {
   padding: 10px 20px;
+  margin-bottom: 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;

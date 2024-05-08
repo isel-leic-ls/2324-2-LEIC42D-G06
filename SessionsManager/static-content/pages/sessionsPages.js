@@ -1,4 +1,4 @@
-import {div, button, label, p, ul, li, a, radioButton, input} from "../tags.js"
+import {div, button, label, p, ul, li, a, radioButton, input, h2} from "../tags.js"
 import {returnHomeButton} from "../components/returnHomeButton.js"
 import {errorToast} from "../components/errorToast.js"
 import {controlledInput} from "../components/controlledInput.js"
@@ -28,22 +28,22 @@ export function sessionsSearchPage() {
 
     const searchButton = button(
         {
+            class : 'generic-search-button',
             onClick: () => {
                 sessionsSearchPageClick(dateInput, document.querySelector('input[name="state"]:checked'));
             },
-            class: 'search-sessions-button'
         },
         "Search sessions"
     );
 
     return div(
         { class: 'sessions-page' },
-        "Find sessions by date and state:",
+        p({}, "Search for sessions by entering date (optional) and closed state"),
         div(
             {},
             label({id: "dateLabel"}, "Date:", dateCheckBox, dateInput),
             p({}),
-            label({id: "stateLabel"}, "State:", ...stateRadioButtons),
+            label({id: "stateLabel"}, "Session State:", ...stateRadioButtons),
         ),
         searchButton,
         homeButton
@@ -73,7 +73,7 @@ export function sessionsListPage(sessions, buttons) { //list of sessions
          p({}, "Here are the sessions that were queried:"),
         ...sessions.map((session, index) =>
             ul({},
-                li({}, a({ href: "#sessions/" + session.id }, "Session: " + (index + 1))),
+                li({}, a({ href: "#sessions/" + session.id }, "Session " + (index + 1))),
                 li({}, "Date: " + session.date)
             )
         ),
@@ -91,13 +91,13 @@ export function sessionDetailsPage(session, leaveSession, updateSession, deleteS
 
     return div(
         { class: 'session-details-page' },
-        "Session details",
+        h2({}, "Session Details"),
         ul({},
-            li({}, a({href: "#games/" + session.game}, "Game")),
-            li({}, "Capacity: " + session.capacity),
-            li({}, "Date: " + session.date),
-            li({}, "Closed: " + session.closed),
-            li({}, "Players: ", ...pAnchors)
+            li({}, "This session is playing this ", a({href: "#games/" + session.game}, "game")),
+            li({}, "Maximum player capacity: " + session.capacity),
+            li({}, "Date and time: " + session.date),
+            li({}, "Session closed status: " + session.closed),
+            li({}, "Players in the session: ", ...pAnchors)
         ),
          div(
             { class: 'buttons-container' },
@@ -113,9 +113,9 @@ export function sessionDetailsPage(session, leaveSession, updateSession, deleteS
                 button({ class: 'update-button', onClick: () => { openModal(
                     div(
                         {class : 'form-container'}, // This is using the 'form-container' class even though it's not a form
-                        label({}, "Capacity:"),
+                        label({}, "New Capacity:"),
                         input({ class : 'form-input', type: "number", id: "capacityInput", min: 2, max: 100, required: true}),
-                        label({}, "Date:"),
+                        label({}, "New Date:"),
                         input({ class : 'form-input', type: "text", id: "dateInput", required: true}),
                         button({
                             class : 'form-button',
