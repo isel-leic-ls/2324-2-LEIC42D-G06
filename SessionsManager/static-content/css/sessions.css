@@ -78,7 +78,6 @@
   margin-bottom: 10px;
 }
 
-
 .session-details-page a {
   text-decoration: none;
   color: #007bff;
@@ -116,8 +115,44 @@
   background-color: #0056b3;
 }
 
-.session-details-page .buttons-container {
+.session-details-page button.delete-button {
+  background-color: #f44336;
+  color: white;
+}
+
+.session-details-page button.delete-button:hover {
+  background-color: #d32f2f;
+}
+
+.buttons-container {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+}
+
+.owner-buttons {
     margin-bottom: 20px;
+}
+
+.owner-buttons button.update-button {
+    margin-right: 100px;
+}
+
+.participant-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.participant-buttons div {
+    text-align: center;
+}
+
+
+.bold-text {
+    font-weight: bold;
+}
+
+.game-link {
+    font-style: italic;
 }

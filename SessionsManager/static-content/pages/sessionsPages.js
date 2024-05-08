@@ -1,4 +1,4 @@
-import {div, button, label, p, ul, li, a, radioButton, input, h2} from "../tags.js"
+import {div, button, label, p, ul, li, a, radioButton, input, h2, span} from "../tags.js"
 import {returnHomeButton} from "../components/returnHomeButton.js"
 import {errorToast} from "../components/errorToast.js"
 import {controlledInput} from "../components/controlledInput.js"
@@ -89,64 +89,84 @@ export function sessionDetailsPage(session, leaveSession, updateSession, deleteS
         div({}, a({ href: "#players/" + p }, "Player " + (index + 1)))
     );
 
+    function leaveButton() {
+        return button({ class: 'leave-button', onClick: () => { openModal(
+            div(
+                {class : 'form-container'},
+                "Are you sure you want to leave this session?",
+                button({ class : 'form-button', onClick : () => { leaveSession(session.id); closeModal() } }, "Yes"),
+            )
+        )}}, "Leave session");
+    }
+
+    function updateButton() {
+        return button({ class: 'update-button', onClick: () => { openModal(
+            div(
+                {class : 'form-container'}, // This is using the 'form-container' class even though it's not a form
+                label({}, "New Capacity:"),
+                input({ class : 'form-input', type: "number", id: "capacityInput", min: 2, max: 100, required: true}),
+                label({}, "New Date:"),
+                input({ class : 'form-input', type: "text", id: "dateInput", required: true}),
+                button({
+                    class : 'form-button',
+                    onClick: () => {
+                        updateSession(
+                            session.id,
+                            document.getElementById('capacityInput').value,
+                            document.getElementById('dateInput').value
+                        );
+                        closeModal();
+                    }
+                }, "Update")
+            )
+        )}}, "Update session");
+    }
+
+    function deleteButton() {
+        return button({ class: 'delete-button', onClick: () => { openModal(
+            div(
+                {class : 'form-container'},
+                "Are you sure you want to delete this session?",
+                button({ class : 'form-button', onClick : () => { deleteSession(session.id); closeModal() } }, "Yes")
+            )
+        ) }}, "Delete session");
+    }
+
+    function joinButton() {
+        return button({onClick: () => { joinSession(session.id) } }, "Join session")
+    }
+
     return div(
         { class: 'session-details-page' },
         h2({}, "Session Details"),
         ul({},
-            li({}, "This session is playing this ", a({href: "#games/" + session.game}, "game")),
-            li({}, "Maximum player capacity: " + session.capacity),
-            li({}, "Date and time: " + session.date),
-            li({}, "Session closed status: " + session.closed),
-            li({}, "Players in the session: ", ...pAnchors)
+            li({}, "This session is featuring the game: ", a({href: "#games/" + session.game, class: 'game-link'}, "Game")),
+            li({}, "Maximum player capacity: ", span({class: 'bold-text'}, String(session.capacity))),
+            li({}, "Date and time: ", span({class: 'bold-text'}, session.date)),
+            li({}, "Session closed status: ", span({class: 'bold-text'}, session.closed ? "Closed" : "Open")),
+            li({}, "Players in the session:", ...pAnchors)
         ),
-         div(
+        div(
             { class: 'buttons-container' },
-            isInSession(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
-                button({ class: 'leave-button', onClick: () => { openModal(
+            div(
+                { class: 'owner-buttons' },
+                isOwner(session, CONSTS.HARDCODED_ID) ?
                     div(
-                        {class : 'form-container'},
-                        "Are you sure you want to leave this session?",
-                        button({ class : 'form-button', onClick : () => { leaveSession(session.id); closeModal() } }, "Yes"),
-                    )
-                )}}, "Leave session") : div({}),
-            isOwner(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
-                button({ class: 'update-button', onClick: () => { openModal(
-                    div(
-                        {class : 'form-container'}, // This is using the 'form-container' class even though it's not a form
-                        label({}, "New Capacity:"),
-                        input({ class : 'form-input', type: "number", id: "capacityInput", min: 2, max: 100, required: true}),
-                        label({}, "New Date:"),
-                        input({ class : 'form-input', type: "text", id: "dateInput", required: true}),
-                        button({
-                            class : 'form-button',
-                            onClick: () => {
-                                updateSession(
-                                    session.id,
-                                    document.getElementById('capacityInput').value,
-                                    document.getElementById('dateInput').value
-                                );
-                                closeModal();
-                            }
-                        }, "Update")
-                    )
-                )}}, "Update session") : div({}),
-            isOwner(session, CONSTS.HARDCODED_ID) ? // hardcoded with player 1000 for now
-                button({ class: 'leave-button', onClick: () => { openModal(
-                    div(
-                        {class : 'form-container'},
-                        "Are you sure you want to delete this session?",
-                        button({ class : 'form-button', onClick : () => { deleteSession(session.id); closeModal() } }, "Yes")
-                    )
-                ) }}, "Delete session") : div({}),
+                        {},
+                        p({}, "You can change the session details as you are the leader."),
+                        updateButton(),
+                        deleteButton(),
+                    ) : div({})
+            ),
+            div(
+                { class: 'participant-buttons' },
+                isInSession(session, CONSTS.HARDCODED_ID) ? div( {}, p({}, "You can leave the session"), leaveButton()) : div({}),
+                isInSession(session, CONSTS.HARDCODED_ID) || session.closed ? div({}) : div ({}, p({}, "You can join the session"), joinButton())
+            )
         ),
-        isInSession(session, CONSTS.HARDCODED_ID) || session.closed ? // hardcoded with player 1000 for now
-            div({}) : button({onClick: () => { joinSession(session.id) } }, "Join session"),
         homeButton
     );
 }
-
-
-
 
 function isInSession(session, pid) {
     return session.players.includes(pid);

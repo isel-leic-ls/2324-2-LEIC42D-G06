@@ -35,6 +35,10 @@ export function h2(attributes = {}, ...children) {
     return createElement("h2", attributes, ...children);
 }
 
+export function span(attributes = {}, ...children) {
+    return createElement("span", attributes, ...children);
+}
+
 export function a(attributes = {}, ...children) {
     return createElement("a", attributes, ...children);
 }
