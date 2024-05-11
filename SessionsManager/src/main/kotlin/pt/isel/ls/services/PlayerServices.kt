@@ -41,4 +41,11 @@ class PlayerServices(private val pRepo: PlayersRepo) {
         require(limit > 0) { "Limit value must be positive non-zero" }
         return pRepo.getPlayersByUsername(username,skip,limit)
     }
+
+    fun login(username : String, password: String) : Pair<Int, String> {
+        val player = pRepo.getPlayerByName(username)
+        if(player.password != password)
+            throw IllegalArgumentException("Invalid password")
+        return player.id to player.token
+    }
 }

@@ -82,7 +82,7 @@ export function sessionsListPage(sessions, buttons) { //list of sessions
 }
 
 
-export function sessionDetailsPage(session, leaveSession, updateSession, deleteSession, joinSession) {
+export function sessionDetailsPage(session, leaveSession, updateSession, deleteSession, joinSession, playerId) {
     const homeButton = returnHomeButton();
 
     const pAnchors = session.players.map((p, index) =>
@@ -148,30 +148,30 @@ export function sessionDetailsPage(session, leaveSession, updateSession, deleteS
         ),
         div(
             { class: 'buttons-container' },
-            div(
+            playerId != null ? div(
                 { class: 'owner-buttons' },
-                isOwner(session, CONSTS.HARDCODED_ID) ?
+                isOwner(session, playerId) ?
                     div(
                         {},
                         p({}, "You can change the session details as you are the leader."),
                         updateButton(),
                         deleteButton(),
                     ) : div({})
-            ),
-            div(
+            ) : ' ',
+            playerId != null ? div(
                 { class: 'participant-buttons' },
-                isInSession(session, CONSTS.HARDCODED_ID) ? div( {}, p({}, "You can leave the session"), leaveButton()) : div({}),
-                isInSession(session, CONSTS.HARDCODED_ID) || session.closed ? div({}) : div ({}, p({}, "You can join the session"), joinButton())
-            )
+                isInSession(session, playerId) ? div( {}, p({}, "You can leave the session"), leaveButton()) : div({}),
+                isInSession(session, playerId) || session.closed ? div({}) : div ({}, p({}, "You can join the session"), joinButton())
+            ) : ' '
         ),
         homeButton
     );
 }
 
 function isInSession(session, pid) {
-    return session.players.includes(pid);
+    return session.players.includes(parseInt(pid));
 }
 
 function isOwner(session, pid) {
-    return session.players[0] == pid;
+    return session.players[0] == parseInt(pid);
 }

@@ -7,6 +7,8 @@ window.addEventListener('hashchange', hashChangeHandler)
 
 function loadHandler() { //called when the page is loaded
     router.addRouteHandler("home", handlers.getHome)
+    router.addRouteHandler("register", handlers.getRegister)
+    router.addRouteHandler("login", handlers.getLogin)
     router.addRouteHandler("games", handlers.getGamesSearch)
     router.addRouteHandler("games/byName", handlers.getGamesSearchByName)
     router.addRouteHandler("games/list", handlers.getGamesList)

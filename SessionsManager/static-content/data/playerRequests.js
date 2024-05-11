@@ -14,11 +14,11 @@ export class PlayerRepository {
         throw new Error("Failed to retrieve player details");
     }
 
-    async handlePlayerId() {
+    async handlePlayerId(token) {
         const result = await fetch("http://localhost:9000/api/players/token/info", {
             headers: {
                 "Accept": "application/json",
-                "Authorization": CONSTS.HARDCODED_TOKEN,
+                "Authorization": token,
             },
         });
         if (result.status === 200) {
@@ -26,5 +26,51 @@ export class PlayerRepository {
             return player;
         }
         throw new Error("Failed to retrieve player details");
+    }
+
+    async handleRegister(name, email, password) {
+        const body = {
+            name: name,
+            email: email,
+            password: password
+        };
+
+        const response = await fetch(CONSTS.BASE_API_URL + "/players", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (response.status === 201) {
+            //const model = await response.json();
+            //return model.pid;
+            return;
+        }
+        throw new Error("Failed to register player");
+    }
+
+    async handleLogin(username, password) {
+        const body = {
+            name: username,
+            password: password
+        };
+
+        const response = await fetch(CONSTS.BASE_API_URL + "/players/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (response.status === 200) {
+            const model = await response.json();
+            return model;
+        }
+        throw new Error("Failed to login player");
     }
 }

@@ -73,6 +73,23 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
         }
     }
 
+    override fun getPlayerByName(name: String): Player {
+        dataSource.connection.use {
+            val result = it.prepareStatement("SELECT * FROM player WHERE name = ?")
+                .bindParameters(name)
+                .executeQuery()
+
+            if (!result.next()) throw AppException.PlayerNotFound("Player $name does not exist")
+            return Player(
+                result.getInt("pid"),
+                result.getString("name"),
+                result.getString("email"),
+                result.getString("token"),
+                result.getString("password")
+            )
+        }
+    }
+
     override fun getPlayersByUsername(username: String, skip: Int, limit: Int): Pair<List<PlayerDetails>, Int> {
         dataSource.connection.use {
             val result = it.prepareStatement("SELECT * FROM player WHERE name LIKE ?")

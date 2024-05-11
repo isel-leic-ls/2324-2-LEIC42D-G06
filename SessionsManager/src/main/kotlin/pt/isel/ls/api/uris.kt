@@ -23,6 +23,7 @@ object Session {
 
 object PlayerUris {
     const val CREATE = "$API/players"
+    const val LOGIN = "$API/players/login"
     const val GET = "$API/players/{pid}"
     const val GET_BY_TOKEN = "$API/players/token/info"
     const val GET_BY_USERNAME = "$API/players"

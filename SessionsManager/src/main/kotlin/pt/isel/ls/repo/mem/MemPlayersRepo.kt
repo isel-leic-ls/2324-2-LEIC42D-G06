@@ -25,6 +25,10 @@ class MemPlayersRepo : PlayersRepo {
     override fun getPlayerIdByToken(token: String) = players.find { it.token == token }?.id
         ?: throw AppException.PlayerNotFound("Player not found with token $token")
 
+    override fun getPlayerByName(name: String): Player {
+        TODO("Not yet implemented")
+    }
+
     override fun getPlayersByUsername(username: String, skip: Int, limit: Int): Pair<List<PlayerDetails>, Int> {
         TODO("Not yet implemented")
     }

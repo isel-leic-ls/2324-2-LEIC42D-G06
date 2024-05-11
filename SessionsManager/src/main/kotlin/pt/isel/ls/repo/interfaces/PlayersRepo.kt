@@ -9,6 +9,6 @@ interface PlayersRepo {
     fun checkPlayerExistsByEmail(email: String): Boolean
     fun checkPlayerExistsByName(name: String): Boolean
     fun getPlayerIdByToken(token: String): Int
-
+    fun getPlayerByName(name: String): Player
     fun getPlayersByUsername(username: String, skip:Int,limit:Int):Pair<List<PlayerDetails>, Int>
 }

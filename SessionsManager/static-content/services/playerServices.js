@@ -15,4 +15,12 @@ export class PlayerService {
     async playerIdRetrieval(token) {
         return await this.playerRepository.handlePlayerId(token);
     }
+
+    async playerRegistration(name, email, password) {
+        return await this.playerRepository.handleRegister(name, email, password);
+    }
+
+    async playerLogin(username, password) {
+        return await this.playerRepository.handleLogin(username, password);
+    }
 }
