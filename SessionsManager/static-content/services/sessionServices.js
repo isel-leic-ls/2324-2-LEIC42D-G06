@@ -48,7 +48,7 @@ export class SessionService {
         return await this.sessionRepository.handleSessionsRetrievalRequest(queryString);
     }
 
-    async sessionCreation(gid, capacity, date) {
+    async sessionCreation(gid, capacity, date, token) {
         const parsedGameId = parseInt(gid);
         if (isNaN(parsedGameId) || parsedGameId < CONSTS.FIRST_GAME_ID)
             throw new Error("Invalid game ID");
@@ -57,26 +57,26 @@ export class SessionService {
             throw new Error("Invalid capacity");
         if (!dateTimePattern.test(date))
             throw new Error("Invalid date");
-        return await this.sessionRepository.handleSessionCreationRequest(gid, capacity, date);
+        return await this.sessionRepository.handleSessionCreationRequest(gid, capacity, date, token);
     }
 
-    async sessionLeave(sid) {
-        return await this.sessionRepository.handleSessionLeaveRequest(sid);
+    async sessionLeave(sid, token) {
+        return await this.sessionRepository.handleSessionLeaveRequest(sid, token);
     }
 
-    async sessionUpdate(sid, capacity, date) {
+    async sessionUpdate(sid, capacity, date, token) {
         if (isNaN(capacity) || capacity < 2)
             throw new Error("Invalid capacity");
         if (!dateTimePattern.test(date))
             throw new Error("Invalid date");
-        return await this.sessionRepository.handleSessionUpdateRequest(sid, capacity, date);
+        return await this.sessionRepository.handleSessionUpdateRequest(sid, capacity, date, token);
     }
 
-    async sessionDelete(sid) {
-        return await this.sessionRepository.handleSessionDeleteRequest(sid);
+    async sessionDelete(sid, token) {
+        return await this.sessionRepository.handleSessionDeleteRequest(sid, token);
     }
 
-    async sessionJoin(sid) {
-        return await this.sessionRepository.handleSessionJoinRequest(sid);
+    async sessionJoin(sid, token) {
+        return await this.sessionRepository.handleSessionJoinRequest(sid, token);
     }
 }

@@ -27,7 +27,7 @@ export class SessionRepository {
         throw new Error("Failed to retrieve session details");
     }
 
-    async handleSessionCreationRequest(gid, capacity, date) {
+    async handleSessionCreationRequest(gid, capacity, date, token) {
         const body = {
             gid: gid,
             capacity: capacity,
@@ -39,7 +39,7 @@ export class SessionRepository {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "Authorization": CONSTS.HARDCODED_TOKEN
+                "Authorization": token
             },
             body: JSON.stringify(body)
         });
@@ -51,12 +51,12 @@ export class SessionRepository {
         throw new Error("Failed to create session");
     }
 
-    async handleSessionLeaveRequest(sid) {
+    async handleSessionLeaveRequest(sid, token) {
         const response = await fetch(CONSTS.BASE_API_URL + "/sessions/" + sid + "/players", {
             method: "DELETE",
             headers: {
                 "Accept": "application/json",
-                "Authorization": CONSTS.HARDCODED_TOKEN
+                "Authorization": token
             }
         });
 
@@ -66,7 +66,7 @@ export class SessionRepository {
         throw new Error("Failed to leave session " + sid);
     }
 
-    async handleSessionUpdateRequest(sid, capacity, date) {
+    async handleSessionUpdateRequest(sid, capacity, date, token) {
         const body = {
             capacity: capacity,
             date: date,
@@ -77,7 +77,7 @@ export class SessionRepository {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "Authorization": CONSTS.HARDCODED_TOKEN
+                "Authorization": token
             },
             body: JSON.stringify(body)
         });
@@ -88,12 +88,12 @@ export class SessionRepository {
         throw new Error("Failed to update session");
     }
 
-    async handleSessionDeleteRequest(sid) {
+    async handleSessionDeleteRequest(sid, token) {
         const response = await fetch(CONSTS.BASE_API_URL + "/sessions/" + sid, {
             method: "DELETE",
             headers: {
                 "Accept": "application/json",
-                "Authorization": CONSTS.HARDCODED_TOKEN
+                "Authorization": token
             }
         });
 
@@ -103,12 +103,12 @@ export class SessionRepository {
         throw new Error("Failed to delete session " + sid);
     }
 
-    async handleSessionJoinRequest(sid) {
+    async handleSessionJoinRequest(sid, token) {
         const response = await fetch(CONSTS.BASE_API_URL + "/sessions/" + sid + "/players", {
             method: "PUT",
             headers: {
                 "Accept": "application/json",
-                "Authorization": CONSTS.HARDCODED_TOKEN
+                "Authorization": token
             }
         });
 

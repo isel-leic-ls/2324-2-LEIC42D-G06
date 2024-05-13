@@ -40,7 +40,7 @@ export class GameRepository {
         throw new Error("Failed to retrieve games");
     }
 
-    async handleGameCreationRequest(name, dev, genres) {
+    async handleGameCreationRequest(name, dev, genres, token) {
         const body = {
             name: name,
             developer: dev,
@@ -52,7 +52,7 @@ export class GameRepository {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json",
-                "Authorization": CONSTS.HARDCODED_TOKEN
+                "Authorization": token
             },
             body: JSON.stringify(body)
         });

@@ -14,21 +14,21 @@ function gamesSearchByNameClick(name) {
         + "&skip=" + CONSTS.SKIP_DEFAULT + "&limit=" + CONSTS.LIMIT_DEFAULT;
 }
 
-export function gamesSearchPage(createGame) {
+export function gamesSearchPage(createGame, loggedIn) {
     const genresInput = input({type: "text", id: "genresInput", placeHolder: "Action, Adventure"});
     const developerInput = input({type: "text", id: "developerInput", placeHolder: "Ubisoft, EA"});
     const nameInput = input({type: "text", id: "nameInput", placeHolder: "FIFA 22"});
 
     const form = gameForm(createGame);
 
-    const createGameButton = button(
+    const createGameButton = loggedIn ? button(
        {
            class: 'generic-create-button',
            onClick: () => {
                openModal(form);
            }
        }, "Create game"
-   );
+    ) : '';
 
    const searchButton = button(
        {
@@ -55,7 +55,7 @@ export function gamesSearchPage(createGame) {
    return div(
        { class: 'game-search-page' },
        p({}, "Search for games by entering genre(s) and developer or search by game name."),
-       p({}, "You can also create a new game."),
+       loggedIn ? p({}, "You can also create a new game.") : ' ',
        createGameButton,
        div(
            { class: 'search-section' },
@@ -135,7 +135,7 @@ export function gamesListPage(games, buttons) {
 }
 
 
-export function gameDetailsPage(game, createSession) {
+export function gameDetailsPage(game, createSession, loggedIn ) {
     const homeButton = returnHomeButton();
     const form = sessionForm(createSession, game.id);
 
@@ -150,14 +150,14 @@ export function gameDetailsPage(game, createSession) {
                 li({}, "Developer: " + game.dev),
                 li({}, "Genres: " + game.genres.join(", ")),
             ),
-            button(
+            loggedIn ? button(
                 {
                     class : 'generic-create-button',
                     onClick: () => {
                         openModal(form)
                     }
                 }, "Create a session with this game"
-            )
+            ) : ' '
         ),
         button(
             {

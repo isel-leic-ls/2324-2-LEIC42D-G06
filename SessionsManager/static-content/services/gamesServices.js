@@ -29,12 +29,12 @@ export class GameService {
         return await this.gameRepository.handleGamesRetrievalByNameRequest(query);
     }
 
-    async gameCreation(name, dev, genres) {
+    async gameCreation(name, dev, genres, token) {
         if (name === undefined || name === "") throw new Error("Invalid name");
         if (dev === undefined || dev === "") throw new Error("Invalid developer");
         if (genres === undefined || genres === "") throw new Error("Invalid genres");
 
         const genreArray = genres.split(',');
-        return await this.gameRepository.handleGameCreationRequest(name, dev, genreArray);
+        return await this.gameRepository.handleGameCreationRequest(name, dev, genreArray, token);
     }
 }

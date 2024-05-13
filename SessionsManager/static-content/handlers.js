@@ -1,4 +1,4 @@
-import {homePage} from "./pages/homePage.js"
+import {homePage, registerPage, loginPage} from "./pages/homePage.js"
 import {gamesSearchPage, gamesListPage, gameDetailsPage} from "./pages/gamesPages.js"
 import {sessionsSearchPage, sessionsListPage, sessionDetailsPage} from "./pages/sessionsPages.js"
 import {playerDetailsPage} from "./pages/playerPages.js"
@@ -12,6 +12,10 @@ import { SessionRepository } from "./data/sessionsRequests.js";
 import { GameService } from "./services/gamesServices.js";
 import { PlayerService } from "./services/playerServices.js";
 import { SessionService } from "./services/sessionServices.js";
+import { UserStorage } from "./storage.js";
+
+// Initialize the UserStorage
+const userStorage = new UserStorage();
 
 // initiate repositories and services
 const gameRepository = new GameRepository();
@@ -25,17 +29,28 @@ const sessionService = new SessionService(sessionRepository);
 /** Home */
 async function getHome(mainContent) {
     safeCall(mainContent, async () => {
-        const player = await playerService.playerIdRetrieval();
-        const pageContent = homePage(player);
+        const {id, token} = userStorage.getUserInfo();
+        let player = null;
+        if(id != null || token != null) {
+            player = await playerService.playerIdRetrieval(token);
+        }
+
+        const logoutFunction = (() => {
+            userStorage.clearUserInfo();
+            window.location.reload();
+        });
+
+        const pageContent = homePage(player, logoutFunction);
         mainContent.replaceChildren(pageContent);
     })
 }
 
 /** Games */
 function getGamesSearch(mainContent) {
+    const { id, token } = userStorage.getUserInfo();
     const createGameFunction = (async (name, dev, genres) => {
         try{
-            const gid = await gameService.gameCreation(name, dev, genres);
+            const gid = await gameService.gameCreation(name, dev, genres, token);
             window.location.hash = "games/" + gid;
         }catch(error){
             const errorContent = basicError(error.message)
@@ -43,7 +58,8 @@ function getGamesSearch(mainContent) {
         }
 
     });
-    const pageContent = gamesSearchPage(createGameFunction);
+    const loggedIn = id != null;
+    const pageContent = gamesSearchPage(createGameFunction, loggedIn); // boolean to check if the user is logged in
     mainContent.replaceChildren(pageContent);
 }
 
@@ -59,18 +75,20 @@ async function getGamesList(mainContent, path) {
 
 async function getGameDetails(mainContent, path) {
     safeCall(mainContent, async () => {
+        const { id, token } = userStorage.getUserInfo();
         const gid = filterResource(path);
         const game = await gameService.gameDetailsRetrieval(gid);
         const createSessionFunction = (async (gid, capacity, date) => {
             try {
-                const sid = await sessionService.sessionCreation(gid, capacity, date);
+                const sid = await sessionService.sessionCreation(gid, capacity, date, token);
                 window.location.hash = "sessions/" + sid;
             } catch(error) {
                 const errorContent = basicError(error.message)
                 mainContent.replaceChildren(errorContent)
             }
         });
-        const pageContent = gameDetailsPage(game, createSessionFunction);
+        const loggedIn = id != null; // boolean to check if the user is logged in
+        const pageContent = gameDetailsPage(game, createSessionFunction, loggedIn);
         mainContent.replaceChildren(pageContent);
     })
 }
@@ -93,30 +111,31 @@ async function getSessionsList(mainContent, path) {
 
 async function getSessionDetails(mainContent, path) {
     safeCall(mainContent, async () => {
+        const {id, token} = userStorage.getUserInfo();
         const sid = filterResource(path);
         const result = await sessionService.sessionDetailsRetrieval(sid);
         const leaveSessionFunction = (async (id) => {
-            await sessionService.sessionLeave(id);
+            await sessionService.sessionLeave(id, token);
             window.location.reload();
         });
 
         const updateSessionFunction = (async (id, capacity, date) => {
-            await sessionService.sessionUpdate(id, capacity, date);
+            await sessionService.sessionUpdate(id, capacity, date, token);
             window.location.reload();
         });
 
         const deleteSessionFunction = (async (id) => {
-            await sessionService.sessionLeave(id);
+            await sessionService.sessionLeave(id, token);
             window.location.reload();
         });
 
         const joinSessionFunction = (async (id) => {
-            await sessionService.sessionJoin(id);
+            await sessionService.sessionJoin(id, token);
             window.location.reload();
         });
 
         const pageContent = sessionDetailsPage(result.session,leaveSessionFunction,updateSessionFunction,
-            deleteSessionFunction, joinSessionFunction);
+            deleteSessionFunction, joinSessionFunction, id);
         mainContent.replaceChildren(pageContent);
     })
 }
@@ -141,6 +160,39 @@ async function getGamesSearchByName(mainContent, path) {
     })
 }
 
+async function getRegister(mainContent) {
+    safeCall(mainContent, async () => {
+        const registerFunction = (async (name, email, password) => {
+            try{
+                await playerService.playerRegistration(name, email, password);
+                window.location.hash = "login";
+            }catch(error){
+                const errorContent = basicError(error.message)
+                mainContent.replaceChildren(errorContent)
+            }
+        });
+        const pageContent = registerPage(registerFunction);
+        mainContent.replaceChildren(pageContent);
+    })
+}
+
+async function getLogin(mainContent) {
+    safeCall(mainContent, async () => {
+        const loginFunction = (async (username, password) => {
+            try{
+                const response = await playerService.playerLogin(username, password);
+                userStorage.setUserInfo(response.id, response.token); // set the user info in the storage
+                window.location.hash = "home";
+            }catch(error){
+                const errorContent = basicError(error.message)
+                mainContent.replaceChildren(errorContent)
+            }
+        });
+        const pageContent = loginPage(loginFunction);
+        mainContent.replaceChildren(pageContent);
+    })
+}
+
 export const handlers = {
     getHome,
     getGamesSearch,
@@ -150,7 +202,9 @@ export const handlers = {
     getSessionsList,
     getSessionDetails,
     getPlayer,
-    getGamesSearchByName
+    getGamesSearchByName,
+    getRegister,
+    getLogin
 }
 
 export default handlers

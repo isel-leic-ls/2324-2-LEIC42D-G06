@@ -7,11 +7,8 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.core.Response
 import org.http4k.routing.routes
-import pt.isel.ls.api.model.PlayerInputModel
 import org.http4k.core.Status
-import pt.isel.ls.api.model.PlayerOutputModel
-import pt.isel.ls.api.model.PlayerRetrievalOutputModel
-import pt.isel.ls.api.model.PlayersListRetrievalOutputModel
+import pt.isel.ls.api.model.*
 
 class PlayerRoutes(private val services: PlayerServices) {
 
@@ -19,8 +16,15 @@ class PlayerRoutes(private val services: PlayerServices) {
         PlayerUris.CREATE bind Method.POST to ::createPlayer,
         PlayerUris.GET bind Method.GET to ::getPlayerDetails,
         PlayerUris.GET_BY_TOKEN bind Method.GET to ::getPlayerIdByToken,
-        PlayerUris.GET_BY_USERNAME bind Method.GET to ::getPlayersByUsername
+        PlayerUris.GET_BY_USERNAME bind Method.GET to ::getPlayersByUsername,
+        PlayerUris.LOGIN bind Method.POST to ::login
     )
+
+    private fun login(request: Request) = exceptionAwareScope {
+        val inputModel = request.fromJson<LoginInputModel>()
+        val (pid, token) = services.login(inputModel.name, inputModel.password)
+        Response(Status.OK).toJson(PlayerOutputModel(pid, token))
+    }
 
     private fun createPlayer(request: Request) =
         exceptionAwareScope {
