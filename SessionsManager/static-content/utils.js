@@ -1,7 +1,8 @@
 import {basicError} from "./components/basicError.js";
 
+// BASE_API_URL = "http://localhost:9000/api"
 export const CONSTS = {
-    BASE_API_URL: "http://localhost:9000/api",
+    BASE_API_URL: "https://img-ls-2324-2-42d-g06.onrender.com/api",
     FIRST_GAME_ID: 100,
     FIRST_PLAYER_ID: 1000,
     FIRST_SESSION_ID: 10000,

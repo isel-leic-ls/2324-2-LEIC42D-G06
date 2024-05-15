@@ -15,7 +15,7 @@ export class PlayerRepository {
     }
 
     async handlePlayerId(token) {
-        const result = await fetch("http://localhost:9000/api/players/token/info", {
+        const result = await fetch(CONSTS.BASE_API_URL + "/players/token/info", {
             headers: {
                 "Accept": "application/json",
                 "Authorization": token,
