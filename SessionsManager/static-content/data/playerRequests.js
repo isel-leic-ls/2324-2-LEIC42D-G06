@@ -73,4 +73,17 @@ export class PlayerRepository {
         }
         throw new Error("Failed to login player");
     }
+
+    async handlePlayersRetrievalRequest(query) {
+        const response = await fetch(CONSTS.BASE_API_URL + "/players?" + query, {
+            headers: {
+                "Accept": "application/json",
+            }
+        });
+        if (response.status === 200) {
+            const players = await response.json();
+            return players;
+        }
+        throw new Error("Failed to retrieve players");
+    }
 }

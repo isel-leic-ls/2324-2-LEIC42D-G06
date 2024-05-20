@@ -14,7 +14,7 @@ val NAME_RANGE = MIN_NAME_LENGTH..MAX_NAME_LENGTH
 data class Player(val id: Int, val name: String, val email: String, val token : String, val password: String)
 
 @Serializable
-data class PlayerDetails(val name: String, val email: String)
+data class PlayerDetails(val id: Int, val name: String, val email: String)
 
 fun validatePlayerCredentials(name: String, email: String, password: String) {
     require(name.isNotBlank()) { "Name cannot be blank" }

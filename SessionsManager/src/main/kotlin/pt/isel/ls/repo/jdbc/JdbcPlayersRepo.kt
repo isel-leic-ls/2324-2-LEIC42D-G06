@@ -99,9 +99,10 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
             val playerInfoList = mutableListOf<PlayerDetails>()
 
             while (result.next()) {
+                val id = result.getInt("pid")
                 val name = result.getString("name")
                 val email = result.getString("email")
-                playerInfoList.add(PlayerDetails(name, email))
+                playerInfoList.add(PlayerDetails(id, name, email))
             }
             return playerInfoList.drop(skip).take(limit) to playerInfoList.size
         }

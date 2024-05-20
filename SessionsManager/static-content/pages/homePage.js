@@ -10,6 +10,7 @@ export function homePage(player, logoutFunction) {
             {},
             li({}, a({ href: "#games" }, "Search games"), " - Explore and discover new games"),
             li({}, a({ href: "#sessions" }, "Search sessions"), " - Find and join gaming sessions"),
+            li({}, a({ href: "#players" }, "Search players"), " - Find and connect with other players"),
             player ? li({}, a({ href: "#players/" + player.id }, "My profile"), " - View and manage your profile"): '',
             player ? button({ class : 'logout-button', onClick: logoutFunction }, "Logout") : '',
             player ? '' : li({}, a({ href: "#register" }, "Register"), " - Register a new account"),

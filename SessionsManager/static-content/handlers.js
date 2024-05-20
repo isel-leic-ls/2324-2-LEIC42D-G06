@@ -1,7 +1,7 @@
 import {homePage, registerPage, loginPage} from "./pages/homePage.js"
 import {gamesSearchPage, gamesListPage, gameDetailsPage} from "./pages/gamesPages.js"
 import {sessionsSearchPage, sessionsListPage, sessionDetailsPage} from "./pages/sessionsPages.js"
-import {playerDetailsPage} from "./pages/playerPages.js"
+import {playerDetailsPage, playersSearchPage, playersListPage} from "./pages/playerPages.js"
 import {pagingButtons} from "./components/pagingButtons.js"
 import {safeCall} from "./utils.js";
 import {filterQueryParameters, filterResource} from "./uriparsers.js"
@@ -73,6 +73,18 @@ async function getGamesList(mainContent, path) {
     })
 }
 
+async function getPlayersList(mainContent, path) {
+    safeCall(mainContent, async () => {
+        const {skip, limit, name} = filterQueryParameters(path);
+        console.log(skip, limit, name)
+        const {players, total} = await playerService.playersRetrieval(name, skip, limit);
+        const buttons = pagingButtons(parseInt(skip), parseInt(limit), total, path)
+        const pageContent = playersListPage(players, buttons);
+        mainContent.replaceChildren(pageContent);
+    })
+
+}
+
 async function getGameDetails(mainContent, path) {
     safeCall(mainContent, async () => {
         const { id, token } = userStorage.getUserInfo();
@@ -96,6 +108,11 @@ async function getGameDetails(mainContent, path) {
 /** Sessions */
 function getSessionsSearch(mainContent) {
     const pageContent = sessionsSearchPage();
+    mainContent.replaceChildren(pageContent);
+}
+
+function getPlayersSearch(mainContent) {
+    const pageContent = playersSearchPage();
     mainContent.replaceChildren(pageContent);
 }
 
@@ -193,6 +210,8 @@ async function getLogin(mainContent) {
     })
 }
 
+
+
 export const handlers = {
     getHome,
     getGamesSearch,
@@ -202,6 +221,8 @@ export const handlers = {
     getSessionsList,
     getSessionDetails,
     getPlayer,
+    getPlayersList,
+    getPlayersSearch,
     getGamesSearchByName,
     getRegister,
     getLogin

@@ -130,6 +130,36 @@ paths:
           description: Player not found
         '500':
           description: Internal Server Error
+          
+          
+          
+  /players/login:
+    post:
+      tags:
+      - Player Management
+      summary: execute login
+      description: |
+        Execute the login of a player
+      requestBody:
+        description: Player login input model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerLoginInputModel'
+      responses:
+        '200':
+          description: The player's token and id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerOutputModel'
+        '400':
+          description: Invalid password
+        '404':
+          description: Player does not exist
+        '500':
+          description: Internal Server Error
         
           
           
@@ -572,6 +602,21 @@ components:
           type: string
           description: Player' Email
           example: "a47718@alunos.isel.pt"
+        password:
+          type: string
+          description: Player's Password
+          example: "binogogo"
+          
+    PlayerLoginInputModel:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+          description: Player's Unique Name
+          example: "Pedro Diz"
         password:
           type: string
           description: Player's Password

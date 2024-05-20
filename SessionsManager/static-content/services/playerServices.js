@@ -23,4 +23,11 @@ export class PlayerService {
     async playerLogin(username, password) {
         return await this.playerRepository.handleLogin(username, password);
     }
+
+    async playersRetrieval(name, skip, limit) {
+        const checkedSkip = isNaN(skip) || skip < 0 ? CONSTS.SKIP_DEFAULT : skip;
+        const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
+        const query = `name=${name}&skip=${checkedSkip}&limit=${checkedLimit}`;
+        return await this.playerRepository.handlePlayersRetrievalRequest(query);
+    }
 }

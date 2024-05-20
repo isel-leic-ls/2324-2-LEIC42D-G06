@@ -43,7 +43,7 @@ class PlayerRoutes(private val services: PlayerServices) {
     private fun getPlayerIdByToken(request: Request) = exceptionAwareScope {
         val token = request.getAuthorizationToken()
         val pid = services.getPlayerIdByToken(token)
-        Response(Status.OK).toJson(PlayerOutputModel(pid, token))//TODO() so enviar o id provavelmente
+        Response(Status.OK).toJson(PlayerOutputModel(pid, token))
     }
 
     private fun getPlayersByUsername(request: Request) = exceptionAwareScope {
