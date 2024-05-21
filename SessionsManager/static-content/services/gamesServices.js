@@ -1,4 +1,5 @@
 import { CONSTS } from "../utils.js";
+import { DetailedError } from "../utils.js";
 
 export class GameService {
     constructor(gameRepository) {
@@ -7,13 +8,13 @@ export class GameService {
     async gameDetailsRetrieval(gId) {
         const parsedGameId = parseInt(gId);
         if (isNaN(parsedGameId) || parsedGameId < CONSTS.FIRST_GAME_ID)
-            throw new Error("Invalid game ID");
+            throw new DetailedError("Invalid game ID", "");
         return await this.gameRepository.handleGameDetailsRequest(gId);
     }
 
     async gamesRetrieval(skip, limit, genres, developer) {
-        if (genres === undefined) throw new Error("Invalid genres");
-        if (developer === undefined) throw new Error("Invalid developer");
+        if (genres === undefined) throw new DetailedError("Invalid genres", "");
+        if (developer === undefined) throw new DetailedError("Invalid developer", "");
         const checkedSkip = isNaN(skip) || skip < 0 ? CONSTS.SKIP_DEFAULT : skip;
         const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
 
@@ -22,7 +23,7 @@ export class GameService {
     }
 
     async gamesByNameRetrieval(gname, skip, limit) {
-        if (gname === undefined) throw new Error("Invalid name");
+        if (gname === undefined) throw new DetailedError("Invalid name", "");
         const checkedSkip = isNaN(skip) || skip < 0 ? CONSTS.SKIP_DEFAULT : skip;
         const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
         const query = `gname=${gname}&skip=${checkedSkip}&limit=${checkedLimit}`;
@@ -30,9 +31,9 @@ export class GameService {
     }
 
     async gameCreation(name, dev, genres, token) {
-        if (name === undefined || name === "") throw new Error("Invalid name");
-        if (dev === undefined || dev === "") throw new Error("Invalid developer");
-        if (genres === undefined || genres === "") throw new Error("Invalid genres");
+        if (name === undefined || name === "") throw new DetailedError("Invalid name", "");
+        if (dev === undefined || dev === "") throw new DetailedError("Invalid developer", "");
+        if (genres === undefined || genres === "") throw new DetailedError("Invalid genres", "");
 
         const genreArray = genres.split(',');
         return await this.gameRepository.handleGameCreationRequest(name, dev, genreArray, token);

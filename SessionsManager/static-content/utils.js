@@ -16,8 +16,16 @@ export async function safeCall(mainContent, block){
     try{
         await block()
     }catch(error){
-        const errorContent = basicError(error.message)
+        console.log(error)
+        const errorContent = basicError(error.message, error.details)
         mainContent.replaceChildren(errorContent)
+    }
+}
+
+export class DetailedError extends Error {
+    constructor(message, details){
+        super(message)
+        this.details = details
     }
 }
 

@@ -1,5 +1,6 @@
 import { CONSTS } from "../utils.js";
 import { pattern } from "../pages/sessionsPages.js";
+import { DetailedError } from "../utils.js";
 
 const states = ["OPEN", "CLOSED"];
 const dateTimePattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
@@ -12,25 +13,25 @@ export class SessionService {
     async sessionDetailsRetrieval(sId) {
         const parsedSessionId = parseInt(sId);
         if (isNaN(parsedSessionId) || parsedSessionId < CONSTS.FIRST_SESSION_ID)
-            throw new Error("Invalid session ID");
+            throw new DetailedError("Invalid session ID", "");
         return await this.sessionRepository.handleSessionDetailsRequest(sId);
     }
 
     async sessionsRetrieval(gid, date, state, pid, skip, limit) {
         const parsedGameId = parseInt(gid);
         if (gid !== undefined && (isNaN(parsedGameId) || parsedGameId < CONSTS.FIRST_GAME_ID))
-            throw new Error("Invalid game ID");
+            throw new DetailedError("Invalid game ID", "");
         if (date !== "null" && date !== undefined && !pattern.test(date))
-            throw new Error("Invalid date");
+            throw new DetailedError("Invalid date", "");
         if (state !== "null" && state !== undefined && !states.includes(state))
-            throw new Error("Invalid state");
+            throw new DetailedError("Invalid state", "");
         const parsedPlayerId = parseInt(pid);
         if (pid !== undefined && (isNaN(parsedPlayerId) || parsedPlayerId < CONSTS.FIRST_PLAYER_ID))
-            throw new Error("Invalid player ID");
+            throw new DetailedError("Invalid player ID", "");
         if (isNaN(skip) || skip < 0)
-            throw new Error("Invalid skip");
+            throw new DetailedError("Invalid skip", "");
         if (isNaN(limit) || limit < 1)
-            throw new Error("Invalid limit");
+            throw new DetailedError("Invalid limit", "");
 
         let queryString = "";
 
@@ -51,12 +52,12 @@ export class SessionService {
     async sessionCreation(gid, capacity, date, token) {
         const parsedGameId = parseInt(gid);
         if (isNaN(parsedGameId) || parsedGameId < CONSTS.FIRST_GAME_ID)
-            throw new Error("Invalid game ID");
+            throw new DetailedError("Invalid game ID", "");
         const parsedCapacity = parseInt(capacity);
         if (isNaN(parsedCapacity) || parsedCapacity < 2)
-            throw new Error("Invalid capacity");
+            throw new DetailedError("Invalid capacity", "");
         if (!dateTimePattern.test(date))
-            throw new Error("Invalid date");
+            throw new DetailedError("Invalid date", "");
         return await this.sessionRepository.handleSessionCreationRequest(gid, capacity, date, token);
     }
 
@@ -66,9 +67,9 @@ export class SessionService {
 
     async sessionUpdate(sid, capacity, date, token) {
         if (isNaN(capacity) || capacity < 2)
-            throw new Error("Invalid capacity");
+            throw new DetailedError("Invalid capacity", "");
         if (!dateTimePattern.test(date))
-            throw new Error("Invalid date");
+            throw new DetailedError("Invalid date", "");
         return await this.sessionRepository.handleSessionUpdateRequest(sid, capacity, date, token);
     }
 

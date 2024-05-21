@@ -1,4 +1,5 @@
 import { CONSTS } from '../utils.js';
+import { DetailedError } from '../utils.js';
 
 export class PlayerService {
     constructor(playerRepository) {
@@ -8,7 +9,7 @@ export class PlayerService {
     async playerDetailsRetrieval(pId) {
         const parsedPlayerId = parseInt(pId);
         if (isNaN(parsedPlayerId) || parsedPlayerId < CONSTS.FIRST_PLAYER_ID)
-            throw new Error("Invalid player ID");
+            throw new DetailedError("Invalid player ID", "");
         return await this.playerRepository.handlePlayerDetailsRequest(pId);
     }
 

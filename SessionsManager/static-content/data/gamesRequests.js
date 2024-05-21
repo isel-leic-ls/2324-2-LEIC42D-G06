@@ -1,4 +1,5 @@
 import { CONSTS } from "../utils.js";
+import { DetailedError } from "../utils.js";
 
 export class GameRepository {
     async handleGamesRetrievalRequest(query) {
@@ -7,11 +8,11 @@ export class GameRepository {
                 "Accept": "application/json",
             }
         });
+        const jsonResp = await response.json();
         if (response.status === 200) {
-            const games = await response.json();
-            return games;
+            return jsonResp;
         }
-        throw new Error("Failed to retrieve games");
+        throw new DetailedError("Failed to retrieve games", "Details: " + jsonResp.description);
     }
 
     async handleGameDetailsRequest(gid) {
@@ -20,11 +21,11 @@ export class GameRepository {
                 "Accept": "application/json",
             }
         });
+        const jsonResp = await response.json();
         if (response.status === 200) {
-            const game = await response.json();
-            return game;
+            return jsonResp;
         }
-        throw new Error("Failed to retrieve game details");
+        throw new DetailedError("Failed to retrieve game details", "Details: " + jsonResp.description);
     }
 
     async handleGamesRetrievalByNameRequest(query) {
@@ -33,11 +34,11 @@ export class GameRepository {
                 "Accept": "application/json",
             }
         });
+        const jsonResp = await response.json();
         if (response.status === 200) {
-            const games = await response.json();
-            return games;
+            return jsonResp;
         }
-        throw new Error("Failed to retrieve games");
+        throw new DetailedError("Failed to retrieve games", "Details: " + jsonResp.description);
     }
 
     async handleGameCreationRequest(name, dev, genres, token) {
@@ -57,10 +58,10 @@ export class GameRepository {
             body: JSON.stringify(body)
         });
 
+        const jsonResp = await response.json();
         if (response.status === 201) {
-            const model = await response.json();
-            return model.gId;
+            return jsonResp.gId;
         }
-        throw new Error("Failed to create game");
+        throw new DetailedError("Failed to create game", "Details: " + jsonResp.description);
     }
 }

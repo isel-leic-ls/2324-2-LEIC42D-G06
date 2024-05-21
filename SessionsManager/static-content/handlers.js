@@ -4,6 +4,7 @@ import {sessionsSearchPage, sessionsListPage, sessionDetailsPage} from "./pages/
 import {playerDetailsPage, playersSearchPage, playersListPage} from "./pages/playerPages.js"
 import {pagingButtons} from "./components/pagingButtons.js"
 import {safeCall} from "./utils.js";
+import {DetailedError} from "./utils.js";
 import {filterQueryParameters, filterResource} from "./uriparsers.js"
 import {basicError} from "./components/basicError.js";
 import { GameRepository } from "./data/gamesRequests.js";
@@ -53,7 +54,8 @@ function getGamesSearch(mainContent) {
             const gid = await gameService.gameCreation(name, dev, genres, token);
             window.location.hash = "games/" + gid;
         }catch(error){
-            const errorContent = basicError(error.message)
+            console.log(error)
+            const errorContent = basicError(error.message, error.details)
             mainContent.replaceChildren(errorContent)
         }
 
@@ -95,7 +97,7 @@ async function getGameDetails(mainContent, path) {
                 const sid = await sessionService.sessionCreation(gid, capacity, date, token);
                 window.location.hash = "sessions/" + sid;
             } catch(error) {
-                const errorContent = basicError(error.message)
+                const errorContent = basicError(error.message, error.details)
                 mainContent.replaceChildren(errorContent)
             }
         });
@@ -184,7 +186,7 @@ async function getRegister(mainContent) {
                 await playerService.playerRegistration(name, email, password);
                 window.location.hash = "login";
             }catch(error){
-                const errorContent = basicError(error.message)
+                const errorContent = basicError(error.message, error.details)
                 mainContent.replaceChildren(errorContent)
             }
         });
@@ -201,7 +203,7 @@ async function getLogin(mainContent) {
                 userStorage.setUserInfo(response.id, response.token); // set the user info in the storage
                 window.location.hash = "home";
             }catch(error){
-                const errorContent = basicError(error.message)
+                const errorContent = basicError(error.message, error.details)
                 mainContent.replaceChildren(errorContent)
             }
         });
