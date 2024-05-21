@@ -38,7 +38,7 @@ export function sessionsSearchPage() {
 
     return div(
         { class: 'sessions-page' },
-        p({}, "Search for sessions by entering date (optional) and closed state"),
+        p({}, "Search for sessions by entering date (optional) and session state"),
         div(
             {},
             label({id: "dateLabel"}, "Date:", dateCheckBox, dateInput),
