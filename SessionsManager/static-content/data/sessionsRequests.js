@@ -8,9 +8,9 @@ export class SessionRepository {
                 "Accept": "application/json",
             }
         });
+        const jsonResp = await response.json();
         if (response.status === 200) {
-            const sessions = await response.json();
-            return sessions;
+            return jsonResp;
         }
         throw new DetailedError("Failed to retrieve sessions", "Details: " + jsonResp.description);
     }
@@ -21,9 +21,9 @@ export class SessionRepository {
                 "Accept": "application/json",
             }
         });
+        const jsonResp = await response.json();
         if (response.status === 200) {
-            const session = await response.json();
-            return session;
+            return jsonResp;
         }
         throw new DetailedError("Failed to retrieve session details", "Details: " + jsonResp.description);
     }
