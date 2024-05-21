@@ -79,7 +79,7 @@ describe('router', function () {
 
         setTimeout(() => {
             const sut = document.getElementById("basicError");
-            sut.innerText.should.be.equal("Failed to retrieve player details\nReturn Home")
+            sut.innerText.should.be.equal("Failed to retrieve player details\n\nDetails: Player 9999999 does not exist\n\nReturn Home")
             document.getElementById("mainContent").removeChild(sut)
             done();
         }, timeout);
@@ -91,7 +91,7 @@ describe('router', function () {
 
         setTimeout(() => {
             const sut = document.getElementById("basicError");
-            sut.innerText.should.be.equal("Invalid player ID\nReturn Home")
+            sut.innerText.should.be.equal("Invalid player ID\n\nReturn Home")
             document.getElementById("mainContent").removeChild(sut)
             done();
         }, timeout);
@@ -103,7 +103,7 @@ describe('router', function () {
 
         setTimeout(() => {
             const sut = document.getElementById("basicError");
-            sut.innerText.should.be.equal("Failed to retrieve game details\nReturn Home")
+            sut.innerText.should.be.equal("Failed to retrieve game details\n\nDetails: Game 9999999 does not exist\n\nReturn Home")
             document.getElementById("mainContent").removeChild(sut)
             done();
         }, timeout);
@@ -115,7 +115,7 @@ describe('router', function () {
 
         setTimeout(() => {
             const sut = document.getElementById("basicError");
-            sut.innerText.should.be.equal("Invalid game ID\nReturn Home")
+            sut.innerText.should.be.equal("Invalid game ID\n\nReturn Home")
             document.getElementById("mainContent").removeChild(sut)
             done();
         }, timeout);
@@ -127,7 +127,7 @@ describe('router', function () {
 
         setTimeout(() => {
             const sut = document.getElementById("basicError");
-            sut.innerText.should.be.equal("Failed to retrieve session details\nReturn Home")
+            sut.innerText.should.be.equal("Failed to retrieve session details\n\nDetails: Session 9999999 does not exist\n\nReturn Home")
             document.getElementById("mainContent").removeChild(sut)
             done();
         }, timeout);
@@ -139,7 +139,7 @@ describe('router', function () {
 
         setTimeout(() => {
             const sut = document.getElementById("basicError");
-            sut.innerText.should.be.equal("Invalid session ID\nReturn Home")
+            sut.innerText.should.be.equal("Invalid session ID\n\nReturn Home")
             document.getElementById("mainContent").removeChild(sut)
             done();
         }, timeout);
