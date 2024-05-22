@@ -2,12 +2,12 @@ import router from "../router.js";
 import handlers from "../handlers.js";
 import { hashChangeHandler } from "../index.js";
 
+
 describe('router', function () {
     const timeout = 300;
     window.addEventListener('hashchange', hashChangeHandler);
 
     it('should find home', function () {
-
         router.addRouteHandler("home", handlers.getHome)
         const handler = router.getRouteHandler("home")
         handler.name.should.be.equal("getHome")
@@ -19,7 +19,6 @@ describe('router', function () {
     })
 
     it('should find getgamessearch ', function () {
-
         router.addRouteHandler("games", handlers.getGamesSearch)
         const handler = router.getRouteHandler("games")
         handler.name.should.be.equal("getGamesSearch")
@@ -150,38 +149,4 @@ describe('router', function () {
             done();
         }, timeout);
     })
-
-    /*
-        it('should find player with id 1000', function (done) {
-            router.addRouteHandler("players/:pid", handlers.getPlayer);
-            window.location.hash = "players/1000";
-
-            setTimeout(() => {
-                const sut = document.getElementById("playerDetails");
-                console.log(sut)
-                sut.innerText.should.be.equal(
-                    "Player Details\nName: Pedro\nE-mail: pedro@hotmail.com\nSearch sessions with this player\nReturn Home"
-                )
-                document.getElementById("mainContent").removeChild(sut);
-                done();
-            }, timeout);
-        })
-
-
-        it('should find game with id 100', function (done) {
-            router.addRouteHandler("games/:gid", handlers.getGameDetails);
-            window.location.hash = "games/100";
-
-            setTimeout(() => {
-                const sut = document.getElementById("gameDetails");
-                sut.innerText.should.be.equal(
-                    "Game Details\nName: Lord of the Rings Online\nDeveloper: Dev123\nGenres: RPG, Adventure\n" +
-                    "Search sessions with this game\nReturn Home"
-                )
-                document.getElementById("mainContent").removeChild(sut);
-                done();
-            }, timeout);
-        })
-    */
-
 })
