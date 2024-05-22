@@ -1,6 +1,7 @@
 import { CONSTS } from "../utils.js";
 import { DetailedError } from "../utils.js";
 
+
 export class SessionRepository {
     async handleSessionsRetrievalRequest(query) {
         const response = await fetch(CONSTS.BASE_API_URL + "/sessions?" + query, {
@@ -8,10 +9,9 @@ export class SessionRepository {
                 "Accept": "application/json",
             }
         });
+
         const jsonResp = await response.json();
-        if (response.status === 200) {
-            return jsonResp;
-        }
+        if (response.status === 200) return jsonResp;
         throw new DetailedError("Failed to retrieve sessions", "Details: " + jsonResp.description);
     }
 
@@ -21,10 +21,9 @@ export class SessionRepository {
                 "Accept": "application/json",
             }
         });
+
         const jsonResp = await response.json();
-        if (response.status === 200) {
-            return jsonResp;
-        }
+        if (response.status === 200) return jsonResp;
         throw new DetailedError("Failed to retrieve session details", "Details: " + jsonResp.description);
     }
 
@@ -44,10 +43,9 @@ export class SessionRepository {
             },
             body: JSON.stringify(body)
         });
+
         const jsonResp = await response.json();
-        if (response.status === 201) {
-            return jsonResp.sid;
-        }
+        if (response.status === 201) return jsonResp.sid;
         throw new DetailedError("Failed to create session", "Details: " + jsonResp.description);
     }
 
@@ -59,9 +57,8 @@ export class SessionRepository {
                 "Authorization": token
             }
         });
-        if (response.status === 204) {
-            return;
-        }
+
+        if (response.status === 204) return;
         const jsonResp = await response.json();
         throw new DetailedError("Failed to leave session " + sid, "Details: " + jsonResp.description);
     }
@@ -81,9 +78,8 @@ export class SessionRepository {
             },
             body: JSON.stringify(body)
         });
-        if (response.status === 204) {
-            return;
-        }
+
+        if (response.status === 204) return;
         const jsonResp = await response.json();
         throw new DetailedError("Failed to update session", "Details: " + jsonResp.description);
     }
@@ -97,9 +93,7 @@ export class SessionRepository {
             }
         });
 
-        if (response.status === 204) {
-            return;
-        }
+        if (response.status === 204) return;
         const jsonResp = await response.json();
         throw new DetailedError("Failed to delete session " + sid, "Details: " + jsonResp.description);
     }
@@ -112,9 +106,8 @@ export class SessionRepository {
                 "Authorization": token
             }
         });
-        if (response.status === 204) {
-            return;
-        }
+
+        if (response.status === 204) return;
         const jsonResp = await response.json();
         throw new DetailedError("Failed to join session " + sid, "Details: " + jsonResp.description);
     }

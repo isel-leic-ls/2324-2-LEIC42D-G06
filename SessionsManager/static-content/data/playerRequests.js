@@ -1,6 +1,7 @@
 import { CONSTS } from "../utils.js";
 import { DetailedError } from "../utils.js";
 
+
 export class PlayerRepository {
     async handlePlayerDetailsRequest(pid) {
         const response = await fetch(CONSTS.BASE_API_URL + "/players/" + pid, {
@@ -8,10 +9,9 @@ export class PlayerRepository {
                 "Accept": "application/json",
             }
         });
+
         const jsonResp = await response.json();
-        if (response.status === 200) {
-            return jsonResp;
-        }
+        if (response.status === 200) return jsonResp;
         throw new DetailedError("Failed to retrieve player details", "Details: " + jsonResp.description);
     }
 
@@ -24,9 +24,7 @@ export class PlayerRepository {
         });
 
         const jsonResp = await result.json();
-        if (result.status === 200) {
-            return jsonResp;
-        }
+        if (result.status === 200) return jsonResp;
         throw new DetailedError("Failed to retrieve player details", "Details: " + jsonResp.description);
     }
 
@@ -47,11 +45,7 @@ export class PlayerRepository {
         });
 
         const jsonResp = await response.json();
-        if (response.status === 201) {
-            //const model = await response.json();
-            //return model.pid;
-            return;
-        }
+        if (response.status === 201) return;
         throw new DetailedError("Failed to register player", "Details: " + jsonResp.description);
     }
 
@@ -71,9 +65,7 @@ export class PlayerRepository {
         });
 
         const jsonResp = await response.json();
-        if (response.status === 200) {
-            return jsonResp;
-        }
+        if (response.status === 200) return jsonResp;
         throw new DetailedError("Failed to login player", "Details: " + jsonResp.description);
     }
 
@@ -83,10 +75,9 @@ export class PlayerRepository {
                 "Accept": "application/json",
             }
         });
+
         const jsonResp = await response.json();
-        if (response.status === 200) {
-            return jsonResp;
-        }
+        if (response.status === 200) return jsonResp;
         throw new DetailedError("Failed to retrieve players", "Details: " + jsonResp.description);
     }
 }

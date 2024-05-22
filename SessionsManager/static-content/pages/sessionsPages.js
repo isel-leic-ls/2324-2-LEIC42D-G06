@@ -1,9 +1,10 @@
-import {div, button, label, p, ul, li, a, radioButton, input, h2, span} from "../tags.js"
-import {returnHomeButton} from "../components/returnHomeButton.js"
-import {errorToast} from "../components/errorToast.js"
-import {controlledInput} from "../components/controlledInput.js"
-import {CONSTS} from "../utils.js"
-import {openModal, closeModal} from "../components/modal.js"
+import { div, button, label, p, ul, li, a, radioButton, input, h2, span } from "../tags.js"
+import { returnHomeButton } from "../components/returnHomeButton.js"
+import { errorToast } from "../components/errorToast.js"
+import { controlledInput } from "../components/controlledInput.js"
+import { CONSTS } from "../utils.js"
+import { openModal, closeModal } from "../components/modal.js"
+
 
 export const pattern = /^\d{4}-\d{2}-\d{2}$/;
 export const states = ["ALL", "OPEN", "CLOSED"]
@@ -13,7 +14,7 @@ export function sessionsSearchPage() {
     const [dateCheckBox, dateInput] = controlledInput("2025-03-04");
 
     const stateRadioButtons = states.map(state => {
-        const radio = radioButton({name: "state", value: state});
+        const radio = radioButton({ name: "state", value: state });
         if (state === "ALL") radio.checked = true;
 
         radio.addEventListener("click", () => {
@@ -28,7 +29,7 @@ export function sessionsSearchPage() {
 
     const searchButton = button(
         {
-            class : 'generic-search-button',
+            class: 'generic-search-button',
             onClick: () => {
                 sessionsSearchPageClick(dateInput, document.querySelector('input[name="state"]:checked'));
             },
@@ -41,9 +42,9 @@ export function sessionsSearchPage() {
         p({}, "Search for sessions by entering date (optional) and session state"),
         div(
             {},
-            label({id: "dateLabel"}, "Date:", dateCheckBox, dateInput),
+            label({ id: "dateLabel" }, "Date:", dateCheckBox, dateInput),
             p({}),
-            label({id: "stateLabel"}, "Session State:", ...stateRadioButtons),
+            label({ id: "stateLabel" }, "Session State:", ...stateRadioButtons),
         ),
         searchButton,
         homeButton
@@ -62,15 +63,13 @@ function sessionsSearchPageClick(dateInput, stateInput) {
     }
 }
 
-
 export function sessionsListPage(sessions, buttons) { //list of sessions
     const homeButton = returnHomeButton();
-
     return div(
         { class: 'sessions-page' },
-         p({}, "This page displays the sessions that were queried."),
-         div({}, buttons),
-         p({}, "Here are the sessions that were queried:"),
+        p({}, "This page displays the sessions that were queried."),
+        div({}, buttons),
+        p({}, "Here are the sessions that were queried:"),
         ...sessions.map((session, index) =>
             ul({},
                 li({}, a({ href: "#sessions/" + session.id }, "Session " + (index + 1))),
@@ -81,7 +80,6 @@ export function sessionsListPage(sessions, buttons) { //list of sessions
     );
 }
 
-
 export function sessionDetailsPage(session, leaveSession, updateSession, deleteSession, joinSession, playerId) {
     const homeButton = returnHomeButton();
 
@@ -90,60 +88,74 @@ export function sessionDetailsPage(session, leaveSession, updateSession, deleteS
     );
 
     function leaveButton() {
-        return button({ class: 'leave-button', onClick: () => { openModal(
-            div(
-                {class : 'form-container'},
-                "Are you sure you want to leave this session?",
-                button({ class : 'form-button', onClick : () => { leaveSession(session.id); closeModal() } }, "Yes"),
-            )
-        )}}, "Leave session");
+        return button({
+            class: 'leave-button', onClick: () => {
+                openModal(
+                    div(
+                        { class: 'form-container' },
+                        "Are you sure you want to leave this session?",
+                        button(
+                            { class: 'form-button', onClick: () => { leaveSession(session.id); closeModal() } }, "Yes"
+                        ),
+                    )
+                )
+            }
+        }, "Leave session");
     }
 
     function updateButton() {
-        return button({ class: 'update-button', onClick: () => { openModal(
-            div(
-                {class : 'form-container'}, // This is using the 'form-container' class even though it's not a form
-                label({}, "New Capacity:"),
-                input({ class : 'form-input', type: "number", id: "capacityInput", min: 2, max: 100, required: true}),
-                label({}, "New Date:"),
-                input({ class : 'form-input', type: "text", id: "dateInput", required: true}),
-                button({
-                    class : 'form-button',
-                    onClick: () => {
-                        updateSession(
-                            session.id,
-                            document.getElementById('capacityInput').value,
-                            document.getElementById('dateInput').value
-                        );
-                        closeModal();
-                    }
-                }, "Update")
-            )
-        )}}, "Update session");
+        return button({
+            class: 'update-button', onClick: () => {
+                openModal(
+                    div(
+                        { class: 'form-container' }, //This is using the 'form-container' class even though it's not a form
+                        label({}, "New Capacity:"),
+                        input({ class: 'form-input', type: "number", id: "capacityInput", min: 2, max: 100, required: true }),
+                        label({}, "New Date:"),
+                        input({ class: 'form-input', type: "text", id: "dateInput", required: true }),
+                        button({
+                            class: 'form-button',
+                            onClick: () => {
+                                updateSession(
+                                    session.id,
+                                    document.getElementById('capacityInput').value,
+                                    document.getElementById('dateInput').value
+                                );
+                                closeModal();
+                            }
+                        }, "Update")
+                    )
+                )
+            }
+        }, "Update session");
     }
 
     function deleteButton() {
-        return button({ class: 'delete-button', onClick: () => { openModal(
-            div(
-                {class : 'form-container'},
-                "Are you sure you want to delete this session?",
-                button({ class : 'form-button', onClick : () => { deleteSession(session.id); closeModal() } }, "Yes")
-            )
-        ) }}, "Delete session");
+        return button({
+            class: 'delete-button', onClick: () => {
+                openModal(
+                    div(
+                        { class: 'form-container' },
+                        "Are you sure you want to delete this session?",
+                        button({ class: 'form-button', onClick: () => { deleteSession(session.id); closeModal() } }, "Yes")
+                    )
+                )
+            }
+        }, "Delete session");
     }
 
     function joinButton() {
-        return button({onClick: () => { joinSession(session.id) } }, "Join session")
+        return button({ onClick: () => { joinSession(session.id) } }, "Join session")
     }
 
     return div(
         { class: 'session-details-page' },
         h2({}, "Session Details"),
         ul({},
-            li({}, "This session is featuring the game: ", a({href: "#games/" + session.game, class: 'game-link'}, "Game")),
-            li({}, "Maximum player capacity: ", span({class: 'bold-text'}, String(session.capacity))),
-            li({}, "Date and time: ", span({class: 'bold-text'}, session.date)),
-            li({}, "Session closed status: ", span({class: 'bold-text'}, session.closed ? "Closed" : "Open")),
+            li({}, "This session is featuring the game: ", a({ href: "#games/" + session.game, class: 'game-link' }, "Game")),
+            li({}, "Maximum player capacity: ", span({ class: 'bold-text' }, String(session.capacity))),
+            li({}, "Date and time: ", span({ class: 'bold-text' }, session.date)),
+            li({}, "Session closed status: ", span({ class: 'bold-text' }, session.closed ? "Closed" : "Open")),
             li({}, "Players in the session:", ...pAnchors)
         ),
         div(
@@ -160,8 +172,13 @@ export function sessionDetailsPage(session, leaveSession, updateSession, deleteS
             ) : ' ',
             playerId != null ? div(
                 { class: 'participant-buttons' },
-                isInSession(session, playerId) ? div( {}, p({}, "You can leave the session"), leaveButton()) : div({}),
-                isInSession(session, playerId) || session.closed ? div({}) : div ({}, p({}, "You can join the session"), joinButton())
+                isInSession(
+                    session, playerId) ? div({}, p({}, "You can leave the session"), leaveButton()) : div({}
+
+                    ),
+                isInSession(
+                    session, playerId) || session.closed ? div({}) : div({}, p({}, "You can join the session"), joinButton()
+                    )
             ) : ' '
         ),
         homeButton

@@ -1,4 +1,4 @@
-import { div, a, ul, li, label, input, button, form, p, h2 } from "../tags.js"
+import { div, a, ul, li, label, input, button, p, h2 } from "../tags.js"
 import { returnHomeButton } from "../components/returnHomeButton.js"
 import { openModal, closeModal } from "../components/modal.js"
 import { CONSTS } from "../utils.js"
@@ -20,7 +20,6 @@ export function gamesSearchPage(createGame, loggedIn) {
     const nameInput = input({ type: "text", id: "nameInput", placeHolder: "FIFA 22" });
 
     const form = createGameForm(createGame);
-
     const createGameButton = loggedIn ? button(
         {
             class: 'generic-create-button',
@@ -51,7 +50,6 @@ export function gamesSearchPage(createGame, loggedIn) {
     );
 
     const homeButton = returnHomeButton();
-
     return div(
         { class: 'game-search-page' },
         p({}, "Search for games by entering genre(s) and developer or search by game name."),
@@ -80,7 +78,6 @@ export function gamesSearchPage(createGame, loggedIn) {
         div({}, homeButton)
     );
 }
-
 
 function createGameForm(createGame) {
     const form = document.createElement('form');
@@ -118,7 +115,6 @@ function createGameForm(createGame) {
 
 export function gamesListPage(games, buttons) {
     const homeButton = returnHomeButton();
-
     return div(
         { class: 'games-page' },
         p({}, "This page displays the games that were queried."),
@@ -140,11 +136,9 @@ export function gamesListPage(games, buttons) {
     );
 }
 
-
 export function gameDetailsPage(game, createSession, loggedIn) {
     const homeButton = returnHomeButton();
     const form = createSessionForm(createSession, game.id);
-
     return div(
         { class: 'game-details-page' },
         h2({}, "Game Details"),
@@ -178,11 +172,9 @@ export function gameDetailsPage(game, createSession, loggedIn) {
     );
 }
 
-
 function createSessionForm(createSession, id) {
     const form = document.createElement('form');
     form.className = 'form-container';
-
     form.appendChild(label({}, "Session capacity:"));
     form.appendChild(
         input({ class: 'form-input', type: "number", id: "sessionCapacity", min: 2, max: 100, required: true, placeHolder: "5" })

@@ -4,6 +4,7 @@ let notFoundRouteHandler = () => { throw "Route handler for unknown routes not d
 function addRouteHandler(path, handler) {
     routes.push({ path, handler })
 }
+
 function addDefaultNotFoundRouteHandler(notFoundRH) {
     notFoundRouteHandler = notFoundRH
 }
@@ -14,10 +15,8 @@ function getRouteHandler(path) {
 }
 
 function comparePaths(rPath, path) {
-
     const qIndex = path.indexOf('?');
     const qPath = qIndex === -1 ? path : path.substring(0, qIndex);
-
     const routeParts = rPath.split("/");
     const pathParts = qPath.split("/");
 
@@ -27,6 +26,7 @@ function comparePaths(rPath, path) {
         if (routeParts[i].startsWith(":")) continue;
         if (routeParts[i] !== pathParts[i]) return false;
     }
+    
     return true;
 }
 

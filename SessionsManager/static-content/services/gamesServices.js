@@ -1,10 +1,12 @@
 import { CONSTS } from "../utils.js";
 import { DetailedError } from "../utils.js";
 
+
 export class GameService {
     constructor(gameRepository) {
         this.gameRepository = gameRepository;
     }
+
     async gameDetailsRetrieval(gId) {
         const parsedGameId = parseInt(gId);
         if (isNaN(parsedGameId) || parsedGameId < CONSTS.FIRST_GAME_ID)
@@ -15,6 +17,7 @@ export class GameService {
     async gamesRetrieval(skip, limit, genres, developer) {
         if (genres === undefined) throw new DetailedError("Invalid genres", "");
         if (developer === undefined) throw new DetailedError("Invalid developer", "");
+        
         const checkedSkip = isNaN(skip) || skip < 0 ? CONSTS.SKIP_DEFAULT : skip;
         const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
 
@@ -24,6 +27,7 @@ export class GameService {
 
     async gamesByNameRetrieval(gname, skip, limit) {
         if (gname === undefined) throw new DetailedError("Invalid name", "");
+
         const checkedSkip = isNaN(skip) || skip < 0 ? CONSTS.SKIP_DEFAULT : skip;
         const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
         const query = `gname=${gname}&skip=${checkedSkip}&limit=${checkedLimit}`;

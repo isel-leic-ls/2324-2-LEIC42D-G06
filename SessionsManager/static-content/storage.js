@@ -4,7 +4,6 @@ const items = {
 }
 
 export class UserStorage {
-
     setUserInfo(id, token) {
         sessionStorage.setItem(items.id, id)
         sessionStorage.setItem(items.token, "Bearer " + token)
@@ -21,5 +20,4 @@ export class UserStorage {
         sessionStorage.removeItem(items.id)
         sessionStorage.removeItem(items.token)
     }
-
 }

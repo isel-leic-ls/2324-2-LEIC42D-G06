@@ -5,7 +5,6 @@ import { CONSTS } from "../utils.js"
 
 export function playerDetailsPage(player) { //this is the details page for a specific player
     const homeButton = returnHomeButton();
-
     const searchSessionsButton = button(
         {
             class: 'generic-search-button',
@@ -43,7 +42,7 @@ export function playersSearchPage() {
         div(
             {class : 'search-section'},
             label({ for: "name" }, "Name:"),
-            input({ id: "name", type: "text" })
+            input({ id: "name", type: "text", placeHolder: "JP"})
         ),
         button(
             {
@@ -62,7 +61,6 @@ export function playersSearchPage() {
 
 export function playersListPage(players, buttons) {
     const homeButton = returnHomeButton();
-
     return div(
         { class: 'players-page' },
         p({}, "This page displays the players that were queried."),

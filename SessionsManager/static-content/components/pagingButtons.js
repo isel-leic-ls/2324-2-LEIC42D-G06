@@ -2,7 +2,6 @@ import { div, button } from "../tags.js";
 
 
 export function pagingButtons(skip, limit, total, path) {
-
     function previousSessions() {
         window.location.hash = path.replace(/(skip=)\d+/, "$1" + (skip - limit))
     }

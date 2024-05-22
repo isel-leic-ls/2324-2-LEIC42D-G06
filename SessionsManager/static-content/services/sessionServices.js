@@ -2,6 +2,7 @@ import { CONSTS } from "../utils.js";
 import { pattern } from "../pages/sessionsPages.js";
 import { DetailedError } from "../utils.js";
 
+
 const states = ["OPEN", "CLOSED"];
 const dateTimePattern = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
 
@@ -25,6 +26,7 @@ export class SessionService {
             throw new DetailedError("Invalid date", "");
         if (state !== "null" && state !== undefined && !states.includes(state))
             throw new DetailedError("Invalid state", "");
+
         const parsedPlayerId = parseInt(pid);
         if (pid !== undefined && (isNaN(parsedPlayerId) || parsedPlayerId < CONSTS.FIRST_PLAYER_ID))
             throw new DetailedError("Invalid player ID", "");
@@ -34,7 +36,6 @@ export class SessionService {
             throw new DetailedError("Invalid limit", "");
 
         let queryString = "";
-
         if (gid !== undefined)
             queryString += `gid=${gid}&`;
         if (date !== undefined && date !== "null")
@@ -43,7 +44,6 @@ export class SessionService {
             queryString += `state=${state}&`;
         if (pid !== undefined)
             queryString += `pid=${pid}&`;
-
         queryString += `skip=${skip}&limit=${limit}`;
 
         return await this.sessionRepository.handleSessionsRetrievalRequest(queryString);
@@ -58,6 +58,7 @@ export class SessionService {
             throw new DetailedError("Invalid capacity", "");
         if (!dateTimePattern.test(date))
             throw new DetailedError("Invalid date", "");
+
         return await this.sessionRepository.handleSessionCreationRequest(gid, capacity, date, token);
     }
 
@@ -70,6 +71,7 @@ export class SessionService {
             throw new DetailedError("Invalid capacity", "");
         if (!dateTimePattern.test(date))
             throw new DetailedError("Invalid date", "");
+
         return await this.sessionRepository.handleSessionUpdateRequest(sid, capacity, date, token);
     }
 

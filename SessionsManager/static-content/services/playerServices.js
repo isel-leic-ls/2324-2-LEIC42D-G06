@@ -1,6 +1,7 @@
 import { CONSTS } from '../utils.js';
 import { DetailedError } from '../utils.js';
 
+
 export class PlayerService {
     constructor(playerRepository) {
         this.playerRepository = playerRepository;

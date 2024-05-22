@@ -1,7 +1,7 @@
-// Try to get this to work with our DSL
 import { div } from '../tags.js';
-export function errorToast(message) {
 
+
+export function errorToast(message) {
     const overlay =
       div({ class: 'popupOverlay' },
           div({ class: 'popup' },
@@ -11,7 +11,6 @@ export function errorToast(message) {
     const mainContent = document.getElementById('mainContent');
     mainContent.appendChild(overlay);
 
-    // Remove popup after timeout
-    const timeout = 1500;
+    const timeout = 1500; //Remove popup after timeout
     setTimeout(() => { mainContent.removeChild(overlay); }, timeout);
 }

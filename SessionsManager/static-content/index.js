@@ -26,7 +26,6 @@ function loadHandler() { //called when the page is loaded
 export function hashChangeHandler() { //called when the hash changes
     const mainContent = document.getElementById("mainContent")
     const path = window.location.hash.replace("#", "")
-
     const handler = router.getRouteHandler(path)
     handler(mainContent, path)
 }

@@ -1,6 +1,7 @@
 import { CONSTS } from "../utils.js";
 import { DetailedError } from "../utils.js";
 
+
 export class GameRepository {
     async handleGamesRetrievalRequest(query) {
         const response = await fetch(CONSTS.BASE_API_URL + "/games?" + query, {
@@ -8,10 +9,9 @@ export class GameRepository {
                 "Accept": "application/json",
             }
         });
+
         const jsonResp = await response.json();
-        if (response.status === 200) {
-            return jsonResp;
-        }
+        if (response.status === 200) return jsonResp;
         throw new DetailedError("Failed to retrieve games", "Details: " + jsonResp.description);
     }
 
@@ -21,10 +21,9 @@ export class GameRepository {
                 "Accept": "application/json",
             }
         });
+
         const jsonResp = await response.json();
-        if (response.status === 200) {
-            return jsonResp;
-        }
+        if (response.status === 200) return jsonResp;
         throw new DetailedError("Failed to retrieve game details", "Details: " + jsonResp.description);
     }
 
@@ -34,10 +33,9 @@ export class GameRepository {
                 "Accept": "application/json",
             }
         });
+
         const jsonResp = await response.json();
-        if (response.status === 200) {
-            return jsonResp;
-        }
+        if (response.status === 200) return jsonResp;
         throw new DetailedError("Failed to retrieve games", "Details: " + jsonResp.description);
     }
 
@@ -59,9 +57,7 @@ export class GameRepository {
         });
 
         const jsonResp = await response.json();
-        if (response.status === 201) {
-            return jsonResp.gId;
-        }
+        if (response.status === 201) return jsonResp.gId;
         throw new DetailedError("Failed to create game", "Details: " + jsonResp.description);
     }
 }
