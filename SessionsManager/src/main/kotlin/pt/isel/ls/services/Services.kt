@@ -1,6 +1,6 @@
 package pt.isel.ls.services
 
-import SessionRepo
+import pt.isel.ls.repo.interfaces.SessionRepo
 import pt.isel.ls.repo.interfaces.GamesRepo
 import pt.isel.ls.repo.interfaces.PlayersRepo
 

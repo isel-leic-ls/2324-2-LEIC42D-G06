@@ -1,6 +1,6 @@
 package pt.isel.ls.repo.mem
 
-import SessionRepo
+import pt.isel.ls.repo.interfaces.SessionRepo
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
 import pt.isel.ls.domain.toSession

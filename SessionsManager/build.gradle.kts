@@ -9,9 +9,9 @@ repositories {
 
 dependencies {
     implementation(group = "org.postgresql", name = "postgresql", version = "42.+")
-    implementation(group = "org.http4k", name = "http4k-core", version = "4.40.+")
+    implementation(group = "org.http4k", name = "http4k-core", version = "5.20.0.0")
     implementation(group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version = "1.5.+")
-    implementation(group = "org.http4k", name = "http4k-server-jetty", version = "4.40.+")
+    implementation(group = "org.http4k", name = "http4k-server-jetty", version = "5.20.0.0")
     testImplementation(kotlin("test"))
 }
 

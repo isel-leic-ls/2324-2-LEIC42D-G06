@@ -17,7 +17,7 @@ import pt.isel.ls.utils.FIRST_PLAYER_ID
 
 private const val TOKEN = "3ad7db4b-c5a9-42ee-9094-852f94c57cb7"
 
-class PlayerRoutesMock() {
+class PlayerRoutesMock {
 
     val routes: RoutingHttpHandler = routes(
         PlayerUris.CREATE bind Method.POST to ::createPlayer,

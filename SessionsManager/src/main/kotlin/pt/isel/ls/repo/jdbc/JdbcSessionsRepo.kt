@@ -1,6 +1,6 @@
 package pt.isel.ls.repo.jdbc
 
-import SessionRepo
+import pt.isel.ls.repo.interfaces.SessionRepo
 import pt.isel.ls.AppException
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
