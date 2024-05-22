@@ -1,6 +1,7 @@
 package pt.isel.ls.services
 
 import pt.isel.ls.AppException
+import pt.isel.ls.domain.NAME_RANGE
 import pt.isel.ls.domain.Player
 import pt.isel.ls.domain.PlayerDetails
 import pt.isel.ls.domain.validatePlayerCredentials
@@ -37,6 +38,7 @@ class PlayerServices(private val pRepo: PlayersRepo) {
     fun getPlayerIdByToken(token: String) = pRepo.getPlayerIdByToken(token)
 
     fun getPlayersByUsername(username : String,skip:Int, limit:Int):Pair<List<PlayerDetails>, Int> {
+        require(username.length in NAME_RANGE) {"Username length must be between ${NAME_RANGE.start} and ${NAME_RANGE.last}"}
         require(skip >= 0) { "Skip value must be positive" }
         require(limit > 0) { "Limit value must be positive non-zero" }
         return pRepo.getPlayersByUsername(username,skip,limit)
