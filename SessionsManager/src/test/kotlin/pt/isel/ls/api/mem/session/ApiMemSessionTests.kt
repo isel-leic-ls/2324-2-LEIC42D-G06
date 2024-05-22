@@ -37,7 +37,7 @@ class ApiMemSessionTests {
     // create the services
     private val services = Services(gamesRepo, playersRepo, sessionRepo)
 
-    // setup the server with the session routes only
+    //set up the server with the session routes only
     private val serviceRoutes = SessionRoutes(services.sessionService)
     private val server = serviceRoutes.routes.asServer(Jetty(8080))
 

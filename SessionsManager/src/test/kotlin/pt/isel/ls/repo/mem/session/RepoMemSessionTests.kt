@@ -260,17 +260,19 @@ class RepoMemSessionTests {
         val gid = 1
         val capacity = 5
         val total = 5
-        val skip = 2
-        val limit = skip
+        val skipAndLimit = 2
         val date = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
 
         val sids = (0..total).map { repo.createSession(createSessionDTO(capacity, date, gid, listOf(it + 1))) }
 
         //act
-        val result = repo.getListOfSessions(gid, null, null, null, skip, limit)
+        val result = repo.getListOfSessions(gid, null, null, null, skipAndLimit, skipAndLimit)
 
         //assert
-        assertTrue(result.first.size == limit && result.first.all { it.id in sids.drop(skip).take(limit) })
+        assertTrue(
+            result.first.size == skipAndLimit &&
+                    result.first.all { it.id in sids.drop(skipAndLimit).take(skipAndLimit) }
+        )
     }
 
     @Test

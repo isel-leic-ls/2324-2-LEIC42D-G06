@@ -4,7 +4,6 @@ import org.http4k.core.Method
 import org.http4k.core.Request
 import org.http4k.server.Jetty
 import org.http4k.server.asServer
-import pt.isel.ls.api.PlayerRoutes
 import pt.isel.ls.api.PlayerUris
 import pt.isel.ls.api.mem.mockServices.PlayerRoutesMock
 import pt.isel.ls.repo.mem.MemPlayersRepo

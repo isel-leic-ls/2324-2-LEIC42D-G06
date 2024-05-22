@@ -1,6 +1,8 @@
+package pt.isel.ls.repo.interfaces
+
 import pt.isel.ls.domain.Session
 import pt.isel.ls.domain.SessionDTO
-import java.time.LocalDateTime
+
 
 interface SessionRepo {
     fun createSession(dto: SessionDTO) : Int
