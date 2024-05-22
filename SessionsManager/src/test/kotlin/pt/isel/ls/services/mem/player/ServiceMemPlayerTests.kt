@@ -124,9 +124,14 @@ class ServiceMemPlayerTests {
     }
 
     @Test
-    fun `get player by username`() {
+    fun `get player by username with invalid name`() {
         val pRepo = MemPlayersRepo()
         val service = PlayerServices(pRepo)
-        assertFailsWith<IllegalArgumentException> { service.getPlayersByUsername("Vasco",1,-1) }
+        val username = buildString {
+            repeat(51){append("a")}
+        }
+        assertFailsWith<IllegalArgumentException> { service.getPlayersByUsername(username,1,-1) }
     }
+
+
 }
