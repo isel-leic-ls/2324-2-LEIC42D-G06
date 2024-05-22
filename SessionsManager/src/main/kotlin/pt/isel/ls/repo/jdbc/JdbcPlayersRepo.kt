@@ -7,6 +7,7 @@ import pt.isel.ls.repo.interfaces.PlayersRepo
 import java.sql.Statement
 import javax.sql.DataSource
 
+
 class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
     override fun createPlayer(name: String, email: String, token: String, password: String): Int {
         dataSource.connection.use {
@@ -24,7 +25,6 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
             val rs = stmt.generatedKeys
             if (rs.next()) return rs.getInt(1)
             else throw AppException.SQLException("Player not inserted")
-
         }
     }
 
@@ -92,7 +92,7 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
 
     override fun getPlayersByUsername(username: String, skip: Int, limit: Int): Pair<List<PlayerDetails>, Int> {
         dataSource.connection.use {
-            val result = it.prepareStatement("SELECT * FROM player WHERE name LIKE ?")
+            val result = it.prepareStatement("SELECT * FROM player WHERE name ILIKE ?")
                 .bindParameters("$username%")
                 .executeQuery()
 
@@ -104,8 +104,8 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
                 val email = result.getString("email")
                 playerInfoList.add(PlayerDetails(id, name, email))
             }
+
             return playerInfoList.drop(skip).take(limit) to playerInfoList.size
         }
-
     }
 }
