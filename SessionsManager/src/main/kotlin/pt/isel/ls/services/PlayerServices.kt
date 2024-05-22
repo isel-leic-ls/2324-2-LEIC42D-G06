@@ -38,7 +38,7 @@ class PlayerServices(private val pRepo: PlayersRepo) {
     fun getPlayerIdByToken(token: String) = pRepo.getPlayerIdByToken(token)
 
     fun getPlayersByUsername(username : String,skip:Int, limit:Int):Pair<List<PlayerDetails>, Int> {
-        require(username.length in NAME_RANGE) {"Username length must be between ${NAME_RANGE.start} and ${NAME_RANGE.last}"}
+        require(username.length < NAME_RANGE.last) {"Username length must be less than ${NAME_RANGE.last}"}
         require(skip >= 0) { "Skip value must be positive" }
         require(limit > 0) { "Limit value must be positive non-zero" }
         return pRepo.getPlayersByUsername(username,skip,limit)
