@@ -15,13 +15,14 @@ import pt.isel.ls.api.model.PlayerRetrievalOutputModel
 import pt.isel.ls.domain.Player
 import pt.isel.ls.utils.FIRST_PLAYER_ID
 
+
 private const val TOKEN = "3ad7db4b-c5a9-42ee-9094-852f94c57cb7"
 
 class PlayerRoutesMock {
-
     val routes: RoutingHttpHandler = routes(
         PlayerUris.CREATE bind Method.POST to ::createPlayer,
-        PlayerUris.GET bind Method.GET to ::getPlayerDetails
+        PlayerUris.GET bind Method.GET to ::getPlayerDetails,
+        PlayerUris.GET_BY_USERNAME bind Method.GET to ::getPlayersByUsername
     )
 
     private fun createPlayer(request: Request) =
@@ -31,13 +32,23 @@ class PlayerRoutesMock {
             Response(Status.CREATED).toJson(PlayerOutputModel(pid, token))
         }
 
+    private fun getPlayerDetails(request: Request) =
+        exceptionAwareScope {
+            val pid = request.getPlayerDetails()
+            val player =
+                if (pid == FIRST_PLAYER_ID)
+                    Player(FIRST_PLAYER_ID, "test", "test@gmail.com", TOKEN, "test")
+                else throw AppException.PlayerNotFound("No player found with the given Id")
+            Response(Status.OK).toJson(PlayerRetrievalOutputModel(player.id, player.name, player.email))
+        }
 
-    private fun getPlayerDetails(request: Request) = exceptionAwareScope {
-        val pid = request.getPlayerDetails()
-        val player = if(pid == FIRST_PLAYER_ID) Player(FIRST_PLAYER_ID,"teste","teste@gmail.com",TOKEN,"teste")
-        else throw AppException.PlayerNotFound("No player found with the given Id")
-        Response(Status.OK).toJson(PlayerRetrievalOutputModel(player.id, player.name, player.email))
-    }
-
-
+    private fun getPlayersByUsername(request: Request) =
+        exceptionAwareScope {
+            val username = request.getUsername()
+            val player =
+                if (username == "test")
+                    Player(FIRST_PLAYER_ID, "test", "test@gmail.com", TOKEN, "test")
+                else throw AppException.PlayerNotFound("No player found with the given username")
+            Response(Status.OK).toJson(PlayerRetrievalOutputModel(player.id, player.name, player.email))
+        }
 }

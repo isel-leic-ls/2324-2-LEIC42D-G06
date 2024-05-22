@@ -6,6 +6,7 @@ import pt.isel.ls.repo.jdbc.JdbcPlayersRepo
 import pt.isel.ls.utils.Environment
 import kotlin.test.*
 
+
 class RepoJdbcPlayerTests {
     private val dataSource = PGSimpleDataSource().apply {
         setUrl(Environment.DATABASE_TEST_URL)
@@ -33,7 +34,12 @@ class RepoJdbcPlayerTests {
 
     @Test
     fun `check if player exists by id`() {
-        val pId = repo.createPlayer("Trubin", "trubin1@gmail.com", "3ad7db4b-c5a9-42fe-9094-852f94c57cb9", "vasco123")
+        val pId = repo.createPlayer(
+            "Trubin",
+            "trubin1@gmail.com",
+            "3ad7db4b-c5a9-42fe-9094-852f94c57cb9",
+            "vasco123"
+        )
         assertEquals(pId, repo.getPlayer(pId).id)
     }
 
@@ -46,13 +52,23 @@ class RepoJdbcPlayerTests {
 
     @Test
     fun `creating a player`() {
-        val pId = repo.createPlayer("Trubin", "trubin1@gmail.com", "3ad7db4b-c5a9-42fe-9094-852f94c57cb9", "vasco123")
+        val pId = repo.createPlayer(
+            "Trubin",
+            "trubin1@gmail.com",
+            "3ad7db4b-c5a9-42fe-9094-852f94c57cb9",
+            "vasco123"
+        )
         assertTrue(pId > 0, "Player ID should be greater than zero")
     }
 
     @Test
     fun `check if a player exists by token`() {
-        val pId = repo.createPlayer("Trubin", "trubin1@gmail.com", "3ad7db4b-c5a9-42fe-9094-852f94c57cb9", "vasco123")
+        val pId = repo.createPlayer(
+            "Trubin",
+            "trubin1@gmail.com",
+            "3ad7db4b-c5a9-42fe-9094-852f94c57cb9",
+            "vasco123"
+        )
         val tPid = repo.getPlayerIdByToken("3ad7db4b-c5a9-42fe-9094-852f94c57cb9")
         assertEquals(pId, tPid, "Player ID should be the same")
     }

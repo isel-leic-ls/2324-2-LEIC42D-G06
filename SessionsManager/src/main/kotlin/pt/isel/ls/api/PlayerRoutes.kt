@@ -10,8 +10,8 @@ import org.http4k.routing.routes
 import org.http4k.core.Status
 import pt.isel.ls.api.model.*
 
-class PlayerRoutes(private val services: PlayerServices) {
 
+class PlayerRoutes(private val services: PlayerServices) {
     val routes: RoutingHttpHandler = routes(
         PlayerUris.CREATE bind Method.POST to ::createPlayer,
         PlayerUris.GET bind Method.GET to ::getPlayerDetails,
@@ -20,11 +20,12 @@ class PlayerRoutes(private val services: PlayerServices) {
         PlayerUris.LOGIN bind Method.POST to ::login
     )
 
-    private fun login(request: Request) = exceptionAwareScope {
-        val inputModel = request.fromJson<LoginInputModel>()
-        val (pid, token) = services.login(inputModel.name, inputModel.password)
-        Response(Status.OK).toJson(PlayerOutputModel(pid, token))
-    }
+    private fun login(request: Request) =
+        exceptionAwareScope {
+            val inputModel = request.fromJson<LoginInputModel>()
+            val (pid, token) = services.login(inputModel.name, inputModel.password)
+            Response(Status.OK).toJson(PlayerOutputModel(pid, token))
+        }
 
     private fun createPlayer(request: Request) =
         exceptionAwareScope {
@@ -33,24 +34,25 @@ class PlayerRoutes(private val services: PlayerServices) {
             Response(Status.CREATED).toJson(PlayerOutputModel(pid, token))
         }
 
+    private fun getPlayerDetails(request: Request) =
+        exceptionAwareScope {
+            val pid = request.getPlayerDetails()
+            val player = services.getPlayer(pid)
+            Response(Status.OK).toJson(PlayerRetrievalOutputModel(player.id, player.name, player.email))
+        }
 
-    private fun getPlayerDetails(request: Request) = exceptionAwareScope {
-        val pid = request.getPlayerDetails()
-        val player = services.getPlayer(pid)
-        Response(Status.OK).toJson(PlayerRetrievalOutputModel(player.id, player.name, player.email))
-    }
+    private fun getPlayerIdByToken(request: Request) =
+        exceptionAwareScope {
+            val token = request.getAuthorizationToken()
+            val pid = services.getPlayerIdByToken(token)
+            Response(Status.OK).toJson(PlayerOutputModel(pid, token))
+        }
 
-    private fun getPlayerIdByToken(request: Request) = exceptionAwareScope {
-        val token = request.getAuthorizationToken()
-        val pid = services.getPlayerIdByToken(token)
-        Response(Status.OK).toJson(PlayerOutputModel(pid, token))
-    }
-
-    private fun getPlayersByUsername(request: Request) = exceptionAwareScope {
-        val username = request.getUsername()
-        val (skip, limit) = request.getSkipAndLimit()
-        val (list, total) = services.getPlayersByUsername(username, skip, limit)
-        Response(Status.OK).toJson(PlayersListRetrievalOutputModel(list, total))
-    }
-
+    private fun getPlayersByUsername(request: Request) =
+        exceptionAwareScope {
+            val username = request.getUsername()
+            val (skip, limit) = request.getSkipAndLimit()
+            val (list, total) = services.getPlayersByUsername(username, skip, limit)
+            Response(Status.OK).toJson(PlayersListRetrievalOutputModel(list, total))
+        }
 }

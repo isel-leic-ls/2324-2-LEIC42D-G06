@@ -138,7 +138,7 @@ class ApiMemPlayerTests {
 
     @Test
     fun `get a player by username`() {
-        val url = "/api/players?name=Vasco"
+        val url = "/api/players?name=test"
         val request = Request(Method.GET, url)
         val response = mockServiceRoutes.routes(request)
         assertEquals(200, response.status.code)
