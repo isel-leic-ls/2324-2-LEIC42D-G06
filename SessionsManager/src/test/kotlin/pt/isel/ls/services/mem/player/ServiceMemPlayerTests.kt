@@ -19,7 +19,7 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("", "email","vasco123")
+            service.createPlayer("", "email", "vasco123")
         }
         // Assert
         assertEquals("Name cannot be blank", exception.message)
@@ -32,7 +32,7 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("name", "","vasco123")
+            service.createPlayer("name", "", "vasco123")
         }
         // Assert
         assertEquals("Invalid email", exception.message)
@@ -45,7 +45,7 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("n", "email","vasco123")
+            service.createPlayer("n", "email", "vasco123")
         }
         // Assert
         assertEquals(
@@ -60,7 +60,11 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("nameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "name@gmail.com","vasco123")
+            service.createPlayer(
+                "nameeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                "name@gmail.com",
+                "vasco123"
+            )
         }
         // Assert
         assertEquals(
@@ -75,7 +79,7 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act
         val exception = assertFailsWith<IllegalArgumentException> {
-            service.createPlayer("name", "e","vasco123")
+            service.createPlayer("name", "e", "vasco123")
         }
         // Assert
         assertEquals(
@@ -103,5 +107,26 @@ class ServiceMemPlayerTests {
         val service = PlayerServices(pRepo)
         // Act & Assert
         assertFailsWith<AppException.PlayerNotFound> { service.getPlayer(FIRST_PLAYER_ID) }
+    }
+
+    @Test
+    fun `get player by username with invalid skip`() {
+       val pRepo = MemPlayersRepo()
+        val service = PlayerServices(pRepo)
+        assertFailsWith<IllegalArgumentException> { service.getPlayersByUsername("Vasco",-1,1) }
+    }
+
+    @Test
+    fun `get player by username with invalid limit`() {
+        val pRepo = MemPlayersRepo()
+        val service = PlayerServices(pRepo)
+        assertFailsWith<IllegalArgumentException> { service.getPlayersByUsername("Vasco",1,-1) }
+    }
+
+    @Test
+    fun `get player by username`() {
+        val pRepo = MemPlayersRepo()
+        val service = PlayerServices(pRepo)
+        assertFailsWith<IllegalArgumentException> { service.getPlayersByUsername("Vasco",1,-1) }
     }
 }
