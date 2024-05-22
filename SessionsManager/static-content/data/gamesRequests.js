@@ -1,67 +1,67 @@
 import { CONSTS } from "../utils.js";
+import { DetailedError } from "../utils.js";
 
-const token = "Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7";
-
-export async function handleGamesRetrievalRequest(query) {
-    const response = await fetch(CONSTS.BASE_API_URL + "/games?" + query, {
-        headers: {
-            "Accept": "application/json",
+export class GameRepository {
+    async handleGamesRetrievalRequest(query) {
+        const response = await fetch(CONSTS.BASE_API_URL + "/games?" + query, {
+            headers: {
+                "Accept": "application/json",
+            }
+        });
+        const jsonResp = await response.json();
+        if (response.status === 200) {
+            return jsonResp;
         }
-    })
-    if (response.status === 200) {
-        const games = await response.json();
-        return games;
+        throw new DetailedError("Failed to retrieve games", "Details: " + jsonResp.description);
     }
-    throw new Error("Failed to retrieve games");
-}
 
-export async function handleGameDetailsRequest(gid) {
-    const response = await fetch(CONSTS.BASE_API_URL + "/games/id/" + gid, {
-        headers: {
-            "Accept": "application/json",
+    async handleGameDetailsRequest(gid) {
+        const response = await fetch(CONSTS.BASE_API_URL + "/games/id/" + gid, {
+            headers: {
+                "Accept": "application/json",
+            }
+        });
+        const jsonResp = await response.json();
+        if (response.status === 200) {
+            return jsonResp;
         }
-    });
-    if (response.status === 200) {
-        const game = await response.json();
-        return game;
+        throw new DetailedError("Failed to retrieve game details", "Details: " + jsonResp.description);
     }
-    throw new Error("Failed to retrieve game details");
-}
 
-export async function handleGamesRetrievalByNameRequest(query) {
-    const response = await fetch(CONSTS.BASE_API_URL + "/games/list?"+ query, {
-        headers: {
-            "Accept": "application/json",
+    async handleGamesRetrievalByNameRequest(query) {
+        const response = await fetch(CONSTS.BASE_API_URL + "/games/list?" + query, {
+            headers: {
+                "Accept": "application/json",
+            }
+        });
+        const jsonResp = await response.json();
+        if (response.status === 200) {
+            return jsonResp;
         }
-    })
-    if (response.status === 200) {
-        const games = await response.json();
-        return games;
+        throw new DetailedError("Failed to retrieve games", "Details: " + jsonResp.description);
     }
-    throw new Error("Failed to retrieve games");
-}
 
-export async function handleGameCreationRequest(name, dev, genres) {
+    async handleGameCreationRequest(name, dev, genres, token) {
+        const body = {
+            name: name,
+            developer: dev,
+            genres: genres
+        };
 
-    const body = {
-        name: name,
-        developer: dev,
-        genres: genres
-    };
+        const response = await fetch(CONSTS.BASE_API_URL + "/games", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": token
+            },
+            body: JSON.stringify(body)
+        });
 
-    const response = await fetch(CONSTS.BASE_API_URL + "/games", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Authorization" : token
-        },
-        body: JSON.stringify(body)
-    })
-
-    if (response.status === 201) {
-        const model = await response.json();
-        return model.gId;
+        const jsonResp = await response.json();
+        if (response.status === 201) {
+            return jsonResp.gId;
+        }
+        throw new DetailedError("Failed to create game", "Details: " + jsonResp.description);
     }
-    throw new Error("Failed to create game");
 }

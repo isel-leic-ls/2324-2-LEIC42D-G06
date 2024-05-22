@@ -1,8 +1,13 @@
-import {div} from "../tags.js";
+import {div, p} from "../tags.js";
 import {returnHomeButton} from "./returnHomeButton.js";
 
 
-export function basicError(message) { //this is a generic error page
+export function basicError(message, details) { //this is a generic error page
     const homeButton = returnHomeButton();
-    return div({id: "basicError"}, message, homeButton);
+    return div(
+    {class : 'error-page', id: "basicError"},
+        p({}, message),
+        p({}, details),
+        homeButton
+    );
 }

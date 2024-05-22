@@ -133,7 +133,7 @@ class ServiceMemSessionTests {
         //arrange
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
-        val pid = 1
+        val pid = FIRST_PLAYER_ID
         val gid = FIRST_GAME_ID
         val capacity = 5
         val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
@@ -175,7 +175,7 @@ class ServiceMemSessionTests {
         //arrange
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
-        val pid = 1
+        val pid = FIRST_PLAYER_ID
         val gid = FIRST_GAME_ID
         val capacity = 2
         val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
@@ -197,7 +197,7 @@ class ServiceMemSessionTests {
         //arrange
         val sRepo = MemSessionRepo()
         val sServices = SessionServices(pRepo, gRepo, sRepo)
-        val pid = 1
+        val pid = FIRST_PLAYER_ID
         val gid = FIRST_GAME_ID
         val capacity = 5
         val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
@@ -222,5 +222,94 @@ class ServiceMemSessionTests {
         assertFailsWith<IllegalArgumentException> {
             sServices.getListOfSessions(gid, startDate, null, null, 0, 10)
         }
+    }
+
+    @Test
+    fun `updating a session successfully`() {
+        //arrange
+        val sRepo = MemSessionRepo()
+        val sServices = SessionServices(pRepo, gRepo, sRepo)
+        val pid = FIRST_PLAYER_ID + 1
+        val gid = FIRST_GAME_ID
+        val capacity = 5
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
+        val sid = sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
+
+        //act
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID + 1)
+        val token = fPlayer.token
+        val newCapacity = 10
+        val newStartDate = LocalDateTime.now().plusDays(2).format(DATE_TIME_FORMATTER)
+
+        sServices.updateSession(token, sid, newStartDate, newCapacity)
+        val session = sRepo.getSession(sid)
+
+        //assert
+        assertTrue(session.capacity == newCapacity && session.date == newStartDate)
+    }
+
+    @Test
+    fun `deleting session successfully`() {
+        //arrange
+        val sRepo = MemSessionRepo()
+        val sServices = SessionServices(pRepo, gRepo, sRepo)
+        val pid = FIRST_PLAYER_ID + 1
+        val gid = FIRST_GAME_ID
+        val capacity = 5
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
+        val sid = sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
+
+        //act
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID + 1)
+        val token = fPlayer.token
+        sServices.deleteSession(token, sid)
+
+        //assert
+        assertFailsWith<AppException.SessionNotFound> {
+            sRepo.getSession(sid)
+        }
+    }
+
+    @Test
+    fun `deleting the only player in a session`() {
+        //arrange
+        val sRepo = MemSessionRepo()
+        val sServices = SessionServices(pRepo, gRepo, sRepo)
+        val pid = FIRST_PLAYER_ID + 1
+        val gid = FIRST_GAME_ID
+        val capacity = 5
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
+        val sid = sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
+
+        //act
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID + 1)
+        val token = fPlayer.token
+        sServices.deletePlayerFromSession(token, sid)
+
+        //assert
+        assertFailsWith<AppException.SessionNotFound> {
+            sRepo.getSession(sid)
+        }
+    }
+
+    @Test
+    fun `joining a session successfully`() {
+        //arrange
+        val sRepo = MemSessionRepo()
+        val sServices = SessionServices(pRepo, gRepo, sRepo)
+        val pid = FIRST_PLAYER_ID
+        val gid = FIRST_GAME_ID
+        val capacity = 5
+        val startDate = LocalDateTime.now().plusDays(1).format(DATE_TIME_FORMATTER)
+        val sid = sRepo.createSession(createSessionDTO(capacity, startDate, gid, listOf(pid)))
+
+        //act
+        val fPlayer = pRepo.getPlayer(FIRST_PLAYER_ID + 1)
+        val token = fPlayer.token
+        sServices.addPlayerToSession(token, sid)
+        val session = sRepo.getSession(sid)
+
+        //assert
+        assertTrue(session.players.containsAll(listOf(pid, fPlayer.id)))
     }
 }

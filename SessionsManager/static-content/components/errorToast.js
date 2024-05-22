@@ -1,30 +1,17 @@
 // Try to get this to work with our DSL
+import { div } from '../tags.js';
 export function errorToast(message) {
 
-  // Create overlay
-  const mainContent = document.getElementById('mainContent');
-  const overlay = document.createElement('div');
-  overlay.className = 'popupOverlay';
+    const overlay =
+      div({ class: 'popupOverlay' },
+          div({ class: 'popup' },
+              div({ class: 'content' }, message)
+          )
+      );
+    const mainContent = document.getElementById('mainContent');
+    mainContent.appendChild(overlay);
 
-  // Create popup
-  const popup = document.createElement('div');
-  popup.className = 'popup';
-
-  // Create content element
-  const content = document.createElement('div');
-  content.className = 'content';
-  content.innerText = message;
-
-  // Append content to popup
-  popup.appendChild(content);
-
-  // Append popup to overlay
-  overlay.appendChild(popup);
-
-  // Append overlay to body
-  mainContent.appendChild(overlay);
-
-  // Remove popup after selected timeout
-  const timeout = 1500;
-  setTimeout(() => { mainContent.removeChild(overlay); }, timeout);
+    // Remove popup after timeout
+    const timeout = 1500;
+    setTimeout(() => { mainContent.removeChild(overlay); }, timeout);
 }

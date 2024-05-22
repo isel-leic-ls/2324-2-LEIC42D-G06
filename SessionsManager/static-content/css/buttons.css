@@ -1,0 +1,72 @@
+.paging-button {
+    margin: 0 5px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.paging-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.return-home-button {
+    background-color: #008000;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.return-home-button:hover {
+    background-color: #003030;
+    color: #fff;
+}
+
+.generic-search-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+.generic-search-button:hover {
+    background-color: #0056b3;
+}
+
+.generic-create-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.generic-create-button:hover {
+    background-color: #ccc;
+}
+
+.logout-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: orange;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+

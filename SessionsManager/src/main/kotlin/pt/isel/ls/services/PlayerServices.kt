@@ -2,6 +2,7 @@ package pt.isel.ls.services
 
 import pt.isel.ls.AppException
 import pt.isel.ls.domain.Player
+import pt.isel.ls.domain.PlayerDetails
 import pt.isel.ls.domain.validatePlayerCredentials
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.*
@@ -35,9 +36,16 @@ class PlayerServices(private val pRepo: PlayersRepo) {
 
     fun getPlayerIdByToken(token: String) = pRepo.getPlayerIdByToken(token)
 
-    fun getPlayersByUsername(username : String,skip:Int, limit:Int):List<Player> {
+    fun getPlayersByUsername(username : String,skip:Int, limit:Int):Pair<List<PlayerDetails>, Int> {
         require(skip >= 0) { "Skip value must be positive" }
         require(limit > 0) { "Limit value must be positive non-zero" }
         return pRepo.getPlayersByUsername(username,skip,limit)
+    }
+
+    fun login(username : String, password: String) : Pair<Int, String> {
+        val player = pRepo.getPlayerByName(username)
+        if(player.password != password)
+            throw IllegalArgumentException("Invalid password")
+        return player.id to player.token
     }
 }

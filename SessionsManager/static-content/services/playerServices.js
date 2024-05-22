@@ -1,16 +1,34 @@
-import { handlePlayerDetailsRequest, handlePlayerId } from '../data/playerRequests.js';
 import { CONSTS } from '../utils.js';
+import { DetailedError } from '../utils.js';
 
+export class PlayerService {
+    constructor(playerRepository) {
+        this.playerRepository = playerRepository;
+    }
 
-export async function playerDetailsRetrieval(pId) {
-    const parsedPlayerId = parseInt(pId);
-    if (isNaN(parsedPlayerId) || parsedPlayerId < CONSTS.FIRST_PLAYER_ID)
-        throw new Error("Invalid player ID");
-    return await handlePlayerDetailsRequest(pId);
-}
+    async playerDetailsRetrieval(pId) {
+        const parsedPlayerId = parseInt(pId);
+        if (isNaN(parsedPlayerId) || parsedPlayerId < CONSTS.FIRST_PLAYER_ID)
+            throw new DetailedError("Invalid player ID", "");
+        return await this.playerRepository.handlePlayerDetailsRequest(pId);
+    }
 
-export async function playerIdRetrieval(token) { //TODO: implement token validation
-    //if (token == undefined || token == "" || token == null)
-       //throw new Error("Invalid token");
-    return await handlePlayerId(token);
+    async playerIdRetrieval(token) {
+        return await this.playerRepository.handlePlayerId(token);
+    }
+
+    async playerRegistration(name, email, password) {
+        return await this.playerRepository.handleRegister(name, email, password);
+    }
+
+    async playerLogin(username, password) {
+        return await this.playerRepository.handleLogin(username, password);
+    }
+
+    async playersRetrieval(name, skip, limit) {
+        const checkedSkip = isNaN(skip) || skip < 0 ? CONSTS.SKIP_DEFAULT : skip;
+        const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
+        const query = `name=${name}&skip=${checkedSkip}&limit=${checkedLimit}`;
+        return await this.playerRepository.handlePlayersRetrievalRequest(query);
+    }
 }

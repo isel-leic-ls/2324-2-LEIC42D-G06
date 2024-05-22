@@ -1,32 +1,92 @@
 import { CONSTS } from "../utils.js";
+import { DetailedError } from "../utils.js";
 
-
-const token = "Bearer 3ad7db4b-c5a9-42ee-9094-852f94c57cb7";
-
-export async function handlePlayerDetailsRequest(pid) {
-    const response = await fetch(CONSTS.BASE_API_URL + "/players/" + pid, {
-        headers: {
-            "Accept": "application/json",
+export class PlayerRepository {
+    async handlePlayerDetailsRequest(pid) {
+        const response = await fetch(CONSTS.BASE_API_URL + "/players/" + pid, {
+            headers: {
+                "Accept": "application/json",
+            }
+        });
+        const jsonResp = await response.json();
+        if (response.status === 200) {
+            return jsonResp;
         }
-    });
-    if (response.status === 200) {
-        const player = await response.json();
-        return player;
+        throw new DetailedError("Failed to retrieve player details", "Details: " + jsonResp.description);
     }
-    throw new Error("Failed to retrieve player details");
-}
 
-export async function handlePlayerId() { //TODO: hardcoded token, change this
-    const result = await fetch("http://localhost:9000/api/players/token/info", {
-        headers: {
-            "Accept": "application/json",
-            "Authorization": token
-        },
+    async handlePlayerId(token) {
+        const result = await fetch(CONSTS.BASE_API_URL + "/players/token/info", {
+            headers: {
+                "Accept": "application/json",
+                "Authorization": token,
+            },
+        });
 
-    })
-    if (result.status === 200) {
-        const player = await result.json();
-        return player;
+        const jsonResp = await result.json();
+        if (result.status === 200) {
+            return jsonResp;
+        }
+        throw new DetailedError("Failed to retrieve player details", "Details: " + jsonResp.description);
     }
-    throw new Error("Failed to retrieve player details");
+
+    async handleRegister(name, email, password) {
+        const body = {
+            name: name,
+            email: email,
+            password: password
+        };
+
+        const response = await fetch(CONSTS.BASE_API_URL + "/players", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify(body)
+        });
+
+        const jsonResp = await response.json();
+        if (response.status === 201) {
+            //const model = await response.json();
+            //return model.pid;
+            return;
+        }
+        throw new DetailedError("Failed to register player", "Details: " + jsonResp.description);
+    }
+
+    async handleLogin(username, password) {
+        const body = {
+            name: username,
+            password: password
+        };
+
+        const response = await fetch(CONSTS.BASE_API_URL + "/players/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify(body)
+        });
+
+        const jsonResp = await response.json();
+        if (response.status === 200) {
+            return jsonResp;
+        }
+        throw new DetailedError("Failed to login player", "Details: " + jsonResp.description);
+    }
+
+    async handlePlayersRetrievalRequest(query) {
+        const response = await fetch(CONSTS.BASE_API_URL + "/players?" + query, {
+            headers: {
+                "Accept": "application/json",
+            }
+        });
+        const jsonResp = await response.json();
+        if (response.status === 200) {
+            return jsonResp;
+        }
+        throw new DetailedError("Failed to retrieve players", "Details: " + jsonResp.description);
+    }
 }

@@ -2,6 +2,7 @@ package pt.isel.ls.repo.mem
 
 import pt.isel.ls.domain.Player
 import pt.isel.ls.AppException
+import pt.isel.ls.domain.PlayerDetails
 import pt.isel.ls.repo.interfaces.PlayersRepo
 import pt.isel.ls.utils.FIRST_PLAYER_ID
 import java.util.concurrent.ConcurrentLinkedQueue
@@ -24,7 +25,11 @@ class MemPlayersRepo : PlayersRepo {
     override fun getPlayerIdByToken(token: String) = players.find { it.token == token }?.id
         ?: throw AppException.PlayerNotFound("Player not found with token $token")
 
-    override fun getPlayersByUsername(username: String, skip: Int, limit: Int): List<Player> {
+    override fun getPlayerByName(name: String): Player {
+        TODO("Not yet implemented")
+    }
+
+    override fun getPlayersByUsername(username: String, skip: Int, limit: Int): Pair<List<PlayerDetails>, Int> {
         TODO("Not yet implemented")
     }
 }

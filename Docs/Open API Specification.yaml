@@ -42,6 +42,41 @@ paths:
           description: Email / Name already exists
         '500':
           description: Internal Server Error
+          
+          
+    get:
+      tags:
+        - Player Management
+      summary: get a list of players
+      description: |
+        Get a list of players by name
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+          description: User name
+        - in: query
+          name: skip
+          schema: 
+            type: integer
+          description: Skip x elements
+        - in: query
+          name: limit
+          schema: 
+            type: integer
+          description: Take x elements
+      responses:
+        '200':
+          description: The list of players
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerListOutputModel'
+        '400':
+          description: Missing parameters
+        '500':
+          description: Internal Server Error      
 
 
   /players/{pid}:
@@ -71,6 +106,64 @@ paths:
           description: Player not found
         '500':
           description: Internal Server Error
+          
+          
+  /players/token/info:
+    get:
+      security:
+      - bearerAuth: []
+      tags:
+        - Player Management
+      summary: get the id of a player
+      description: |
+        Get the id of a player by token
+      responses:
+        '200':
+          description: The player's details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerOutputModel'
+        '400':
+          description: Invalid token
+        '404':
+          description: Player not found
+        '500':
+          description: Internal Server Error
+          
+          
+          
+  /players/login:
+    post:
+      tags:
+      - Player Management
+      summary: execute login
+      description: |
+        Execute the login of a player
+      requestBody:
+        description: Player login input model
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlayerLoginInputModel'
+      responses:
+        '200':
+          description: The player's token and id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerOutputModel'
+        '400':
+          description: Invalid password
+        '404':
+          description: Player does not exist
+        '500':
+          description: Internal Server Error
+        
+          
+          
+      
           
   /games:
     post:
@@ -135,15 +228,53 @@ paths:
 
       responses:
         '200':
-          description: The game's details
+          description: The games details
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/GameListOutputModel'
         '400':
-          description: Invalid or missing request body
+          description: Missing parameters
         '500':
           description: Internal Server Error   
+          
+  
+  /games/list:
+    get:
+      tags:
+        - Game Management
+      summary: Get a list of games
+      description: |
+        Get a list of games
+      parameters:
+        - name: gname
+          in: query
+          schema:
+            type: string
+          description: The game's name
+        - name: skip
+          in: query
+          schema: 
+            type: integer
+          description: Skip x elements
+        - name: limit
+          in: query
+          schema: 
+            type: integer
+          description: Take x elements
+  
+      responses:
+        '200':
+          description: The games details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameListOutputModel'
+        '400':
+          description: Missing parameters
+        '500':
+          description: Internal Server Error
+          
           
           
   /games/id/{gid}:
@@ -281,7 +412,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SessionListRetrievalOutputModel'
         '400':
-          description: Invalid JSON body
+          description: Missing parameters
         '500':
           description: Internal Server Error   
           
@@ -476,6 +607,21 @@ components:
           description: Player's Password
           example: "binogogo"
           
+    PlayerLoginInputModel:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+          description: Player's Unique Name
+          example: "Pedro Diz"
+        password:
+          type: string
+          description: Player's Password
+          example: "binogogo"
+          
     PlayerOutputModel:
       type: object
       required:
@@ -511,6 +657,41 @@ components:
           type: string
           description: Player's Email
           example: "a47718@alunos.isel.pt"
+          
+          
+    PlayerListOutputModel:
+      type: object
+      required:
+        - players
+      properties:
+        players:
+          type: array
+          items:
+            $ref : '#/components/schemas/Player'
+            
+            
+             
+    Player:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - genres
+      properties:
+        id:
+          type: integer
+          description: Player ID
+          example: 1000
+        name:
+          type: string
+          description: Player name
+          example: "Pedro"
+        email:
+          type: string
+          description: Player email
+          example: "pdad@gmail.com"
+      
           
           
           
