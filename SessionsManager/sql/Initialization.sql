@@ -3,7 +3,7 @@ CREATE TABLE Player (
     name        VARCHAR(50) NOT NULL UNIQUE,
     email       VARCHAR(50) NOT NULL CHECK (email SIMILAR to '_%@_%') UNIQUE,
     token       VARCHAR(36) NOT NULL UNIQUE,
-    password    VARCHAR(20) NOT NULL
+    password    VARCHAR(60) NOT NULL
 );
 
 CREATE TABLE Game (

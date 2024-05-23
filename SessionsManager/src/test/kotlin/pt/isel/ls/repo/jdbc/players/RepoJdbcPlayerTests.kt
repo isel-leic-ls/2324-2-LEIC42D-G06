@@ -4,6 +4,7 @@ import org.postgresql.ds.PGSimpleDataSource
 import pt.isel.ls.AppException
 import pt.isel.ls.repo.jdbc.JdbcPlayersRepo
 import pt.isel.ls.utils.Environment
+import java.sql.Time
 import kotlin.test.*
 
 class RepoJdbcPlayerTests {
@@ -63,4 +64,10 @@ class RepoJdbcPlayerTests {
             repo.getPlayerIdByToken("3ad7db4b")
         }
     }
+    /*@Test
+    fun `get a non existing player by username`(){
+        val players = repo.getPlayersByUsername("asdasdaswdasdas",0,2)
+        assertTrue{ players.first.isEmpty() }
+    }*/
+
 }

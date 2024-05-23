@@ -12,7 +12,9 @@ import pt.isel.ls.api.*
 import pt.isel.ls.api.model.PlayerInputModel
 import pt.isel.ls.api.model.PlayerOutputModel
 import pt.isel.ls.api.model.PlayerRetrievalOutputModel
+import pt.isel.ls.api.model.PlayersListRetrievalOutputModel
 import pt.isel.ls.domain.Player
+import pt.isel.ls.domain.PlayerDetails
 import pt.isel.ls.utils.FIRST_PLAYER_ID
 
 private const val TOKEN = "3ad7db4b-c5a9-42ee-9094-852f94c57cb7"
@@ -21,22 +23,30 @@ class PlayerRoutesMock {
 
     val routes: RoutingHttpHandler = routes(
         PlayerUris.CREATE bind Method.POST to ::createPlayer,
-        PlayerUris.GET bind Method.GET to ::getPlayerDetails
+        PlayerUris.GET bind Method.GET to ::getPlayerDetails,
+        PlayerUris.GET_BY_USERNAME bind Method.GET to ::getPlayersByUsername
     )
 
     private fun createPlayer(request: Request) =
         exceptionAwareScope {
             request.fromJson<PlayerInputModel>()
             val (token, pid) = TOKEN to FIRST_PLAYER_ID
+
             Response(Status.CREATED).toJson(PlayerOutputModel(pid, token))
         }
 
 
     private fun getPlayerDetails(request: Request) = exceptionAwareScope {
         val pid = request.getPlayerDetails()
-        val player = if(pid == FIRST_PLAYER_ID) Player(FIRST_PLAYER_ID,"teste","teste@gmail.com",TOKEN,"teste")
+        val player = if (pid == FIRST_PLAYER_ID) Player(FIRST_PLAYER_ID, "teste", "teste@gmail.com", TOKEN, "teste")
         else throw AppException.PlayerNotFound("No player found with the given Id")
         Response(Status.OK).toJson(PlayerRetrievalOutputModel(player.id, player.name, player.email))
+    }
+
+    private fun getPlayersByUsername(request: Request) = exceptionAwareScope {
+        val username = request.getUsername()
+        val (list, total) = listOf(PlayerDetails(1,"Vasco","vascobranco13@gmail.com")) to 1
+        Response(Status.OK).toJson(PlayersListRetrievalOutputModel(list, total))
     }
 
 

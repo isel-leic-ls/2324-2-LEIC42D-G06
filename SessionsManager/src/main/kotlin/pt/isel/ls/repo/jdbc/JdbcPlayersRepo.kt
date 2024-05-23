@@ -93,7 +93,7 @@ class JdbcPlayersRepo(private val dataSource: DataSource) : PlayersRepo {
     override fun getPlayersByUsername(username: String, skip: Int, limit: Int): Pair<List<PlayerDetails>, Int> {
         dataSource.connection.use {
             val result = it.prepareStatement("SELECT * FROM player WHERE name LIKE ?")
-                .bindParameters("$username%")
+                .bindParameters("%$username%")
                 .executeQuery()
 
             val playerInfoList = mutableListOf<PlayerDetails>()

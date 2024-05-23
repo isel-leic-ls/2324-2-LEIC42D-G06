@@ -26,7 +26,7 @@ class PlayerRoutes(private val services: PlayerServices) {
         Response(Status.OK).toJson(PlayerOutputModel(pid, token))
     }
 
-    private fun createPlayer(request: Request) =
+    private fun createPlayer(request : Request) =
         exceptionAwareScope {
             val inputModel = request.fromJson<PlayerInputModel>()
             val (token, pid) = services.createPlayer(inputModel.name, inputModel.email, inputModel.password)
@@ -52,5 +52,4 @@ class PlayerRoutes(private val services: PlayerServices) {
         val (list, total) = services.getPlayersByUsername(username, skip, limit)
         Response(Status.OK).toJson(PlayersListRetrievalOutputModel(list, total))
     }
-
 }
