@@ -57,8 +57,8 @@ fun Request.getSessionsListInputModel(): SessionListRetrievalInputModel {
     val gid = query("gid")?.toIntOrNull()
     val date = query("date")
     val state = query("state")
-    val game = query("game")?.toIntOrNull()
-    return SessionListRetrievalInputModel(gid, date, state, game)
+    val pid = query("pid")?.toIntOrNull()
+    return SessionListRetrievalInputModel(gid, date, state, pid)
 }
 
 

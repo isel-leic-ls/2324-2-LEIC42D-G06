@@ -141,8 +141,13 @@ async function getSessionDetails(mainContent, path) {
         });
 
         const updateSessionFunction = (async (id, capacity, date) => {
-            await sessionService.sessionUpdate(id, capacity, date, token);
-            window.location.reload();
+            try {
+                await sessionService.sessionUpdate(id, capacity, date, token);
+                window.location.reload();
+            } catch (error) {
+                const errorContent = basicError(error.message, error.details)
+                mainContent.replaceChildren(errorContent)
+            }
         });
 
         const deleteSessionFunction = (async (id) => {
