@@ -27,9 +27,13 @@ export class PlayerService {
     }
 
     async playersRetrieval(name, skip, limit) {
-        const checkedSkip = isNaN(skip) || skip < 0 ? CONSTS.SKIP_DEFAULT : skip;
-        const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
-        const query = `name=${name}&skip=${checkedSkip}&limit=${checkedLimit}`;
+        if(name === undefined) throw new DetailedError("Invalid name", "");
+
+        if (isNaN(skip) || skip < 0)
+            throw new DetailedError("Invalid skip", "");
+        if (isNaN(limit) || limit < 1)
+            throw new DetailedError("Invalid limit", "");
+        const query = `name=${name}&skip=${skip}&limit=${limit}`;
         return await this.playerRepository.handlePlayersRetrievalRequest(query);
     }
 }

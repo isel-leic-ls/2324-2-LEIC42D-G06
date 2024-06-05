@@ -18,19 +18,24 @@ export class GameService {
         if (genres === undefined) throw new DetailedError("Invalid genres", "");
         if (developer === undefined) throw new DetailedError("Invalid developer", "");
         
-        const checkedSkip = isNaN(skip) || skip < 0 ? CONSTS.SKIP_DEFAULT : skip;
-        const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
+        if (isNaN(skip) || skip < 0)
+            throw new DetailedError("Invalid skip", "");
+        if (isNaN(limit) || limit < 1)
+            throw new DetailedError("Invalid limit", "");
 
-        const query = `genres=${genres}&developer=${developer}&skip=${checkedSkip}&limit=${checkedLimit}`;
+        const query = `genres=${genres}&developer=${developer}&skip=${skip}&limit=${limit}`;
         return await this.gameRepository.handleGamesRetrievalRequest(query);
     }
 
     async gamesByNameRetrieval(gname, skip, limit) {
         if (gname === undefined) throw new DetailedError("Invalid name", "");
 
-        const checkedSkip = isNaN(skip) || skip < 0 ? CONSTS.SKIP_DEFAULT : skip;
-        const checkedLimit = isNaN(limit) || limit < 1 ? CONSTS.LIMIT_DEFAULT : limit;
-        const query = `gname=${gname}&skip=${checkedSkip}&limit=${checkedLimit}`;
+        if (isNaN(skip) || skip < 0)
+            throw new DetailedError("Invalid skip", "");
+        if (isNaN(limit) || limit < 1)
+            throw new DetailedError("Invalid limit", "");
+
+        const query = `gname=${gname}&skip=${skip}&limit=${limit}`;
         return await this.gameRepository.handleGamesRetrievalByNameRequest(query);
     }
 
