@@ -1,7 +1,7 @@
 import { div, a, ul, h1, li, p, button, input, label } from "../tags.js"
 
 
-export function homePage(player, logoutFunction) {
+export function homePage(id, logoutFunction) {
     const container = div(
         { class: 'home-page' },
         h1({}, "Welcome to Session Finder"),
@@ -15,10 +15,10 @@ export function homePage(player, logoutFunction) {
             li({}, a({ href: "#games" }, "Search games"), " - Explore and discover new games"),
             li({}, a({ href: "#sessions" }, "Search sessions"), " - Find and join gaming sessions"),
             li({}, a({ href: "#players" }, "Search players"), " - Find and connect with other players"),
-            player ? li({}, a({ href: "#players/" + player.id }, "My profile"), " - View and manage your profile") : '',
-            player ? button({ class: 'logout-button', onClick: logoutFunction }, "Logout") : '',
-            player ? '' : li({}, a({ href: "#register" }, "Register"), " - Register a new account"),
-            player ? '' : li({}, a({ href: "#login" }, "Login"), " - Login to an existing account")
+            id ? li({}, a({ href: "#players/" + id }, "My profile"), " - View and manage your profile") : '',
+            id ? button({ class: 'logout-button', onClick: logoutFunction }, "Logout") : '',
+            id ? '' : li({}, a({ href: "#register" }, "Register"), " - Register a new account"),
+            id ? '' : li({}, a({ href: "#login" }, "Login"), " - Login to an existing account")
         )
     );
 

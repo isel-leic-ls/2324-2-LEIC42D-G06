@@ -562,7 +562,7 @@ paths:
         '204':
           description: Player successfully removed from session
         '400':
-          description: Invalid Session ID / Player not in Session / Session Ongoing
+          description: Invalid Session ID / Player not in Session
         '401':
           description: Invalid authorization
         '404':

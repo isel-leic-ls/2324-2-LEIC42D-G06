@@ -31,16 +31,13 @@ const sessionService = new SessionService(sessionRepository);
 async function getHome(mainContent) {
     safeCall(mainContent, async () => {
         const { id, token } = userStorage.getUserInfo();
-        let player = null;
-        if (id != null || token != null)
-            player = await playerService.playerIdRetrieval(token);
 
         const logoutFunction = (() => {
             userStorage.clearUserInfo();
             window.location.reload();
         });
 
-        const pageContent = homePage(player, logoutFunction);
+        const pageContent = homePage(id, logoutFunction);
         mainContent.replaceChildren(pageContent);
     })
 }
